@@ -82,3 +82,5 @@ Then, check back your HSAM_1 folder, you should see T1 folder has everything you
 
 This method is only just for submiting ONE JOB per time. Once you suceed, we can move on to try to submit jobs with `launcher`, which will let you submit your job in parallel.
 
+## Additional info:
+The recording of the tvb-ukbb pipeline installation, by Dr. Simmons. [link](https://web.microsoftstream.com/video/ac4b679d-5274-45ff-b481-b3707bd06350?list=user&userId=d1cb665c-d52f-4abb-808f-72eaaa4a451e)
