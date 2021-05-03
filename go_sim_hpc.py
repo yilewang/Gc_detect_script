@@ -4,8 +4,6 @@ import warnings
 import numpy as np
 import argparse
 import pandas as pd
-import seaborn as sn
-import matplotlib.pyplot as plt
 import time
 import logging
 
@@ -59,20 +57,3 @@ if __name__ == "__main__":
     logging.warning('Duration: {}'.format(end_time - start_time))
 
 
-
-
-    # plotting
-    df = pd.DataFrame(raw[:, 0, :, 0], columns = ['aCNG-L', 'aCNG-R','mCNG-L','mCNG-R','pCNG-L','pCNG-R', 'HIP-L','HIP-R','PHG-L','PHG-R','AMY-L','AMY-R', 'sTEMp-L','sTEMP-R','mTEMp-L','mTEMp-R'])
-    corrMatrix = df.corr()
-    print(corrMatrix)
-    #csv_file = 'go_'+str(y)+'.csv'
-    #corrMatrix.to_csv(csv_file)
-    #sn.heatmap(corrMatrix, annot = False, cmap= 'viridis')
-    #plt.show()
-    ## limbic = np.array(raw)
-    # PCG_L = limbic[:,0, 4, 0]
-    # PCG_R = limbic[:, 0, 5, 0]
-    # PCG = {'PCG_R': PCG_R, 'PCG_L': PCG_L}
-    # df = pd.DataFrame(PCG)
-    # csv_file = '/home/yxw190015/go/Go_'+str(y)+'.csv'
-    # df.to_csv(csv_file) 
