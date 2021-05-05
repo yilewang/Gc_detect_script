@@ -1,5 +1,7 @@
 
+### Set up TVB-JupyterNotebook on Ganymede at UT Dallas
 
+We are using spack to install & manage conda, then using conda to create the working environment.
 ```bash
 git clone -b v0.16.1 https://github.com/spack/spack.git
 source spack/share/spack/setup-env.sh
@@ -14,7 +16,7 @@ conda activate tvbenv
 jupyter notebook password #setup the password
 ```
 
-
+In X2GO, we can submit jobs to the nodes and launch TVB jupyter notebook
 ```bash
 srun -pTVB -N1 -n48 -pty /bin/bash
 conda activate tvbenv
