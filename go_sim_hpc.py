@@ -1,12 +1,21 @@
+
+
 from tvb.simulator.models.stefanescu_jirsa import ReducedSetHindmarshRose
 from tvb.simulator.lab import *
 import warnings
 import numpy as np
 import argparse
 import pandas as pd
+import seaborn as sn
+import matplotlib.pyplot as plt
 import time
 import logging
+import sys
 
+
+grp = str(sys.argv[1])
+caseid = str(sys.argv[2])
+g = float(sys.argv[3]) 
 
 def tvb_simulation(file, go):
     my_rng = np.random.RandomState(seed=42)
@@ -41,19 +50,43 @@ def tvb_simulation(file, go):
 
 speed = 10.
 
-bash obtain the input
-parser = argparse.ArgumentParser(description='pass a float')
-parser.add_argument('float',type=float, help='the number')
-args = parser.parse_args()
-y = args.float
+
+
+
+# #bash obtain the input
+# parser = argparse.ArgumentParser(description='pass a float')
+# parser.add_argument('float',type=float, help='the number')
+# args = parser.parse_args()
+# y = args.float
 
 if __name__ == "__main__":
-    #test_file = '/home/wayne/0306A.zip'
-    test_file = '/home/yxw190015/go/'
-    #test_file = 'C:/onedrive/OneDrive - The University of Texas at Dallas/AUS-76-DATASET/ALL_Structure_category/Joelle_normalized/AD/dd/0306A.zip'
+    test_file = '/mnt/c/Users/Wayne/workdir/zip/'+grp+'_conn/'+caseid+'.zip'
+    #test_file = '/home/yxw190015/go/'+grp+'_conn/'+casid+'.zip'
+    #test_file = 'C:/Users/Wayne/workdir/zip/'+grp+'_conn/'+caseid+'.zip'
     start_time = time.time()
-    raw = tvb_simulation(test_file, np.array([y]))
+    raw = tvb_simulation(test_file, np.array([g]))
     end_time = time.time()
     logging.warning('Duration: {}'.format(end_time - start_time))
+
+
+
+
+    # plotting
+    df = pd.DataFrame(raw[:, 0, :, 0], columns = ['aCNG-L', 'aCNG-R','mCNG-L','mCNG-R','pCNG-L','pCNG-R', 'HIP-L','HIP-R','PHG-L','PHG-R','AMY-L','AMY-R', 'sTEMp-L','sTEMP-R','mTEMp-L','mTEMp-R'])
+    save_path = '/mnt/c/Users/Wayne/workdir/output/'+grp+'/'+caseid+'/'+caseid+'_'+str(g)+'.csv'
+    df.to_csv(save_path)
+    #csv_file = 'go_'+str(y)+'.csv'
+    #corrMatrix.to_csv(csv_file)
+    #sn.heatmap(corrMatrix, annot = False, cmap= 'viridis')
+    #plt.show()
+    ## limbic = np.array(raw)
+    # PCG_L = limbic[:,0, 4, 0]
+    # PCG_R = limbic[:, 0, 5, 0]
+    # PCG = {'PCG_R': PCG_R, 'PCG_L': PCG_L}
+    # df = pd.DataFrame(PCG)
+    # csv_file = '/home/yxw190015/go/Go_'+str(y)+'.csv'
+    # df.to_csv(csv_file) 
+
+
 
 

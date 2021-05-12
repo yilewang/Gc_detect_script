@@ -26,3 +26,5 @@ export LAUNCHER_WORKDIR=$HOME/go
 export LAUNCHER_JOB_FILE=jobfile
 
 $LAUNCHER_DIR/paramrun
+
+
