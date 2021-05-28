@@ -21,7 +21,7 @@ if __name__ == "__main__":
             gRange = np.round(np.arange(0.001, 0.08, 0.001), 3)
             gMax = []
             gC = []
-            for gm in gRange[0:25]:
+            for gm in gRange[0:70]:
                 # G critical
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
                 df = pd.read_csv(dataFile, index_col=0)
