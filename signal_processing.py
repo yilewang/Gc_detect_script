@@ -9,7 +9,6 @@ import pandas as pd
 import os
 from pandas import DataFrame
 from scipy import signal
-from fastdtw import fastdtw
 from scipy.spatial.distance import euclidean
 from scipy.integrate import simps
 from scipy import integrate
@@ -21,7 +20,7 @@ from statsmodels.tsa.stattools import adfuller, kpss, acf, pacf, grangercausalit
 datana = []
 clag = 'Gc'
 #changepath
-path = 'C:/Users/Wayne/Desktop/cvl/original_data/ALL'
+path = 'C:/onedrive/OneDrive - The University of Texas at Dallas/before3.24.2021/old_research/cvl/original_data/ALL'
 os.chdir(path)
 data = os.listdir(path)
 for i in range(len(data)):
@@ -29,7 +28,7 @@ for i in range(len(data)):
     datana.append(d)
 
 dataname = [[0]]* len(data)
-Goptimal = 'C:/Users/Wayne/Desktop/cvl/original_data/Gc.xlsx'
+Goptimal = 'C:/onedrive/OneDrive - The University of Texas at Dallas/before3.24.2021/old_research/cvl/original_data/Gc.xlsx'
 case_go = pd.read_excel(Goptimal)
 case_go.head()
 id = {j:[] for j in range(len(datana))}
@@ -45,7 +44,7 @@ for k in range(len(Groups)):
 fs = 81920
 samplinginterval = 1/fs
 time = np.arange(0, 80000/fs, samplinginterval)
-cutoff_high = 8
+cutoff_high = 10
 cutoff_low = 1
 order = 2
 dt=1/fs
@@ -83,7 +82,6 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
 def slow_batch(data_r, data_l, na, group):
 
     fig_name = na+'_'+group
-
     PCG_R_filter, N = fir_bandpass(data=np.asarray(data_r),
                                    fs=fs, cut_off_low=cutoff_low,
                                    cut_off_high=cutoff_high, width=2 )
@@ -218,6 +216,7 @@ def slow_batch(data_r, data_l, na, group):
     plt.subplot(2, 2, 4)
     plt.plot(time, smooth(y1_ang/np.pi, 100) - smooth(y2_ang/np.pi, 100), label = "phase_lock")
     plt.title('Phase Lock')
+    plt.show()
     #plt.show()
 
 

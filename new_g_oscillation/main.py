@@ -3,9 +3,12 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.signal import find_peaks
 import os
 import time
+import logging
+from scipy import signal
+from findpeaks import PeakFinder
+
 """
 This is a python file designed to investigate the relationship between G and oscillations.
 @Author: Yile Wang
@@ -13,102 +16,134 @@ This is a python file designed to investigate the relationship between G and osc
 @Email: yile.wang@utdallas.edu
 
 """
+# brain regions labels
+regions = ['aCNG-L', 'aCNG-R','mCNG-L','mCNG-R','pCNG-L','pCNG-R', 'HIP-L','HIP-R','PHG-L','PHG-R','AMY-L','AMY-R', 'sTEMp-L','sTEMP-R','mTEMp-L','mTEMp-R']
 
-def readCSV():
-    df = pd.read_csv(file, index_col=0)
+
+def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0):
+    """
+    The FIR bandpass filter
+    """
+    nyq_rate = fs / 2.0
+    wid = width/nyq_rate
+    N, beta = signal.kaiserord(ripple_db, wid)
+    taps = signal.firwin(N, cutoff = [cut_off_low, cut_off_high],
+                  window = 'hamming', pass_zero = False, fs=fs)
+    filtered_signal = signal.lfilter(taps, 1.0, data)
+    return filtered_signal, N
+
+def smooth(y, box_pts):
+    box = np.ones(box_pts) / box_pts
+    y_smooth = np.convolve(y, box, mode='same')
+    return y_smooth
 
 
-grp_pools = ['AD', 'MCI','NC','SNC']
+
+if __name__ == '__main__':
+    # the sampling rate
+    fs = 81920
+    # the time
+    samplinginterval = 1/fs
+    t = np.arange(0, 1, samplinginterval)
+
+    # the four study groups, Alzheimer's Disease, Mild Cognitive Impairment, Normal Control, Super Normal Control
+    grp_pools = ['AD', 'MCI','NC','SNC']
     start = time.time()
     pdList = []
-    for grp in grp_pools[0:1]:
+    for grp in grp_pools:
+
+        # obtain the data path
         pth = 'C:/Users/Wayne/output/'+grp
         case_pools = os.listdir(pth)
-        for caseid in case_pools[0:1]:
+
+        # iterate the case id.
+        for caseid in case_pools[8:11]:
             gRange = np.round(np.arange(0.001, 0.08, 0.001), 3)
-            gMax = []
-            gC = []
-            for gm in gRange[0:70]:
-                # G critical
+            peaks_value = []
+            Gc2Gm = []
+            for gm in gRange:
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
+                
+                # pandas read the data
                 df = pd.read_csv(dataFile, index_col=0)
+
+                # PCG left and right, channel 4-L, channel 5-R
+                dfPCG = df.iloc[:, 4:6]
+
+                # Other limbic channel, Rest
                 df1 = df.iloc[:, 0:4]
                 df2 = df.iloc[:, 6:16]
-                df_ex = pd.concat([df1, df2], axis=1)
-                dfPCG = df.iloc[:, 4:6]
-                avgPCG = np.average(dfPCG, axis =1)
-                varPCG = np.var(dfPCG, axis = 1)
-                avgRest = np.average(df_ex, axis = 1)
-                varRest = np.var(df_ex, axis=1)
-                yPCG = avgPCG +varPCG
-                yPCG_ = avgPCG - varPCG
-                yRest = avgRest + varRest
-                yRest_ = avgRest - varRest
-                t = np.arange(0, 81920, 1)
-                peaksPCG, _ = find_peaks(yPCG, prominence = 1.96*np.std(yPCG))
-                peaksRest, _ = find_peaks(yRest, prominence=1.96*np.std(yRest))
-                peaksPCG = peaksPCG[peaksPCG>10000]
-                peaksRest = peaksRest[peaksRest>10000]
-                if len(peaksPCG) > 0 and len(peaksRest) <1:
-                    critical = 1
-                else:
-                    critical = 0
-                gC.append(critical)
+                dfRest = pd.concat([df1, df2], axis=1)
+
+                # Gamma Band
+                pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 25.0, 100.0)
+                pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 25.0, 100.0)
 
 
-                # G max
-                dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
-                df = pd.read_csv(dataFile, index_col=0)
-                avg = np.average(df, axis = 1)
-                var = np.var(df, axis=1)
-                y = avg + var
-                y_ = avg - var
-                t = np.arange(0, 81920, 1)
-                peaks, _ = find_peaks(y, prominence= 1.96* np.std(y))
-                peaks = peaks[peaks>10000]
-                if len(peaks) > 0:
-                    max = 1
-                else:
-                    max = 0
-                gMax.append(max)
+                # Theta Band
+                pcgThetaL, N= fir_bandpass(np.asarray(df['pCNG-L']), fs, 4.0, 8.0)
+                pcgThetaR, N= fir_bandpass(np.asarray(df['pCNG-R']), fs, 4.0, 8.0)
 
-                fig, (axs1,axs2,axs3) = plt.subplots(3, figsize=(15,8))
-                plt.suptitle(grp+"_"+caseid+'_'+str(gm))
-                axs1.fill_between(t, y, y_)
-                axs1.plot(t, avg, 'r')
-                axs1.plot(peaks, y[peaks], 'xk', label = "ALL Regions")
-                axs1.legend()                 
-                axs2.fill_between(t, yRest, yRest_)
-                axs2.plot(t, avgRest, 'r')
-                axs2.plot(peaksRest, yRest[peaksRest], '*r', label = "Rest of Regions")
-                axs2.legend()
-                axs3.fill_between(t, yPCG, yPCG_)
-                axs3.plot(t, avgPCG, 'r')
-                axs3.plot(peaksPCG, yPCG[peaksPCG], 'og', label = "PCG")
-                axs3.legend()
-                # plt.show()
-                save_path = grp+"_"+caseid+"_"+str(gm)+"_demo.png"
-                plt.savefig(save_path)
+                # delay
+                delay = 0.5 * (N-1) / fs
+
+                # peaks detection
+
+                # func1 = PeakFinder(pcgThetaR)
+                # tmp1, tmp2 = func1.findPeaks()
+                # print(tmp1, tmp2)
+
+
+                # rest of the regions
+                avgRest = np.average(dfRest, axis = 1)
+                peaksRest, _ = signal.find_peaks(avgRest[1000:], prominence=0.1) # to determine the Gc
+
+
+                valleyThetaR, _ = signal.find_peaks(pcgThetaR * -1, prominence=(np.max(pcgThetaR) - np.min(pcgThetaR)) * 1/3)
+
+                peaksGammaR, _ = signal.find_peaks(df["pCNG-R"], height=np.max(pcgThetaR), prominence = 0.1)
+                peaksGammaL, _ = signal.find_peaks(df["pCNG-L"], height=np.max(pcgThetaL), prominence = 0.1)
+                peaksThetaR, _ = signal.find_peaks(pcgThetaR, prominence = 0.1)
+                peaksThetaL, _ = signal.find_peaks(pcgThetaL, prominence = 0.1)
+                
+                print(type(peaksGammaR))
+                
+                # visualization
+                fig, (ax1, ax2) = plt.subplots(2, figsize=(9,8))
+                fig.suptitle(caseid + "_filtered data_"+ str(gm))
+                ax1.plot(t, df['pCNG-R'], label = "Raw")                
+                ax1.plot(t[N-1:]-delay, pcgThetaR[N-1:], label = "Theta")
+                ax1.plot(t[N-1:]-delay, pcgGammaR[N-1:], label = "Gamma")
+                ax1.legend()
+                ax1.title.set_text('Theta&Gamma Fliter Signals')
+                ax2.plot(t[N-1:]-delay, pcgThetaR[N-1:], label = "Theta")
+                ax2.plot(peaksThetaR/fs - delay, pcgThetaR[peaksThetaR],'or', label = "Theta Peaks")
+                ax2.plot(valleyThetaR/fs - delay, pcgThetaR[valleyThetaR],'*g', label = "Theta Valleys")
+                ax2.title.set_text('Theta Peaks')
+                ax2.legend()
+                plt.show()
+
+                # count the peaks
+                peaks_value.append(len(peaksGammaR) + len(peaksGammaL))
+                while len(peaksGammaR)+len(peaksGammaL) > 0 and len(peaksRest) == 0:
+                    Gc2Gm.append(gm)
+                    break
+
+            
+            plt.figure(figsize=(9, 5))
+            if not Gc2Gm:
+                continue
+            else: 
+                Gc_label = "G critical = " + str(Gc2Gm[0])
+            # plt.axvline(x=Gc2Gm[0], color='b', linestyle=':', label = Gc_label)
+            # plt.plot(gRange, peaks_value, '*:g')
+            # plt.xticks(np.arange(0.001, 0.08, 0.005))
+            # plt.title(caseid+"_G ~ Gamma oscillation trend_")
+            # plt.legend()
+
+            # save pics
+            save_path = grp+"_"+caseid+"_demo.png"
+            plt.savefig(save_path)
+
             end = time.time()
             logging.warning('Duration: {}'.format(end - start))
-
-            # plt.figure(figsize=(18,5))
-            # plt.title(grp+"_"+caseid+'_'+'bifurcation')
-            # plt.plot(gRange,gMax, "o:b", label = "Gmax")
-            # plt.plot(gRange, gC, "*:r", label = "Gcritical")
-            # plt.xticks(np.arange(0.001, 0.080, 0.001))
-            # plt.legend()
-            # save_path = grp+"_"+caseid+"_"+"bif.png"
-            # plt.savefig(save_path)
-    #         for cc in range(len(gRange)):
-    #             if gMax[cc] - gC[cc] == 0.0:
-    #                 res = cc+1
-    #                 break
-    #         pdList.append((grp, caseid, np.round((res)*0.001,3), np.sum(gMax)*0.001))
-    # dfTable = pd.DataFrame(pdList, columns=('Group', 'CaseID', 'Gc', 'Gmax'))
-    # dfTable.to_csv(r'C:/Users/Wayne/tvb/TVB_workflow/new_g_max/New_Gc_Gmax_Table.csv', index = False) 
-
-
-
-
-#if __name__ == '__main__':
