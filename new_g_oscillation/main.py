@@ -32,11 +32,6 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
     filtered_signal = signal.lfilter(taps, 1.0, data)
     return filtered_signal, N
 
-def smooth(y, box_pts):
-    box = np.ones(box_pts) / box_pts
-    y_smooth = np.convolve(y, box, mode='same')
-    return y_smooth
-
 
 
 if __name__ == '__main__':
@@ -47,7 +42,7 @@ if __name__ == '__main__':
     t = np.arange(0, 1, samplinginterval)
 
     # the four study groups, Alzheimer's Disease, Mild Cognitive Impairment, Normal Control, Super Normal Control
-    grp_pools = ['AD', 'MCI','NC','SNC']
+    grp_pools = ['NC', 'MCI','AD','SNC']
     start = time.time()
     pdList = []
     for grp in grp_pools:
@@ -57,10 +52,12 @@ if __name__ == '__main__':
         case_pools = os.listdir(pth)
 
         # iterate the case id.
-        for caseid in case_pools[8:11]:
+        for caseid in case_pools:
             gRange = np.round(np.arange(0.001, 0.08, 0.001), 3)
-            peaks_value = []
-            Gc2Gm = []
+            Gc = []
+            Gm = []
+            gamma_peaks = np.array([])
+            theta_peaks = np.array([])
             for gm in gRange:
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
                 
@@ -89,60 +86,73 @@ if __name__ == '__main__':
 
                 # peaks detection
 
-                # func1 = PeakFinder(pcgThetaR)
-                # tmp1, tmp2 = func1.findPeaks()
-                # print(tmp1, tmp2)
-
-
                 # rest of the regions
                 avgRest = np.average(dfRest, axis = 1)
                 peaksRest, _ = signal.find_peaks(avgRest[1000:], prominence=0.1) # to determine the Gc
-
-
-                valleyThetaR, _ = signal.find_peaks(pcgThetaR * -1, prominence=(np.max(pcgThetaR) - np.min(pcgThetaR)) * 1/3)
-
+                
+                # Gamma signals
                 peaksGammaR, _ = signal.find_peaks(df["pCNG-R"], height=np.max(pcgThetaR), prominence = 0.1)
                 peaksGammaL, _ = signal.find_peaks(df["pCNG-L"], height=np.max(pcgThetaL), prominence = 0.1)
-                peaksThetaR, _ = signal.find_peaks(pcgThetaR, prominence = 0.1)
-                peaksThetaL, _ = signal.find_peaks(pcgThetaL, prominence = 0.1)
                 
-                print(type(peaksGammaR))
+                # Theta signals
+                func1 = PeakFinder(pcgThetaR)
+                ThetaR = func1.findPeaks()
+                #func1.peaks_plots(ThetaR)
+                func2 = PeakFinder(pcgThetaL)
+                ThetaL = func2.findPeaks()
+                peaksThetaR = ThetaR[1::2]
+                peaksThetaL = ThetaL[1::2]
+                valleysThetaR = ThetaR[0::2]
+                valleysThetaL = ThetaL[1::2]
+
                 
-                # visualization
-                fig, (ax1, ax2) = plt.subplots(2, figsize=(9,8))
-                fig.suptitle(caseid + "_filtered data_"+ str(gm))
-                ax1.plot(t, df['pCNG-R'], label = "Raw")                
-                ax1.plot(t[N-1:]-delay, pcgThetaR[N-1:], label = "Theta")
-                ax1.plot(t[N-1:]-delay, pcgGammaR[N-1:], label = "Gamma")
-                ax1.legend()
-                ax1.title.set_text('Theta&Gamma Fliter Signals')
-                ax2.plot(t[N-1:]-delay, pcgThetaR[N-1:], label = "Theta")
-                ax2.plot(peaksThetaR/fs - delay, pcgThetaR[peaksThetaR],'or', label = "Theta Peaks")
-                ax2.plot(valleyThetaR/fs - delay, pcgThetaR[valleyThetaR],'*g', label = "Theta Valleys")
-                ax2.title.set_text('Theta Peaks')
-                ax2.legend()
-                plt.show()
+                #visualization
+                # fig, (ax1, ax2) = plt.subplots(2, figsize=(9,8))
+                # fig.suptitle(caseid + "_filtered data_"+ str(gm))
+                # ax1.plot(t, df['pCNG-R'], label = "Raw")                
+                # ax1.plot(t[N-1:]-delay, pcgThetaR[N-1:], label = "Theta")
+                # ax1.plot(t[N-1:]-delay, pcgGammaR[N-1:], label = "Gamma")
+                # ax1.legend()
+                # ax1.title.set_text('Theta&Gamma Fliter Signals')
+                # ax2.plot(t[N-1:] - delay, pcgThetaR[N-1:], label = "Theta")
+                # ax2.plot(ThetaR/fs - delay, pcgThetaR[ThetaR],'xg', label = "Peaks and Valleys")
+                # ax2.title.set_text('Theta Frequency')
+                # ax2.legend()
+                # plt.show()
 
                 # count the peaks
-                peaks_value.append(len(peaksGammaR) + len(peaksGammaL))
+                gamma_peaks = np.append(gamma_peaks, len(peaksGammaR) + len(peaksGammaL))
+                theta_peaks = np.append(theta_peaks, len(peaksThetaR)+ len(peaksThetaL))
+                
                 while len(peaksGammaR)+len(peaksGammaL) > 0 and len(peaksRest) == 0:
-                    Gc2Gm.append(gm)
+                    Gc.append(gm)
+                    break
+                while len(ThetaR) <=2 and len(ThetaL) <= 2:
+                    Gm.append(gm)
                     break
 
-            
+
             plt.figure(figsize=(9, 5))
-            if not Gc2Gm:
-                continue
+            if not Gc:
+                Gc = [0]
+                Gc_label = "G critical = None"
             else: 
-                Gc_label = "G critical = " + str(Gc2Gm[0])
-            # plt.axvline(x=Gc2Gm[0], color='b', linestyle=':', label = Gc_label)
-            # plt.plot(gRange, peaks_value, '*:g')
-            # plt.xticks(np.arange(0.001, 0.08, 0.005))
-            # plt.title(caseid+"_G ~ Gamma oscillation trend_")
-            # plt.legend()
+                Gc_label = "G critical = " + str(Gc[0])
+            if not Gm:
+                Gm = [0.079]
+                Gm_label = "G max = " + str(Gm[0])
+            else:
+                Gm_label = "G max = " + str(Gm[0])
+            plt.axvline(x=Gc[0], color='r', linestyle='dotted', label = Gc_label)
+            plt.axvline(x=Gm[0], color='r', linestyle = 'dashed', label = Gm_label)            
+            plt.plot(gRange, gamma_peaks, '*:g', label = "Gamma Frequency")
+            plt.plot(gRange, theta_peaks, 'x:b', label = "Theta Frequency")
+            plt.xticks(np.arange(0.001, 0.08, 0.005))
+            plt.title(caseid+"_G ~ Gamma&Theta oscillation trend")
+            plt.legend()
 
             # save pics
-            save_path = grp+"_"+caseid+"_demo.png"
+            save_path = grp+"_"+caseid+".png"
             plt.savefig(save_path)
 
             end = time.time()
