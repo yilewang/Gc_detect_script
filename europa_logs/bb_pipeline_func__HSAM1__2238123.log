@@ -1,0 +1,9 @@
+2021-06-04 03:14:14,518 - bb_pipeline_func - INFO - Starting the subject processing: Fri Jun  4 03:14:14 2021 
+2021-06-04 03:14:14,518 - bb_pipeline_func - INFO - Subject received as input: HSAM1 
+2021-06-04 03:14:14,518 - bb_pipeline_func - INFO - COMMAND TO RUN: 	${FSLDIR}/bin/fsl_sub -q ${QUEUE_MORE_MEM} -N "bb_postprocess_struct_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/ -j  $BB_BIN_DIR/bb_functional_pipeline/bb_postprocess_struct HSAM1 
+2021-06-04 03:14:14,549 - bb_pipeline_func - ERROR - Exception raised during execution of: 	${FSLDIR}/bin/fsl_sub -q ${QUEUE_MORE_MEM} -N "bb_postprocess_struct_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/ -j  $BB_BIN_DIR/bb_functional_pipeline/bb_postprocess_struct HSAM1 
+2021-06-04 03:14:14,549 - bb_pipeline_func - ERROR - Exception type: 	<class 'subprocess.CalledProcessError'> 
+2021-06-04 03:14:14,549 - bb_pipeline_func - ERROR - Exception args: 	(127, '${FSLDIR}/bin/fsl_sub -q ${QUEUE_MORE_MEM} -N "bb_postprocess_struct_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/ -j  $BB_BIN_DIR/bb_functional_pipeline/bb_postprocess_struct HSAM1') 
+2021-06-04 03:14:14,549 - bb_pipeline_func - ERROR - Exception message: 	Command '${FSLDIR}/bin/fsl_sub -q ${QUEUE_MORE_MEM} -N "bb_postprocess_struct_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/ -j  $BB_BIN_DIR/bb_functional_pipeline/bb_postprocess_struct HSAM1' returned non-zero exit status 127. 
+2021-06-04 03:14:14,549 - bb_pipeline_func - ERROR - There is no rFMRI info. Thus, the Resting State part will not be run 
+2021-06-04 03:14:14,549 - bb_pipeline_func - ERROR - There is no tFMRI info. Thus, the Task Functional part will not be run 

@@ -1,0 +1,34 @@
++ cd HSAM1/T1
+++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/imtest T1
++ '[' 1 = 0 ']'
+++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/imtest T1_orig
++ '[' 0 = 0 ']'
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/immv T1 T1_orig
++ cp T1_orig.nii.gz T1_orig_ud.nii.gz
+++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/robustfov -i T1_orig_ud
+++ grep -v Final
+++ head -n 1
+++ awk '{print $5}'
++ head_top=0.000000
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/fslmaths T1_orig_ud -roi 0 -1 0 -1 0.000000 170 0 1 T1_tmp
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/bet T1_tmp T1_tmp_brain -R
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/standard_space_roi T1_tmp_brain T1_tmp2 -maskNONE -ssref /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/data/standard/MNI152_T1_1mm_brain -altinput T1_orig_ud -d
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/immv T1_tmp2 T1
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/flirt -in T1 -ref T1_orig_ud -omat T1_to_T1_orig_ud.mat -schedule /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/etc/flirtsch/xyztrans.sch
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/convert_xfm -omat T1_orig_ud_to_T1.mat -inverse T1_to_T1_orig_ud.mat
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/convert_xfm -omat T1_to_MNI_linear.mat -concat T1_tmp2_tmp_to_std.mat T1_to_T1_orig_ud.mat
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/fnirt --in=T1 --ref=/opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/data/standard/MNI152_T1_1mm --aff=T1_to_MNI_linear.mat --config=/home/yxw190015/tvb-pipeline/tvb-ukbb/bb_data/bb_fnirt.cnf --refmask=/home/yxw190015/tvb-pipeline/tvb-ukbb/templates/MNI152_T1_1mm_brain_mask_dil_GD7 --logout=../logs/bb_T1_to_MNI_fnirt.log --cout=T1_to_MNI_warp_coef --fout=T1_to_MNI_warp --jout=T1_to_MNI_warp_jac --iout=T1_brain_to_MNI.nii.gz --interp=spline
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/invwarp --ref=T1 -w T1_to_MNI_warp_coef -o T1_to_MNI_warp_coef_inv
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/applywarp --rel --interp=nn --in=/home/yxw190015/tvb-pipeline/tvb-ukbb/templates/MNI152_T1_1mm_brain_mask --ref=T1 -w T1_to_MNI_warp_coef_inv -o T1_brain_mask
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/fslmaths T1 -mul T1_brain_mask T1_brain
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/fslmaths T1_brain_to_MNI -mul /home/yxw190015/tvb-pipeline/tvb-ukbb/templates/MNI152_T1_1mm_brain_mask T1_brain_to_MNI
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/applywarp --rel --interp=nn --in=/home/yxw190015/tvb-pipeline/tvb-ukbb/templates/parcellations/TVB_SchaeferTian/TVB_SchaeferTian_436.nii.gz --ref=T1 -w T1_to_MNI_warp_coef_inv -o parcel_to_T1
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/applywarp --rel --interp=nn --in=/home/yxw190015/tvb-pipeline/tvb-ukbb/templates/cerebellum --ref=T1 -w T1_to_MNI_warp_coef_inv -o cerebellum_to_T1
++ /opt/ohpc/pub/unpackaged/apps/fslbinary/6.0.4/bin/applywarp --rel --interp=nn --in=/home/yxw190015/tvb-pipeline/tvb-ukbb/templates/brainstem --ref=T1 -w T1_to_MNI_warp_coef_inv -o brainstem_to_T1
+Image Exception : #63 :: No image files match: /home/yxw190015/tvb-pipeline/tvb-ukbb/templates/brainstem
+Image Exception : #22 :: Failed to read volume /home/yxw190015/tvb-pipeline/tvb-ukbb/templates/brainstem
+Error : No image files match: /home/yxw190015/tvb-pipeline/tvb-ukbb/templates/brainstem
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Failed to read volume /home/yxw190015/tvb-pipeline/tvb-ukbb/templates/brainstem
+Error : No image files match: /home/yxw190015/tvb-pipeline/tvb-ukbb/templates/brainstem
+/home/yxw190015/tvb-pipeline/tvb-ukbb/bb_structural_pipeline/bb_struct_init: line 78: 2239585 Aborted                 (core dumped) ${FSLDIR}/bin/applywarp --rel --interp=nn --in=${templ}/brainstem --ref=T1 -w T1_to_MNI_warp_coef_inv -o brainstem_to_T1
