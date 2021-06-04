@@ -1,0 +1,2439 @@
+HOST INFO: Linux wayne-XPS-15-9570 5.8.0-53-generic #60~20.04.1-Ubuntu SMP Thu May 6 09:52:46 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+COMMAND RUN: /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/tvb_bb_QC.sh
+Starting time: Fri Jun 4 02:52:11 CDT 2021
++ set -x
++ echo ehxB
+ehxB
++ set +e
+++ pwd
++ origDir=/home/wayne/HSAM
+++ dirname /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/tvb_bb_QC.sh
++ dirScript=/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC
+++ pwd
++ dirSubject=/home/wayne/HSAM/HSAM1
++ sub=HSAM1
++ [[ /home/wayne/HSAM/HSAM1 =~ /$ ]]
++ [[ HSAM1 == '' ]]
++ export FSLDIR=/opt/fsl
++ FSLDIR=/opt/fsl
++ rm -f /home/wayne/HSAM/HSAM1/QC/html/image_gen_links.js
++ echo ''
+
++ echo 'STARTING T1 EXTRACTION -------'
+STARTING T1 EXTRACTION -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_extraction_unmasked
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /T1/T1_brain_mask.nii.gz /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_extraction_masked
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 ex_under ../../T1/T1.nii.gz ex_over1 ../../T1/T1_brain_mask.nii.gz NA3 NA3_link 0
++ echo ''
+
++ echo 'STARTING T1 SEGMENTATION -------'
+STARTING T1 SEGMENTATION -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /T1/T1_fast/T1_brain_WM_mask.nii.gz /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_segmentation_unlabelled_WM
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 uw_under ../../T1/T1.nii.gz uw_over1 ../../T1/T1_fast/T1_brain_WM_mask.nii.gz NA4 NA4_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -a 45.0 -o /T1/T1_fast/T1_brain_GM_mask.nii.gz /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_segmentation_unlabelled_GM
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 ug_under ../../T1/T1.nii.gz ug_over1 ../../T1/T1_fast/T1_brain_GM_mask.nii.gz NA5 NA5_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh -o /T1/T1_first/subcort_GM.nii.gz -x 28 -y 28 -z 28 /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_segmentation_unlabelled_subcort_GM
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 133: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 134: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 us_under ../../T1/T1.nii.gz us_over1 ../../T1/T1_first/subcort_GM.nii.gz NA7 NA7_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /T1/labelled_GM.nii.gz -a 75.0 -p random_big -j label /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_segmentation_labelled_cortex
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 lc_under ../../T1/T1.nii.gz lc_over1 ../../T1/labelled_GM.nii.gz NA8 NA8_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh -o /T1/T1_first/T1_first_all_fast_firstseg.nii.gz -p random_big -a 40.0 -x 28 -y 28 -z 28 -j label /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_segmentation_labelled_subcort_GM
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 133: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 134: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 ls_under ../../T1/T1.nii.gz ls_over1 ../../T1/T1_first/T1_first_all_fast_firstseg.nii.gz NA9 NA9_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh -x 28 -y 28 -z 28 /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 T1_segmentation_unmasked_subcort
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 133: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 134: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
++ echo ''
+
++ echo 'STARTING T1 REGISTRATION -------'
+STARTING T1 REGISTRATION -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh -s /opt/fsl/data/standard -l 10 /MNI152_T1_1mm.nii.gz /T1/T1_brain_to_MNI.nii.gz /home/wayne/HSAM/HSAM1 T1_registration
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 120: /opt/fsl/bin/slicer: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 121: /opt/fsl/bin/slicer: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 138: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 140: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 142: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 144: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 151: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 153: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 155: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 157: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 138: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 140: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 142: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 144: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 151: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 153: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 155: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 157: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 138: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 140: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 142: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 144: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 151: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 153: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 155: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 157: /opt/fsl/bin/pngappend: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 re_under ../../T1/T1_brain_to_MNI.nii.gz re_over1 /opt/fsl/data/standard/MNI152_T1_1mm.nii.gz NA12 NA12_link 0
++ '[' -e /home/wayne/HSAM/HSAM1/T2_FLAIR/T2_FLAIR_brain_to_MNI.nii.gz ']'
++ '[' -e /home/wayne/HSAM/HSAM1/T2_FLAIR/T2_FLAIR_unbiased.nii.gz ']'
++ echo ''
+
++ echo 'STARTING DTI ORIENTATION -------'
+STARTING DTI ORIENTATION -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh -o /dMRI/dMRI/dti_V1.nii.gz -j linevector -x 19 -y 32 -z 19 -X 950.0 -Y 850.0 -Z 800.0 /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_orientation_with_FA
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 133: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 134: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dorf_under ../../dMRI/dMRI/dti_FA.nii.gz dorf_over1 ../../dMRI/dMRI/dti_V1.nii.gz NA19 NA19_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh -x 19 -y 32 -z 19 -X 950.0 -Y 850.0 -Z 800.0 /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_orientation_range_FA
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 133: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 134: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 199: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 224: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 226: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 228: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/ortho_appended.sh: line 230: /opt/fsl/bin/pngappend: No such file or directory
++ echo ''
+
++ echo 'STARTING DTI EXTRACTION -------'
+STARTING DTI EXTRACTION -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh /dMRI/dMRI/data_B0.nii.gz /home/wayne/HSAM/HSAM1 DTI_extraction_unmasked
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /dMRI/dMRI/nodif_brain_mask.nii.gz /dMRI/dMRI/data_B0.nii.gz /home/wayne/HSAM/HSAM1 DTI_extraction_masked
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dex_under ../../dMRI/dMRI/data_B0.nii.gz dex_over1 ../../dMRI/dMRI/nodif_brain_mask.nii.gz NA24 NA24_link 0
++ echo ''
+
++ echo 'STARTING DTI REGISTRATION -------'
+STARTING DTI REGISTRATION -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh -l 10 /dMRI/dMRI/transforms/DTI_to_T1.nii.gz /T1/T1.nii.gz /home/wayne/HSAM/HSAM1 DTI_registration
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 124: /opt/fsl/bin/slicer: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 125: /opt/fsl/bin/slicer: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 138: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 140: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 142: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 144: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 151: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 153: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 155: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 157: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 138: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 140: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 142: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 144: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 151: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 153: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 155: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 157: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 138: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 140: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 142: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 144: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 151: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 153: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 155: /opt/fsl/bin/pngappend: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/edges.sh: line 157: /opt/fsl/bin/pngappend: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dre_under ../../T1/T1.nii.gz dre_over1 ../../dMRI/dMRI/transforms/DTI_to_T1.nii.gz NA25 NA25_link 0
++ echo ''
+
++ echo 'STARTING DTI TRACTOGRAPHY -------'
+STARTING DTI TRACTOGRAPHY -------
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_tractography_FA
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /dMRI/probtrackx/exclude.nii.gz -p red-yellow -a 25.0 /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_tractography_exclude
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dxc_under ../../dMRI/dMRI/dti_FA.nii.gz dxc_over1 ../../dMRI/probtrackx/exclude.nii.gz NA29 NA29_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /dMRI/probtrackx/labelledWM_GM.nii.gz -p blue-lightblue -a 100.0 /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_tractography_seeds
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dfs_under ../../dMRI/dMRI/dti_FA.nii.gz dfs_over1 ../../fMRI/dMRI/probtrackx/labelledWM_GM.nii.gz NA30 NA30_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /dMRI/probtrackx/labelledWM_GM.nii.gz -a 100.0 -p random_big -j label /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_tractography_seeds_rb
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dfsrb_under ../../dMRI/dMRI/dti_FA.nii.gz dfsrb_over1 ../../dMRI/probtrackx/labelledWM_GM.nii.gz NA31 NA31_link 0
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh -o /dMRI/probtrackx/exclude.nii.gz -p red-yellow -a 25.0 -s /dMRI/probtrackx/labelledWM_GM.nii.gz -h blue-lightblue -i 100.0 /dMRI/dMRI/dti_FA.nii.gz /home/wayne/HSAM/HSAM1 DTI_tractography_exclude_seeds
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 135: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 136: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 137: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 138: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 139: /opt/fsl/bin/fslval: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 140: /opt/fsl/bin/fslval: No such file or directory
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+(standard_in) 1: syntax error
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/lightbox.sh: line 192: /opt/fsl/bin/fsleyes: No such file or directory
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/image_gen_link.sh /home/wayne/HSAM/HSAM1 dxs_under ../../dMRI/dMRI/dti_FA.nii.gz dxs_over1 ../../dMRI/probtrackx/exclude.nii.gz NA32 dMRI/probtrackx/labelledWM_GM.nii.gz 1
++ export FSLDIR=/opt/HCPpipelines-4.1.3/fsl
++ FSLDIR=/opt/HCPpipelines-4.1.3/fsl
++ echo ''
+
++ echo 'STARTING EDDY QUAD -------'
+STARTING EDDY QUAD -------
++ eddy_quad_list=/home/wayne/HSAM/eddy_quad_list.txt
++ '[' '!' -e /home/wayne/HSAM/eddy_quad_list.txt ']'
++ EDDY_QUAD_output_folder=/home/wayne/HSAM/HSAM1/QC/eddyQUAD/data.qc
++ rm -rf /home/wayne/HSAM/HSAM1/QC/eddyQUAD/data.qc
++ /opt/HCPpipelines-4.1.3/fsl/bin/eddy_quad /home/wayne/HSAM/HSAM1/dMRI/dMRI/data -idx /home/wayne/HSAM/HSAM1/dMRI/dMRI/eddy_index.txt -par /home/wayne/HSAM/HSAM1/dMRI/dMRI/acqparams.txt -m /home/wayne/HSAM/HSAM1/dMRI/dMRI/nodif_brain_mask.nii.gz -b /home/wayne/HSAM/HSAM1/dMRI/dMRI/bvals -o /home/wayne/HSAM/HSAM1/QC/eddyQUAD/data.qc
+/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/tvb_bb_QC.sh: line 279: /opt/HCPpipelines-4.1.3/fsl/bin/eddy_quad: No such file or directory
++ '[' 127 -eq 0 ']'
++ echo ''
+
++ echo 'STARTING FC SC -------'
+STARTING FC SC -------
++ python /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/SC_FC.py /home/wayne/HSAM/HSAM1
+Traceback (most recent call last):
+  File "/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/SC_FC.py", line 11, in <module>
+    from scipy.stats import zscore
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/__init__.py", line 348, in <module>
+    from .stats import *
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/stats.py", line 177, in <module>
+    from . import distributions
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/distributions.py", line 13, in <module>
+    from . import _continuous_distns
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/_continuous_distns.py", line 15, in <module>
+    from scipy._lib._numpy_compat import broadcast_to
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/_lib/_numpy_compat.py", line 10, in <module>
+    from numpy.testing.nosetester import import_nose
+ModuleNotFoundError: No module named 'numpy.testing.nosetester'
++ python /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/new_IDP_gen.py /home/wayne/HSAM/HSAM1 /home/wayne/tvb-pipeline/tvb-ukbb/templates/parcellations/TVB_SchaeferTian/TVB_SchaeferTian_316_LUT.txt
+Traceback (most recent call last):
+  File "/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/new_IDP_gen.py", line 11, in <module>
+    from scipy.stats import zscore
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/__init__.py", line 348, in <module>
+    from .stats import *
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/stats.py", line 177, in <module>
+    from . import distributions
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/distributions.py", line 13, in <module>
+    from . import _continuous_distns
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/stats/_continuous_distns.py", line 15, in <module>
+    from scipy._lib._numpy_compat import broadcast_to
+  File "/home/wayne/tvb-pipeline/software/env/lib/python3.6/site-packages/scipy/_lib/_numpy_compat.py", line 10, in <module>
+    from numpy.testing.nosetester import import_nose
+ModuleNotFoundError: No module named 'numpy.testing.nosetester'
++ python /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/IDP_html_gen.py /home/wayne/HSAM/HSAM1 /home/wayne/tvb-pipeline/tvb-ukbb/bb_IDP/list.txt /home/wayne/tvb-pipeline/tvb-ukbb/bb_IDP/IDPoi.txt
+Traceback (most recent call last):
+  File "/home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/IDP_html_gen.py", line 9, in <module>
+    import pandas as pd
+ModuleNotFoundError: No module named 'pandas'
++ /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/html_gen.sh /home/wayne/HSAM/HSAM1 HSAM1
++ set -e
++ . /home/wayne/tvb-pipeline/tvb-ukbb/bb_pipeline_tools/bb_set_footer
+++ set +x
+The command /home/wayne/tvb-pipeline/tvb-ukbb/tvb_bb_QC/tvb_bb_QC.sh took 2 seconds
+Ending time: Fri Jun 4 02:52:13 CDT 2021

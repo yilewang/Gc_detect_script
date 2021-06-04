@@ -1,0 +1,5 @@
++ direc=/home/wayne/HSAM/HSAM1
++ mkdir -p /home/wayne/HSAM/HSAM1/dMRI/dMRI
++ ln -s /home/wayne/HSAM/HSAM1/dMRI/raw/dwi.nii.gz /home/wayne/HSAM/HSAM1/dMRI/dMRI/DWI.nii.gz
++ cp /home/wayne/HSAM/HSAM1/dMRI/raw/dwi.bval /home/wayne/HSAM/HSAM1/dMRI/dMRI/bvals
+cp: cannot stat '/home/wayne/HSAM/HSAM1/dMRI/raw/dwi.bval': No such file or directory
