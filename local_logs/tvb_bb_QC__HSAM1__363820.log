@@ -1,0 +1,4 @@
+2021-06-04 02:52:10,950 - tvb_bb_QC - INFO - Starting the subject processing: Fri Jun  4 02:52:10 2021 
+2021-06-04 02:52:10,950 - tvb_bb_QC - INFO - Subject received as input: HSAM1 
+2021-06-04 02:52:10,950 - tvb_bb_QC - INFO - COMMAND TO RUN: 	${FSLDIR}/bin/fsl_sub -q ${QUEUE_STANDARD} -N "tvb_bb_QC_HSAM1" -j ,-1,,375952  -l /home/wayne/HSAM/HSAM1/logs/ xvfb-run -a $BB_BIN_DIR/tvb_bb_QC/tvb_bb_QC.sh HSAM1 
+2021-06-04 02:52:13,684 - tvb_bb_QC - INFO - COMMAND OUTPUT: 	376639 

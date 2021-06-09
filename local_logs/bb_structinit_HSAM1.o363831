@@ -1,0 +1,8 @@
+HOST INFO: Linux wayne-XPS-15-9570 5.8.0-53-generic #60~20.04.1-Ubuntu SMP Thu May 6 09:52:46 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+COMMAND RUN: /home/wayne/tvb-pipeline/tvb-ukbb/bb_structural_pipeline/bb_struct_init
+Starting time: Fri Jun 4 00:41:00 CDT 2021
+WARNING: No T2 in HSAM1
+372961
+Warning, Jacobian not within prescribed range. Prescription is 0.2 -- 5 and obtained range is -8.93057 -- 13.2868
+Warning, Jacobian not within prescribed range. Prescription is 0.2 -- 5 and obtained range is -4.07159 -- 17.0283
+WARNING: No T2 in HSAM1
