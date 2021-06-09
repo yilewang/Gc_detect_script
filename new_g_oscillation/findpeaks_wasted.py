@@ -27,42 +27,73 @@ class PeakFinder:
         # some elements
         Gp = [] # for peak point
         Gv = [] # for valley point
+        pro = 0 # for positive salience
+        neg = 0 # for the negative salience
+        proList = [] # positive salience collection
+        negList = [] # negative salience collection
 
         # to get all the local maxima and minima
         for i in Range[:-1]:
             while self.signal[i] > ini:
+                pro += self.signal[i] - ini
                 if self.signal[i] > self.signal[i+1]:
                     Gp.append(i)
+                    proList.append(np.round(pro, 5))
+                    pro = 0
                 ini = self.signal[i]
             while self.signal[i] < ini:
+                neg += ini - self.signal[i]
                 if self.signal[i] <= self.signal[i+1]:
                     Gv.append(i)
+                    negList.append(np.round(neg, 5))
+                    neg = 0
                 ini = self.signal[i]
 
         # merge the peaks and valleys points
         Gall = np.sort(np.concatenate((Gp, Gv), axis = None))
 
+        # using the slide windows to drop some unqualified peaks and valleys
+        n = 3
+
+        # the value for salience value
+        value = np.var(self.signal[5000:])*2
+
         """
         Using slide windows to make second judgement about the peaks and valleys.
         All the signal can be decomposited as a V shape for further analysis
         """
-        fs = 81920
-        tmpGp = [x for x in Gp if x > 0.3*fs]
-        tmpGv = [x for x in Gv if x > 0.3*fs]
-        tmpRange = np.average(self.signal[tmpGp]) - np.average(self.signal[tmpGv])
-        n = 2
-        pks = np.array([])
-        if tmpRange >= 0.1:
-            Gap = np.average(self.signal[tmpGv]) + ((np.average(self.signal[tmpGp]) - np.average(self.signal[tmpGv]))/3)
-            bottomIndex = Gall[self.signal[Gall] < Gap]
-            for i in range(0, len(bottomIndex)-n+1, 1):
-                tmp_windows = bottomIndex[i:i+n]
-                tmp = [x for x in Gp if tmp_windows[0] <= x <= tmp_windows[1]]
-                pks = np.append(pks, np.average(tmp))
-            pks = pks.astype(int)
-        return pks
+        NewG = [Gall[0]]
+        for i in range(1, len(Gall)-n+1, 2):
+            tmp_windows = self.signal[Gall[i:i+n]]
+            space01 = tmp_windows[0] - tmp_windows[1]
+            space21 = tmp_windows[2] - tmp_windows[1]
 
+            # condition1, both sides are less than value
+            if space01 < value and space21 < value:
+                if NewG[-1] != Gall[i]:
+                    NewG.append(Gall[i])
+            # condition2, left side is bigger, right side is smaller
+            elif space01 > value and space21 < value:
+                if NewG[-1] != Gall[i]:
+                    NewG.append(Gall[i])
+            # condition3, left side is smaller, righ side is bigger
+            elif space01 < value and space21 > value:
+                if i == 1:
+                    NewG.append(Gall[i])
+                    if np.abs(space21) > np.abs(space01)*2:
+                        NewG.append(Gall[i+1])
+                        NewG.append(Gall[i+2])
+                if np.abs(space01) < np.abs(space21)/2 and self.signal[Gall[i+1]] < -1:
+                    NewG.append(Gall[i+2])
 
+            # condition4, both sides are bigger
+            elif space01 > value and space21 > value:
+                while i == 1:
+                    NewG.append(Gall[1])
+                    break
+                NewG.append(Gall[i+1])
+                NewG.append(Gall[i+2])
+        return np.array(NewG)
 
     
     def peaks_plots(self, G):
@@ -84,7 +115,4 @@ class PeakFinder:
         plt.show()
 
 
-# data = [5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5]
-# func1 = PeakFinder(data)
-# bb = func1.findPeaks()
-# func1.peaks_plots(bb)
+
