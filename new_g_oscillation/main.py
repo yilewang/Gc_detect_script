@@ -35,13 +35,17 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
     return filtered_signal, N
 
 
-def main(t, y1, ax, color): #y2):
+def main(t, y1, ax, color, legend): #y2):
     # Non-linear Fit
     A, K, C = fit_exp_nonlinear(t, y1)
     fit_y = model_func(t, A, K, C)
-    plot(ax, t, y1, fit_y, (A, K, C), color)
-    title = "Non-linear Fit_Gamma_" + grp
+    ax.plot(t, y1, marker=".", markersize=5, color = color, alpha = 0.3, label=legend if ix == 0 else "")
+    ax.plot(t, fit_y, color = color, alpha = 0.7)
+    legend = "_nolegend_"
+    title = "Non-linear Fit_Gamma"
     ax.set_title(title)
+
+
 
     # A1, K1, C1 = fit_exp_nonlinear(t, y2)
     # fit_y1 = model_func(t, A1, K1, C1)
@@ -74,15 +78,6 @@ def fit_exp_nonlinear(t, y):
 #     A = np.exp(A_log)
 #     return A, K
 
-def plot(ax, t, y, fit_y, fit_parms, color):
-    A, K, C = fit_parms
-    ax.plot(t, y, marker=".", markersize=5, color = color, alpha = 0.3)
-    ax.plot(t, fit_y, color = color, alpha = 0.8)
-    #ax.legend()
-    #ax.plot(t, fit_y, 'b-',
-    #  label='Fitted Function:\n $y = %0.2f e^{%0.2f t} + %0.2f$' % (A, K, C))
-    #ax.legend(bbox_to_anchor=(1.05, 1.1), fancybox=True, shadow=True)
-
 
 
 if __name__ == '__main__':
@@ -94,21 +89,24 @@ if __name__ == '__main__':
     samplinginterval = 1/fs
     t = np.arange(0, 1, samplinginterval)
     # the four study groups, Alzheimer's Disease, Mild Cognitive Impairment, Normal Control, Super Normal Control
-    grp_pools = ['SNC','NC', 'MCI', 'AD']
+    grp_pools = ['MCI','NC', 'SNC','AD']
     start = time.time()
     pdList = []
-    fig, axs = plt.subplots(4, sharex = True, sharey = True, figsize=(12,8))
-    fig.suptitle("G frequency and Gamma")
-    ax=0
-    slope = pd.DataFrame(columns = ['Grp', 'caseid','A','K','C', 'Gmax'])
-    Go = pd.DataFrame(columns = ['Grp', 'caseid', 'Go', 'L_freq', 'R_freq'])
+    # fig, axs = plt.subplots(4, sharex = True, sharey = True, figsize=(12,8))
+    # fig.suptitle("G frequency and Gamma")
+    fig = plt.figure(figsize=(15,5))
+    axs = fig.add_subplot()
+    #ax=0
+    # slope = pd.DataFrame(columns = ['Grp', 'caseid','A','K','C', 'Gmax'])
+    # Go = pd.DataFrame(columns = ['Grp', 'caseid', 'Go', 'L_freq', 'R_freq'])
+    count = 0
     for grp in grp_pools:
         # obtain the data path
         pth = 'C:/Users/Wayne/tvb/LFP/'+grp
         case_pools = os.listdir(pth)
-        mtpColors = list(mtp.colors.cnames.values())
+        mtpColors = ["#AB63FA","#4682B4","#66CDAA","#FFA15A"]
         # iterate the case id.
-        count=10
+        ix = 0
         for caseid in case_pools:
             gRange = np.round(np.arange(coData.loc[caseid, 'Gc'], 0.079, 0.001), 3)
             gamma_peaks = np.array([])
@@ -164,9 +162,9 @@ if __name__ == '__main__':
                 peaksNum_theta = len(ThetaR) + len(ThetaL)
                 theta_peaks = np.append(theta_peaks, peaksNum_theta)
 
-                if gm == coData.loc[caseid, 'Go']:
-                    Go2 = pd.DataFrame([[grp, caseid, gm, len(GammaR), len(GammaL)]], columns = ['Grp', 'caseid', 'Go', 'L_freq', 'R_freq'])
-                    Go = Go.append(Go2, ignore_index = True)
+                # if gm == coData.loc[caseid, 'Go']:
+                #     Go2 = pd.DataFrame([[grp, caseid, gm, len(GammaR), len(GammaL)]], columns = ['Grp', 'caseid', 'Go', 'L_freq', 'R_freq'])
+                #     Go = Go.append(Go2, ignore_index = True)
                     
 
                 
@@ -193,17 +191,21 @@ if __name__ == '__main__':
                 while peaksNum_theta == 0:
                     Gm = np.append(Gm, gm)
                     break
+            # for case:
             if len(Gm) < 1:
                 Gm = [0.079]
             cmRange = np.arange(coData.loc[caseid, 'Gc'], Gm[0], 0.001)
             try:
-                #main(cmRange, gamma_peaks[0:len(cmRange)], axs[ax], mtpColors[count])
-                A, K, C = fit_exp_nonlinear(cmRange, gamma_peaks[0:len(cmRange)])
+                main(cmRange, gamma_peaks[0:len(cmRange)], axs, mtpColors[count], grp)
+                # A, K, C = fit_exp_nonlinear(cmRange, gamma_peaks[0:len(cmRange)])
             except:
                 continue
-            count+=1
-            slope2 = pd.DataFrame([[grp, caseid, A, K, C, Gm[0]]], columns = ['Grp', 'caseid','A','K','C', 'Gmax'])
-            slope = slope.append(slope2, ignore_index=True)
+            ix += 1
+            end = time.time()
+            print(grp, caseid)
+            logging.warning('Duration: {}'.format(end - start))
+            # slope2 = pd.DataFrame([[grp, caseid, A, K, C, Gm[0]]], columns = ['Grp', 'caseid','A','K','C', 'Gmax'])
+            # slope = slope.append(slope2, ignore_index=True)
 
 
 
@@ -220,11 +222,11 @@ if __name__ == '__main__':
             # # save pics
             # save_path = grp+"_"+caseid+".png"
             # plt.savefig(save_path)
-
-            end = time.time()
-            logging.warning('Duration: {}'.format(end - start))
-        ax+=1
-    Go.to_csv(r'C:/Users/Wayne/tvb/Go_freq.csv', index=False, header = True)
+        count+=1
+        #ax+=1
+    plt.legend()
+    plt.show()
+    # Go.to_csv(r'C:/Users/Wayne/tvb/Go_freq.csv', index=False, header = True)
     # save pics
     # save_path = "Gamma_G.png"
     # plt.savefig(save_path) 

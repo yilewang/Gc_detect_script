@@ -9,6 +9,7 @@ import time
 import os
 import logging
 from statsmodels.tsa.stattools import grangercausalitytests
+from mne.connectivity import spectral_connectivity
 """
 This script is designed to do all the lateralization analysis between Alzheimer's Disease and normal groups
 """
@@ -43,14 +44,15 @@ if __name__ == '__main__':
     samplinginterval = 1/fs
     t = np.arange(0, fs, 1)
     # the four study groups, Alzheimer's Disease, Mild Cognitive Impairment, Normal Control, Super Normal Control
-    grp_pools = ['SNC','NC','MCI', 'AD']
+    grp_pools = ['AD','SNC','MCI', 'NC']
     start = time.time()
     pdList = []
-    # fig, axs = plt.subplots(2, sharex = True, sharey = True, figsize=(12,8))
-    # fig.suptitle("G frequency and Gamma")
+    fig, axs = plt.subplots(2, sharex = True, sharey = True, figsize=(12,8))
+    fig.suptitle("G frequency and Gamma")
     ax =0
-    col = ['b', 'r']
+    col = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
     xx = 0
+    phase = pd.DataFrame(columns=['grp','caseid','avg_phase'])
     for grp in grp_pools:
         # obtain the data path
         pth = 'C:/Users/Wayne/tvb/LFP/'+grp
@@ -59,7 +61,7 @@ if __name__ == '__main__':
         color = col[xx]
         for caseid in case_pools:
             gRange = np.round(np.arange(coData.loc[caseid, "Gc"], coData.loc[caseid, "Gmax"], 0.001), 3)
-            for gm in gRange:
+            for gm in gRange[0:1]:
                 # store the filename and prepare for reading the data
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
                 # pandas read the data
@@ -68,8 +70,8 @@ if __name__ == '__main__':
                 dfR = df.iloc[:, 5]
 
                 # Gamma Band
-                pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 25.0, 100.0)
-                pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 25.0, 100.0)
+                pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 35.0, 100.0)
+                pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 35.0, 100.0)
 
 
                 # Theta Band
@@ -80,11 +82,21 @@ if __name__ == '__main__':
                 # delay = 0.5 * (N-1) / fs
 
                 #hilbert transform
-                al1 = np.angle(hilbert(dfL),deg=False)
-                al2 = np.angle(hilbert(dfR),deg=False)
-                phase_synchrony = 1-np.sin(np.abs(al1-al2)/2)
+                al1 = np.angle(hilbert(np.array(pcgThetaL)),deg=False)
+                al2 = np.angle(hilbert(np.array(pcgThetaR)),deg=False)
 
-                # Plot results
+                ### euler's equation
+                # phase_signal = np.array([]) 
+                # for i in range(len(al1)):
+                #     theta_t = al1[i] - al2[i]
+                #     avg_phase_angle = np.exp(1j * theta_t)
+                #     phase_signal = np.append(phase_signal, avg_phase_angle)
+                # phase_syn = np.abs(np.sum(phase_signal)) / fs
+                # print(phase_syn)
+
+                phase_signal = 1-np.sin(np.abs(al1-al2)/2)
+
+                # # Plot results
                 f,ax = plt.subplots(3,1,sharex=True)
                 ax[0].plot(dfL,color='r',label='pCNG-L')
                 ax[0].plot(dfR,color='b',label='pCNG-R')
@@ -94,7 +106,7 @@ if __name__ == '__main__':
                 ax[1].plot(al1,color='r')
                 ax[1].plot(al2,color='b')
                 ax[1].set(ylabel='Angle',title='Angle at each Timepoint')
-                ax[2].plot(phase_synchrony)
+                ax[2].plot(phase_signal)
                 ax[2].set(title='Instantaneous Phase Synchrony',xlabel='Time',ylabel='Phase Synchrony')
                 plt.tight_layout()
                 plt.show()
@@ -125,4 +137,5 @@ if __name__ == '__main__':
         logging.warning('Duration: {}'.format(end - start))
 
         #ax+=1
-        xx+=1
+        #xx+=1
+        phase.to_csv(r'C:/Users/Wayne/tvb/phase_gamma.csv', index=False, header = True)
