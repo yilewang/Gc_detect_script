@@ -1,5 +1,3 @@
-
-
 from tvb.simulator.models.stefanescu_jirsa import ReducedSetHindmarshRose
 from tvb.simulator.lab import *
 import warnings
@@ -12,11 +10,15 @@ import time
 import logging
 import sys
 
+"""
+A python script to use SJ3D model for brain simulation
+"""
 
 grp = str(sys.argv[1])
 caseid = str(sys.argv[2])
 g = float(sys.argv[3]) 
 
+# file is the connectivity path, go is the G value (such as, G = 0.015; G = 0.027)
 def tvb_simulation(file, go):
     my_rng = np.random.RandomState(seed=42)
     oscillator = ReducedSetHindmarshRose()
@@ -26,7 +28,7 @@ def tvb_simulation(file, go):
     white_matter_coupling = coupling.Linear(a=go)
     # if the sampling hz is 81920, dt = 0.01220703125
     # if the sampling hz is 208, dt = 4.8076923076923
-    heunint = integrators.HeunStochastic(dt= 0.01220703125, noise=noise.Additive(nsig=np.array([1.0]), ntau=0.0,
+    heunint = integrators.HeunStochastic(dt= 0.01220703125, noise=noise.Additive(nsig=np.array([0.00001]), ntau=0.0, # feel free to edit the specific paramter value. The default nsig = 1.0
                                                                                 random_stream=my_rng))
     monitors_Bold = (monitors.Bold(hrf_kernel = equations.Gamma(), period = 2000.0), 
                     monitors.TemporalAverage(period=1.0),
@@ -67,8 +69,6 @@ if __name__ == "__main__":
     raw = tvb_simulation(test_file, np.array([g]))
     end_time = time.time()
     logging.warning('Duration: {}'.format(end_time - start_time))
-
-
 
 
     # plotting

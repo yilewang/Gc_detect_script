@@ -11,7 +11,7 @@ slp = df.loc[:,'K']
 Gcm = df.loc[:,'Gmax-Gc']
 
 fig, axs = plt.subplots(1,2, tight_layout=True, figsize=(15,5))
-fig.suptitle('Correlation between expoential K and G range')
+fig.suptitle('Correlation between exponential K and G range')
 grp = ['SNC','NC', 'MCI','AD']
 col = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
 mak = ['*','o','^','s']
@@ -26,7 +26,7 @@ for group in grp:
     axs[0].plot(al2.loc[:,'Gmax-Gc'], -1*al2.loc[:,'K'],marker= mak[count],linestyle = '',color = col[count], label = group)
     count +=1
 axs[0].set_xlabel('G range (Gmax - Gcritical)')
-axs[0].set_ylabel('K parameter in Exp function')
+axs[0].set_ylabel('K parameter in exponential fitting')
 axs[0].legend()
 axs[1].bar(grp, height=corrtmp, color = col, label = '')
 axs[1].set_xlabel('Groups')

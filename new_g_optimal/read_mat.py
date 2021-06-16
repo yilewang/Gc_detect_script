@@ -2,6 +2,11 @@
 ## read data
 import scipy.io
 import pandas as pd
+"""
+@Author: Yile Wang
+
+An easy script to read mat file
+"""
 
 class Case:
     caseCount = 0
