@@ -28,7 +28,7 @@ def tvb_simulation(file, go):
     white_matter_coupling = coupling.Linear(a=go)
     # if the sampling hz is 81920, dt = 0.01220703125
     # if the sampling hz is 208, dt = 4.8076923076923
-    heunint = integrators.HeunStochastic(dt= 0.01220703125, noise=noise.Additive(nsig=np.array([0.00001]), ntau=0.0, # feel free to edit the specific paramter value. The default nsig = 1.0
+    heunint = integrators.HeunStochastic(dt= 0.01220703125, noise=noise.Additive(nsig=np.array([1.0]), ntau=0.0, # feel free to edit the specific paramter value. The default nsig = 1.0
                                                                                 random_stream=my_rng))
     monitors_Bold = (monitors.Bold(hrf_kernel = equations.Gamma(), period = 2000.0), 
                     monitors.TemporalAverage(period=1.0),
