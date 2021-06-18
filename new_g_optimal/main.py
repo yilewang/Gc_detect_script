@@ -29,7 +29,7 @@ if __name__ == "__main__":
     for grp in groups:
         ldir = os.listdir('C:/Users/Wayne/output/'+grp+'/')
         Goptimal = []
-        tmp = np.round(np.arange(0.01, 0.061, 0.001),3)
+        tmp = np.round(np.arange(0.01, 0.080, 0.001),3)
         # a new dataframe to store the data
         df = pd.DataFrame(columns = ['caseid','new_Go'])
         for y in ldir:
