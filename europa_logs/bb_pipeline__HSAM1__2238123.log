@@ -1,7 +1,0 @@
-2021-06-04 01:36:18,149 - bb_pipeline - INFO - Starting the subject processing: Fri Jun  4 01:36:18 2021 
-2021-06-04 01:36:18,149 - bb_pipeline - INFO - Subject received as input: HSAM1 
-2021-06-04 01:36:18,149 - bb_pipeline - INFO - Running file manager 
-2021-06-04 01:36:18,702 - bb_pipeline - INFO - File configuration before QC: {'T1': 'T1/T1.nii.gz'} 
-2021-06-04 01:36:18,705 - bb_pipeline - INFO - File configuration after running file manager: {'T1': 'T1/T1.nii.gz'} 
-2021-06-04 01:36:18,705 - bb_pipeline - ERROR - There is no proper DWI data. Thus, the B0 file cannot be generated in order to run topup 
-2021-06-04 03:14:28,082 - bb_pipeline - INFO - Main processing file finished at: Fri Jun  4 03:14:28 2021 

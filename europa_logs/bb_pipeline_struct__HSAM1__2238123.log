@@ -1,8 +1,0 @@
-2021-06-04 01:36:18,705 - bb_pipeline_struct - INFO - Starting the subject processing: Fri Jun  4 01:36:18 2021 
-2021-06-04 01:36:18,705 - bb_pipeline_struct - INFO - Subject received as input: HSAM1 
-2021-06-04 01:36:18,706 - bb_pipeline_struct - INFO - COMMAND TO RUN: 	${FSLDIR}/bin/fsl_sub -q ${QUEUE_STANDARD} -N "bb_structinit_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/  $BB_BIN_DIR/bb_structural_pipeline/bb_struct_init HSAM1 
-2021-06-04 03:14:14,516 - bb_pipeline_struct - ERROR - Exception raised during execution of: 	${FSLDIR}/bin/fsl_sub -q ${QUEUE_STANDARD} -N "bb_structinit_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/  $BB_BIN_DIR/bb_structural_pipeline/bb_struct_init HSAM1 
-2021-06-04 03:14:14,516 - bb_pipeline_struct - ERROR - Exception type: 	<class 'subprocess.CalledProcessError'> 
-2021-06-04 03:14:14,517 - bb_pipeline_struct - ERROR - Exception args: 	(134, '${FSLDIR}/bin/fsl_sub -q ${QUEUE_STANDARD} -N "bb_structinit_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/  $BB_BIN_DIR/bb_structural_pipeline/bb_struct_init HSAM1') 
-2021-06-04 03:14:14,517 - bb_pipeline_struct - ERROR - Exception message: 	Command '${FSLDIR}/bin/fsl_sub -q ${QUEUE_STANDARD} -N "bb_structinit_HSAM1" -l /home/yxw190015/HSAM/HSAM1/logs/  $BB_BIN_DIR/bb_structural_pipeline/bb_struct_init HSAM1' returned non-zero exit status 134. 
-2021-06-04 03:14:14,517 - bb_pipeline_struct - ERROR - There is not enough/correct DWI data. TOPUP cannot be run. Continuing to run DWI and fMRI processing without TOPUP. 
