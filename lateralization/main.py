@@ -11,6 +11,7 @@ import logging
 from statsmodels.tsa.stattools import grangercausalitytests
 from mne.connectivity import spectral_connectivity
 """
+@ Author: Yile Wang
 This script is designed to do all the lateralization analysis between Alzheimer's Disease and normal groups
 """
 
@@ -78,13 +79,12 @@ if __name__ == '__main__':
                 pcgThetaL, N= fir_bandpass(np.asarray(df['pCNG-L']), fs, 4.0, 8.0)
                 pcgThetaR, N= fir_bandpass(np.asarray(df['pCNG-R']), fs, 4.0, 8.0)
 
-                #  # delay
+                # delay
                 # delay = 0.5 * (N-1) / fs
 
-                #hilbert transform
+                # hilbert transform
                 al1 = np.angle(hilbert(np.array(pcgThetaL)),deg=False)
                 al2 = np.angle(hilbert(np.array(pcgThetaR)),deg=False)
-
                 ### euler's equation
                 # phase_signal = np.array([]) 
                 # for i in range(len(al1)):
@@ -136,6 +136,6 @@ if __name__ == '__main__':
         end = time.time()
         logging.warning('Duration: {}'.format(end - start))
 
-        #ax+=1
-        #xx+=1
-        phase.to_csv(r'C:/Users/Wayne/tvb/phase_gamma.csv', index=False, header = True)
+        # ax+=1
+        # xx+=1
+        # phase.to_csv(r'C:/Users/Wayne/tvb/phase_gamma.csv', index=False, header = True)
