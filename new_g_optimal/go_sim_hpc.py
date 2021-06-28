@@ -10,6 +10,7 @@ import time
 import logging
 import sys
 
+
 """
 A python script to use SJ3D model for brain simulation
 """

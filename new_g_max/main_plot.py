@@ -1,5 +1,4 @@
 
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -14,15 +13,15 @@ if __name__ == "__main__":
     grp_pools = ['AD', 'MCI','NC','SNC']
     start = time.time()
     pdList = []
-    for grp in grp_pools[0:1]:
+    for grp in grp_pools:
         pth = 'C:/Users/Wayne/output/'+grp
         case_pools = os.listdir(pth)
-        for caseid in case_pools[0:1]:
+        for caseid in case_pools:
             gRange = np.round(np.arange(0.001, 0.08, 0.001), 3)
             gMax = []
             gC = []
-            for gm in gRange[0:70]:
-                # G critical
+            for gm in gRange:
+                ### G critical ###
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
                 df = pd.read_csv(dataFile, index_col=0)
                 df1 = df.iloc[:, 0:4]
@@ -49,7 +48,7 @@ if __name__ == "__main__":
                 gC.append(critical)
 
 
-                # G max
+                ### G max ###
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
                 df = pd.read_csv(dataFile, index_col=0)
                 avg = np.average(df, axis = 1)
@@ -65,6 +64,7 @@ if __name__ == "__main__":
                     max = 0
                 gMax.append(max)
 
+                ### Visualization ###
                 fig, (axs1,axs2,axs3) = plt.subplots(3, figsize=(15,8))
                 plt.suptitle(grp+"_"+caseid+'_'+str(gm))
                 axs1.fill_between(t, y, y_)
@@ -82,8 +82,9 @@ if __name__ == "__main__":
                 # plt.show()
                 save_path = grp+"_"+caseid+"_"+str(gm)+"_demo.png"
                 plt.savefig(save_path)
-            end = time.time()
-            logging.warning('Duration: {}'.format(end - start))
+
+                end = time.time()
+                logging.warning('Duration: {}'.format(end - start))
 
             # plt.figure(figsize=(18,5))
             # plt.title(grp+"_"+caseid+'_'+'bifurcation')

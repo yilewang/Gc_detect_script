@@ -48,9 +48,9 @@ if __name__ == '__main__':
     grp_pools = ['AD','SNC','MCI', 'NC']
     start = time.time()
     pdList = []
-    fig, axs = plt.subplots(2, sharex = True, sharey = True, figsize=(12,8))
-    fig.suptitle("G frequency and Gamma")
-    ax =0
+    # fig, axs = plt.subplots(2, sharex = True, sharey = True, figsize=(12,8))
+    # fig.suptitle("G frequency and Gamma")
+    ax = 0
     col = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
     xx = 0
     phase = pd.DataFrame(columns=['grp','caseid','avg_phase'])
@@ -74,6 +74,9 @@ if __name__ == '__main__':
                 pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 35.0, 100.0)
                 pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 35.0, 100.0)
 
+                # diff
+                diffRL = np.array(pcgGammaR - pcgGammaL)
+
 
                 # Theta Band
                 pcgThetaL, N= fir_bandpass(np.asarray(df['pCNG-L']), fs, 4.0, 8.0)
@@ -85,7 +88,8 @@ if __name__ == '__main__':
                 # hilbert transform
                 al1 = np.angle(hilbert(np.array(pcgThetaL)),deg=False)
                 al2 = np.angle(hilbert(np.array(pcgThetaR)),deg=False)
-                ### euler's equation
+
+                ### euler's equation ##
                 # phase_signal = np.array([]) 
                 # for i in range(len(al1)):
                 #     theta_t = al1[i] - al2[i]
@@ -96,27 +100,38 @@ if __name__ == '__main__':
 
                 phase_signal = 1-np.sin(np.abs(al1-al2)/2)
 
-                # # Plot results
-                f,ax = plt.subplots(3,1,sharex=True)
-                ax[0].plot(dfL,color='r',label='pCNG-L')
-                ax[0].plot(dfR,color='b',label='pCNG-R')
-                ax[0].legend(bbox_to_anchor=(0., 1.02, 1., .102),ncol=2)
-                info = grp + '_'+ caseid + '_' + str(gm)
-                ax[0].set( title=info)
-                ax[1].plot(al1,color='r')
-                ax[1].plot(al2,color='b')
-                ax[1].set(ylabel='Angle',title='Angle at each Timepoint')
-                ax[2].plot(phase_signal)
-                ax[2].set(title='Instantaneous Phase Synchrony',xlabel='Time',ylabel='Phase Synchrony')
-                plt.tight_layout()
-                plt.show()
+                ## Plot results ##
+                # f,ax = plt.subplots(3,1,sharex=True)
+                # ax[0].plot(dfL,color='r',label='pCNG-L')
+                # ax[0].plot(dfR,color='b',label='pCNG-R')
+                # ax[0].legend(bbox_to_anchor=(0., 1.02, 1., .102),ncol=2)
+                # info = grp + '_'+ caseid + '_' + str(gm)
+                # ax[0].set( title=info)
+                # ax[1].plot(al1,color='r')
+                # ax[1].plot(al2,color='b')
+                # ax[1].set(ylabel='Angle',title='Angle at each Timepoint')
+                # ax[2].plot(phase_signal)
+                # ax[2].set(title='Instantaneous Phase Synchrony',xlabel='Time',ylabel='Phase Synchrony')
+                # plt.tight_layout()
 
-                # coherence analysis
+                ## coherence analysis ##
                 # f, Cxy = signal.coherence(np.asarray(pcgGammaL), np.asarray(pcgGammaR), 200, nperseg=1024)
                 # axs[ax].semilogy(f, Cxy, color = color)
                 # axs[ax].set_xlabel('Frequency [Hz]')
                 # axs[ax].set_ylabel('Coherence')
                 # axs[ax].set_title('Coherence Analysis')
+
+                # power spectrum
+                fig, (ax0, ax1) = plt.subplots(2,1)
+                ps = np.abs(np.fft.fft(diffRL))**2
+                freqs = np.fft.fftfreq(diffRL.size, samplinginterval)
+                idx = np.argsort(freqs)
+                ax0.plot(diffRL)
+                ax1.plot(freqs[:100][idx[idx < 100]], ps[:100][idx[idx < 100]])
+                plt.show()
+
+
+
 
                 # cross correlation
                 # LL = pcgGammaL
