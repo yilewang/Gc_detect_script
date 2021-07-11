@@ -12,7 +12,8 @@ from statsmodels.tsa.stattools import grangercausalitytests
 from mne.connectivity import spectral_connectivity
 """
 @ Author: Yile Wang
-This script is designed to do all the lateralization analysis between Alzheimer's Disease and normal groups
+This script is designed to do all the lateralization analysis between Alzheimer's Disease and normal groups]
+
 """
 
 
@@ -89,7 +90,9 @@ if __name__ == '__main__':
                 al1 = np.angle(hilbert(np.array(pcgThetaL)),deg=False)
                 al2 = np.angle(hilbert(np.array(pcgThetaR)),deg=False)
 
-                ### euler's equation ##
+                ##########################
+                ### euler's equation
+                ##########################
                 # phase_signal = np.array([]) 
                 # for i in range(len(al1)):
                 #     theta_t = al1[i] - al2[i]
@@ -100,7 +103,9 @@ if __name__ == '__main__':
 
                 phase_signal = 1-np.sin(np.abs(al1-al2)/2)
 
-                ## Plot results ##
+                #########################
+                ## Plot results
+                ##########################
                 # f,ax = plt.subplots(3,1,sharex=True)
                 # ax[0].plot(dfL,color='r',label='pCNG-L')
                 # ax[0].plot(dfR,color='b',label='pCNG-R')
@@ -114,14 +119,19 @@ if __name__ == '__main__':
                 # ax[2].set(title='Instantaneous Phase Synchrony',xlabel='Time',ylabel='Phase Synchrony')
                 # plt.tight_layout()
 
-                ## coherence analysis ##
+
+                ###########################
+                ## coherence analysis
+                ##############################
                 # f, Cxy = signal.coherence(np.asarray(pcgGammaL), np.asarray(pcgGammaR), 200, nperseg=1024)
                 # axs[ax].semilogy(f, Cxy, color = color)
                 # axs[ax].set_xlabel('Frequency [Hz]')
                 # axs[ax].set_ylabel('Coherence')
                 # axs[ax].set_title('Coherence Analysis')
 
+                ########################
                 # power spectrum
+                ##########################
                 fig, (ax0, ax1) = plt.subplots(2,1)
                 ps = np.abs(np.fft.fft(diffRL))**2
                 freqs = np.fft.fftfreq(diffRL.size, samplinginterval)
@@ -129,11 +139,10 @@ if __name__ == '__main__':
                 ax0.plot(diffRL)
                 ax1.plot(freqs[:100][idx[idx < 100]], ps[:100][idx[idx < 100]])
                 plt.show()
-
-
-
-
+                
+                ########################
                 # cross correlation
+                #########################
                 # LL = pcgGammaL
                 # RR = pcgGammaR
                 # # fig, axs = plt.subplots(1, figsize=(10,5))
@@ -145,7 +154,9 @@ if __name__ == '__main__':
                 # axs.set_ylabel('Correlation Coeficient')
                 # plt.show()
 
+                ###########################
                 # Granger Causality
+                ############################
                 #grangercausalitytests(df[['pCNG-L', 'pCNG-R']], 100, addconst=True, verbose=True)
                 
         end = time.time()

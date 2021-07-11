@@ -21,13 +21,14 @@ cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
 
 if __name__ == '__main__':
+    key = 'mTEMp'
     grp_pools = ['AD','SNC','MCI', 'NC']
     start = time.time()
     pdList = []
     # fig, axs = plt.subplots(2, sharex = True, sharey = True, figsize=(12,8))
     # fig.suptitle("G frequency and Gamma")
     col = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
-    fc_data = pd.DataFrame(columns=['grp','caseid','L&R_mean', 'L&R_var'])
+    sc_data = pd.DataFrame(columns=['grp','caseid',key])
     for grp in grp_pools:
         # obtain the data path
         pth = 'C:/Users/Wayne/tvb/LFP/'+grp
@@ -47,12 +48,13 @@ if __name__ == '__main__':
             ### the lateralization ###
 
             #the direct lateralization
-            ind = np.arange(0, 16, 2)
-            m = []
-            for n in ind:
-                tmp = df_sc.iloc[n+1, n]
-                m.append(tmp)
-            #sc_data = sc_data.append({'grp':grp, 'caseid': caseid, 'L&R_mean': np.mean(m), 'L&R_var':np.var(m)}, ignore_index=True)
+            # ind = np.arange(0, 16, 2)
+            # m = []
+            # for n in ind:
+            #     tmp = df_sc.iloc[n+1, n]
+            #     m.append(tmp)
+            apcg = df_sc.iloc[15, 14]
+            sc_data = sc_data.append({'grp':grp, 'caseid': caseid, key:apcg}, ignore_index=True)
 
             # # the 
 
@@ -65,26 +67,28 @@ if __name__ == '__main__':
 
             # ### the functional connectivity ###
             # # FC lateralization
-            try:
-                pth_efc = "C:/Users/Wayne/tvb/TS-4-Vik/"+grp+"-TS/"+ caseid +"/ROICorrelation_"+ caseid +".mat"
-                tmp = Case(pth_efc)
-                df_fc = pd.DataFrame.from_dict(tmp.readFile().get("ROICorrelation"))
-                df_fc.columns = regions
-                df_fc.index = regions
-                # the direct lateralization
-                ind = np.arange(0, 16, 2)
-                m = []
-                for n in ind:
-                    tmp = df_sc.iloc[n+1, n]
-                    m.append(tmp)
-                fc_data = fc_data.append({'grp':grp, 'caseid': caseid, 'L&R_mean': np.mean(m), 'L&R_var':np.var(m)}, ignore_index=True)
-            except FileNotFoundError:
-                continue
+            # try:
+            #     pth_efc = "C:/Users/Wayne/tvb/TS-4-Vik/"+grp+"-TS/"+ caseid +"/ROICorrelation_"+ caseid +".mat"
+            #     tmp = Case(pth_efc)
+            #     df_fc = pd.DataFrame.from_dict(tmp.readFile().get("ROICorrelation"))
+            #     df_fc.columns = regions
+            #     df_fc.index = regions
+            #     # the direct lateralization
+            #     # ind = np.arange(0, 16, 2)
+            #     # m = []
+            #     # for n in ind:
+            #     #     tmp = df_fc.iloc[n+1, n]
+            #     #     m.append(tmp)
+            #     # fc_data = fc_data.append({'grp':grp, 'caseid': caseid, 'L&R_mean': np.mean(m), 'L&R_var':np.var(m)}, ignore_index=True)
+                
+            # except FileNotFoundError:
+            #     continue
 
-                ### visualization ###
-                sns.heatmap(ax=ax1, data=df_fc, cmap=cmap)
-                ax1.set_title('Functional Connectivity')
-                plt.show()
+                # ### visualization ###
+                # sns.heatmap(ax=ax1, data=df_fc, cmap=cmap)
+                # ax1.set_title('Functional Connectivity')
+                # plt.show()
         end = time.time()
         logging.warning('Duration: {}'.format(end - start))
-    # fc_data.to_csv('dirct_lat_fc.csv')
+    ind_key = key+'_lat_sc.csv'
+    sc_data.to_csv(ind_key)

@@ -31,7 +31,8 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
     filtered_signal = signal.lfilter(taps, 1.0, data)
     return filtered_signal, N
 
-def valleyfinder(data, height=-1):
+
+def peaks_valleys_finder(data):
     """
     It is a new self-designed python function to detect peaks and valleys points
     in 1D local field potentials data, especially for slow waves(Theta band)
@@ -58,8 +59,11 @@ def valleyfinder(data, height=-1):
             if data[i] <= data[i+1]:
                 Gv.append(i)
             ini = data[i]
+    return Gp, Gv
+
+def valleysfinder(data, Gv, height=-1):
     tmp = data[Gv]
-    tmp_indx = np.argwhere(tmp < -1).ravel()
+    tmp_indx = np.argwhere(tmp < height).ravel()
     Gv = np.array(Gv)
     Gvalleys = Gv[tmp_indx]
     return Gvalleys
@@ -77,8 +81,15 @@ def AmpCal(data, valleys, peaks):
             amp_list = np.append(amp_list, amp_range)
     return amp_list
 
-
-
+def Thetapeaksfinder(valleys, peaks):
+    len_valleys = len(valleys)
+    v_range= np.arange(0, len(valleys)-1, 1)
+    freq_count = 0
+    for ran in v_range:
+        epo_range = [pe for pe in peaks if pe>valleys[ran] and pe<valleys[ran+1]]
+        if len(epo_range) > 0:
+            freq_count += 1
+    return freq_count
 
 
 
@@ -86,12 +97,15 @@ def AmpCal(data, valleys, peaks):
 if __name__ == '__main__':
     # read Gc and Go file
     coData = pd.read_excel('C:/Users/Wayne/tvb/TVB_workflow/new_g_oscillation/Gc_Go.xlsx', index_col=0)
+
     # the sampling rate
     fs = 81920
+
     # the time
     samplinginterval = 1/fs
     t = np.arange(0, fs, 1)
     tt = np.arange(0, 1, samplinginterval)
+
     # the four study groups, Alzheimer's Disease, Mild Cognitive Impairment, Normal Control, Super Normal Control
     grp_pools = ['AD','SNC','MCI', 'NC']
     start = time.time()
@@ -101,19 +115,22 @@ if __name__ == '__main__':
     ax = 0
     col = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
     xx = 0
-    freq = pd.DataFrame(columns=['grp','caseid','freqL', 'freqR'])
+    freq = pd.DataFrame(columns=['grp','caseid','freqL','freqR'])
     for grp in grp_pools:
         # obtain the data path
         pth = 'C:/Users/Wayne/tvb/LFP/'+grp
         case_pools = os.listdir(pth)
+
         # iterate the case id.
         color = col[xx]
         for caseid in case_pools:
             try:
                 # change it to Gc or Go
                 gm = np.round(coData.loc[caseid, "Go"], 3)
+
                 # store the filename and prepare for reading the data
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
+
                 # pandas read the data
                 df = pd.read_csv(dataFile, index_col=0)
                 dfL = df.iloc[:, 4]
@@ -125,7 +142,6 @@ if __name__ == '__main__':
 
                 # diff
                 diffRL = np.array(pcgGammaR - pcgGammaL)
-
 
                 # Theta Band
                 pcgThetaL, N= fir_bandpass(np.asarray(df['pCNG-L']), fs, 4.0, 8.0)
@@ -146,18 +162,12 @@ if __name__ == '__main__':
                 GammaR, _ = signal.find_peaks(df["pCNG-R"], height=np.max(pcgThetaR), prominence = 0.4)
                 GammaL, _ = signal.find_peaks(df["pCNG-L"], height=np.max(pcgThetaL), prominence = 0.4)
 
-                # Theta peaks
-                ThetaR = valleyfinder(pcgThetaR, height=-1)
-                ThetaL = valleyfinder(pcgThetaL, height=-1)
-
-                ### Frequencies ###
-                freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL': len(GammaL), 'freqR':len(GammaR)}, ignore_index=True)
-
-            except FileNotFoundError:
-                continue
-            except KeyError:
-                continue
-    freq.to_csv('freq_Go.csv')
+                # Theta
+                ptmpR, vtmpR = peaks_valleys_finder(pcgThetaR)
+                ptmpL, vtmpL = peaks_valleys_finder(pcgThetaL)
+                
+                valleysR = valleysfinder(pcgThetaR, vtmpR, height=-1)
+                valleysL = valleysfinder(pcgThetaL, vtmpL, height=-1)
 
 
 
@@ -169,7 +179,7 @@ if __name__ == '__main__':
                 # #ax1.plot(t, env2, label = 'Envelope')             
                 # #ax1.plot(t, pcgGammaR, label = "Gamma")
                 # ax1.plot(GammaR[GammaR > N-1]/fs, df['pCNG-R'][GammaR[GammaR > N-1]], 'x:r')
-                # ax1.plot(ThetaR[ThetaR > N-1]/fs-delay, pcgThetaR[ThetaR[ThetaR > N-1]], 'x:g')
+                # ax1.plot(valleysR[valleysR > N-1]/fs-delay, pcgThetaR[valleysR[valleysR > N-1]], 'x:g')
                 # ax1.legend()
                 # ax1.title.set_text('Theta&Gamma Fliter Signals_R')
                 # ax2.plot(tt, df['pCNG-L'], label = "Raw")
@@ -177,22 +187,52 @@ if __name__ == '__main__':
                 # #ax1.plot(t, env2, label = 'Envelope')             
                 # #ax1.plot(t, pcgGammaR, label = "Gamma")
                 # ax2.plot(GammaL[GammaL > N-1]/fs, df['pCNG-L'][GammaL[GammaL > N-1]], 'x:r')
-                # ax2.plot(ThetaL[ThetaL > N-1]/fs-delay, pcgThetaL[ThetaL[ThetaL > N-1]], 'x:g')
+                # ax2.plot(valleysL[valleysL > N-1]/fs-delay, pcgThetaL[valleysL[valleysL > N-1]], 'x:g')
                 # ax2.legend()
                 # ax2.title.set_text('Theta&Gamma Fliter Signals_L')
-                # #plt.show()
+                # plt.show()
                 # pt = grp + '_' + caseid + '_' + str(gm) +'.png'
                 # #plt.savefig(pt)
 
+                ############################################
+                #### Amplitude: The distance from the center of motion to either extreme
+                ############################################
+                # valleysL = np.append(valleysL, fs)
+                # valleysR = np.append(valleysR, fs)
+                # amp_r = AmpCal(df['pCNG-R'], valleysR, GammaR)
+                # amp_l = AmpCal(df['pCNG-L'], valleysL, GammaL)
+                # ampL = np.mean(amp_l)
+                # ampR = np.mean(amp_r)
+                # amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL, 'ampR':ampR}, ignore_index=True)
 
-            # ### Amplitude: The distance from the center of motion to either extreme ###
-            # ThetaL = np.append(ThetaL, fs)
-            # ThetaR = np.append(ThetaR, fs)
-            # amp_r = AmpCal(df['pCNG-R'], ThetaR, GammaR)
-            # amp_l = AmpCal(df['pCNG-L'], ThetaL, GammaL)
-            # ampL = np.mean(amp_l)
-            # ampR = np.mean(amp_r)
-            # amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL, 'ampR':ampR}, ignore_index=True)
+
+                valleysL = np.append(valleysL, fs)
+                valleysR = np.append(valleysR, fs)
+                ### Frequencies ###
+                GammaL_num = len(GammaL)
+                GammaR_num = len(GammaR)
+                ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
+                ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
+
+                if ThetaR_num >0:
+                    g_tR = GammaR_num/ThetaR_num
+                else:
+                    g_tR = 0
+                
+                if ThetaL_num >0:
+                    g_tL = GammaL_num/ThetaL_num
+                else:
+                    g_tL = 0
+
+                freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL':g_tL,'freqR':g_tR}, ignore_index=True)
+
+
+            except FileNotFoundError:
+                continue
+            except KeyError:
+                continue
+    freq.to_csv('freq_Go_gamma_theta.csv')
+
 
 
 
