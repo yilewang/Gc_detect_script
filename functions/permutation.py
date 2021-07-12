@@ -54,9 +54,9 @@ def PermutationTest(x,y,iteration, visualization = False):
     
 #############################
 ### Test codes:
-x = np.random.random_sample((20,))
-y = np.random.random_sample((12,))
-PermutationTest(x, y, 1000, True)
+# x = np.random.random_sample((20,))
+# y = np.random.random_sample((12,))
+# PermutationTest(x, y, 1000, True)
 #############################
 
 

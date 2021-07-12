@@ -208,7 +208,9 @@ if __name__ == '__main__':
 
                 valleysL = np.append(valleysL, fs)
                 valleysR = np.append(valleysR, fs)
-                ### Frequencies ###
+                #################################################
+                ### Frequencies
+                ###################################################
                 GammaL_num = len(GammaL)
                 GammaR_num = len(GammaR)
                 ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
