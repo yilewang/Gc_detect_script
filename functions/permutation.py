@@ -13,7 +13,7 @@ Date: 07/11/2021
 
 def PermutationTest(x,y,iteration, visualization = False):
     """
-    Args:
+    Args:   
         x: data list1 1-d array
         y: data list2 1-d array
         iteration: iteration number for the test
@@ -25,8 +25,9 @@ def PermutationTest(x,y,iteration, visualization = False):
     # transfer data to array format
     x = np.array(x)
     y = np.array(y)
-    orig_mean = np.mean(x) - np.mean(y)
-    Z = np.concatenate((x, y), axis=0)
+    np.hstack((x,y))
+    orig_mean = abs(np.mean(x) - np.mean(y))
+    Z = np.hstack((x, y))
     box = np.array([])
     i = 0
     while i < iteration:
@@ -36,10 +37,7 @@ def PermutationTest(x,y,iteration, visualization = False):
         box = np.append(box, p_mean)
         i+=1
     permu_mean = np.mean(box)
-    if permu_mean > orig_mean:
-        p_value = box[box < orig_mean].shape[0]/iteration
-    if permu_mean < orig_mean:
-        p_value = box[box > orig_mean].shape[0]/iteration
+    p_value = (box[box > orig_mean].shape[0] + 1) / (iteration + 1) # correction
     print(f"The P-value of the Permutation Test is: {p_value}")
     
     # visualization
@@ -56,9 +54,9 @@ def PermutationTest(x,y,iteration, visualization = False):
     
 #############################
 ### Test codes:
-# x = np.random.random_sample((10,))
-# y = np.random.random_sample((12,))
-# PermutationTest(x, y, 30000, False)
+x = np.random.random_sample((20,))
+y = np.random.random_sample((12,))
+PermutationTest(x, y, 1000, True)
 #############################
 
 
