@@ -7,6 +7,10 @@ from scipy.fftpack import fft,fftfreq,rfft,irfft,ifft
 import time
 import os
 import logging
+import sys
+sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
+from permutation import PermutationTest
+from bootstrap import BootstrapTest
 
 """
 @ Author: Yile Wang
@@ -79,6 +83,8 @@ def AmpCal(data, valleys, peaks):
         if len(epo_range) > 0:
             amp_range = np.max(data[epo_range])
             amp_list = np.append(amp_list, amp_range)
+        else:
+            amp_list = 0
     return amp_list
 
 def Thetapeaksfinder(valleys, peaks):
@@ -115,7 +121,8 @@ if __name__ == '__main__':
     ax = 0
     col = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
     xx = 0
-    freq = pd.DataFrame(columns=['grp','caseid','freqL','freqR'])
+    freq = pd.DataFrame(columns=['grp','caseid','freqL_Gamma','freqR_Gamma', 'freqL_Theta', 'freqR_Theta'])
+    amp = pd.DataFrame(columns=['grp','caseid','ampL','ampR'])
     for grp in grp_pools:
         # obtain the data path
         pth = 'C:/Users/Wayne/tvb/LFP/'+grp
@@ -126,7 +133,7 @@ if __name__ == '__main__':
         for caseid in case_pools:
             try:
                 # change it to Gc or Go
-                gm = np.round(coData.loc[caseid, "Go"], 3)
+                gm = np.round(coData.loc[caseid, "Gc"], 3)
 
                 # store the filename and prepare for reading the data
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
@@ -194,46 +201,74 @@ if __name__ == '__main__':
                 # pt = grp + '_' + caseid + '_' + str(gm) +'.png'
                 # #plt.savefig(pt)
 
-                ############################################
-                #### Amplitude: The distance from the center of motion to either extreme
-                ############################################
-                # valleysL = np.append(valleysL, fs)
-                # valleysR = np.append(valleysR, fs)
-                # amp_r = AmpCal(df['pCNG-R'], valleysR, GammaR)
-                # amp_l = AmpCal(df['pCNG-L'], valleysL, GammaL)
-                # ampL = np.mean(amp_l)
-                # ampR = np.mean(amp_r)
-                # amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL, 'ampR':ampR}, ignore_index=True)
 
 
+
+
+
+                ##########################################
+                ## Amplitude: The distance from the center of motion to either extreme
+                ##########################################
                 valleysL = np.append(valleysL, fs)
                 valleysR = np.append(valleysR, fs)
-                #################################################
-                ### Frequencies
-                ###################################################
-                GammaL_num = len(GammaL)
-                GammaR_num = len(GammaR)
-                ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
-                ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
+                amp_r = AmpCal(df['pCNG-R'], valleysR, GammaR)
+                amp_l = AmpCal(df['pCNG-L'], valleysL, GammaL)
+                ampL = np.mean(amp_l)
+                ampR = np.mean(amp_r)
+                amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL, 'ampR':ampR}, ignore_index=True)
 
-                if ThetaR_num >0:
-                    g_tR = GammaR_num/ThetaR_num
-                else:
-                    g_tR = 0
-                
-                if ThetaL_num >0:
-                    g_tL = GammaL_num/ThetaL_num
-                else:
-                    g_tL = 0
+                # #################################################
+                # ### Frequencies
+                # ###################################################
+                # GammaL_num = len(GammaL)
+                # GammaR_num = len(GammaR)
+                # ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
+                # ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
 
-                freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL':g_tL,'freqR':g_tR}, ignore_index=True)
-
+                # freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num}, ignore_index=True)
 
             except FileNotFoundError:
                 continue
             except KeyError:
                 continue
-    freq.to_csv('freq_Go_gamma_theta.csv')
+    
+
+
+
+
+
+    AD_sample = np.hstack(amp.loc[amp['grp'].isin(['AD']), ['ampR']].values)
+    MCI_sample = np.hstack(amp.loc[amp['grp'].isin(['MCI']), ['ampR']].values)
+    NC_sample = np.hstack(amp.loc[amp['grp'].isin(['NC']), ['ampR']].values)
+    SNC_sample = np.hstack(amp.loc[amp['grp'].isin(['SNC']), ['ampR']].values)
+
+    # PermutationTest(SNC_sample, AD_sample, 5000, True)
+
+    ad_CI, ad_dis = BootstrapTest(AD_sample, 1000)
+    mci_CI, mci_dis = BootstrapTest(MCI_sample, 1000)
+    nc_CI, nc_dis = BootstrapTest(NC_sample, 1000)
+    snc_CI, snc_dis = BootstrapTest(SNC_sample, 1000)
+
+    plt.figure(figsize=(15, 5))
+    plt.title('Bootstrap of four groups')
+
+
+    plt.hist(snc_dis, bins='auto', color= "#FFA15A", label='SNC', alpha = 0.5)
+    # plt.axvline(x=np.round(snc_CI[0],3), label='CI at {}'.format(np.round(snc_CI,3)),c="#FFA15A", linestyle = 'dashed')
+    # plt.axvline(x=np.round(snc_CI[1],3),  c="#FFA15A", linestyle = 'dashed')
+    plt.hist(nc_dis, bins='auto', color="#AB63FA", label='NC', alpha = 0.5)
+    # plt.axvline(x=np.round(nc_CI[0],3), label='CI at {}'.format(np.round(nc_CI,3)),c="#AB63FA", linestyle = 'dashed')
+    # plt.axvline(x=np.round(nc_CI[1],3),  c="#AB63FA", linestyle = 'dashed')
+    plt.hist(mci_dis, bins='auto', color="#4682B4", label='MCI', alpha = 0.5)
+    # plt.axvline(x=np.round(mci_CI[0],3), label='CI at {}'.format(np.round(mci_CI,3)),c="#4682B4", linestyle = 'dashed')
+    # plt.axvline(x=np.round(mci_CI[1],3),  c="#4682B4", linestyle = 'dashed')
+    plt.hist(ad_dis, bins='auto', color="#66CDAA", label='AD', alpha = 0.5)
+    # plt.axvline(x=np.round(ad_CI[0],3), label='CI at {}'.format(np.round(ad_CI,3)),c="#66CDAA", linestyle = 'dashed')
+    # plt.axvline(x=np.round(ad_CI[1],3),  c="#66CDAA", linestyle = 'dashed')
+    plt.legend()
+    plt.show()
+    
+    #print(freq.loc[freq['grp'].isin(['MCI']), ['freqL_Gamma']])
 
 
 

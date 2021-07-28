@@ -10,6 +10,14 @@ fir bandpass filter for LFP data
 def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0):
     """
     The FIR bandpass filter
+    Args:
+        data: 1-d array
+        fs: frequency (sampling rate)
+        cut_off_low: the low threshold
+        cut_off_high: the high threshold
+        width: the time windows for filtering
+    Return:
+        filtered data
     """
     nyq_rate = fs / 2.0
     wid = width/nyq_rate
