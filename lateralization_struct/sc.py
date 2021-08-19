@@ -11,6 +11,8 @@ import seaborn as sns
 import sys
 sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
 from bootstrap import BootstrapTest
+from permutation import PermutationTest
+from scipy import stats
 
 
 """
@@ -50,6 +52,8 @@ if __name__ == '__main__':
             tmp_d = pd.read_csv(io.StringIO(lines), sep='\t', header=None, index_col=None, engine="python")
             tmp_df = tmp_d.set_axis(regions, axis=0) # set the index
             df_sc = tmp_df.set_axis(regions, axis=1) # set the columns
+            # sns.heatmap(df_sc,cmap='coolwarm')
+            # plt.show()
             ### the lateralization ###
 
             #the direct lateralization
@@ -99,39 +103,96 @@ if __name__ == '__main__':
                 # plt.show()
         end = time.time()
         logging.warning('Duration: {}'.format(end - start))
+
+    
+    avg_direct_sc = pd.DataFrame({'grp':direct_sc_data.iloc[:,0],'avg_direct_sc':np.mean(np.array(direct_sc_data.iloc[:, 2:].values).astype('float'), axis=1)})
+
+    # plt.title('Averge Weight of Direct Connection between Left and Right Hemispheres')
+    # sns.boxplot(x="grp",y='avg_direct_sc', data=avg_direct_sc ,palette=col, order=[ "SNC", "NC", "MCI", "AD"], showmeans=True, meanprops={"marker":"o",
+    #                    "markerfacecolor":"white", 
+    #                    "markeredgecolor":"black",
+    #                   "markersize":"5"})
+    # sns.stripplot(y="avg_direct_sc", 
+    #             x="grp", 
+    #             data=avg_direct_sc, color='black', order=[ "SNC", "NC", "MCI", "AD"])
+    # plt.show()
+    
+    # for key in limbic:
+    #     direct_sc_data = direct_sc_data.explode(key)
+    #     direct_sc_data[key] = direct_sc_data[key].astype('float')
+    #     plt.title(key)
+    #     sns.boxplot(x="grp",y=key, data=direct_sc_data, palette=col, order=[ "SNC", "NC", "MCI", "AD"], showmeans=True, meanprops={"marker":"o",
+    #                    "markerfacecolor":"white", 
+    #                    "markeredgecolor":"black",
+    #                   "markersize":"5"})
+    #     sns.stripplot(y=key, 
+    #             x="grp", 
+    #             data=direct_sc_data, color='black', order=[ "SNC", "NC", "MCI", "AD"])
+    #     plt.show()
+
+
+
+
+
+    ign = pd.read_excel('C:/Users/Wayne/tvb/ignition.xlsx')
+
     
 
-    for key in limbic:
-        plt.figure(figsize=(15, 5))
-        AD_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['AD']), [key]].values).astype('float')
-        MCI_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['MCI']), [key]].values).astype('float')
-        NC_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['NC']), [key]].values).astype('float')
-        SNC_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['SNC']), [key]].values).astype('float')
+    # Lateralization Index
+    # sns.violinplot(x='grp', y='diff', data=ign,  order=[ "SNC", "NC", "MCI", "AD"], palette=col, showmean=True)
+    # sns.stripplot(y="diff", 
+    #             x="grp", 
+    #             data=ign, color='black', order=[ "SNC", "NC", "MCI", "AD"], edgecolor='gray')
+    # plt.title('Lateralization Index of Ignition')
+    # plt.show()
 
-        ad_CI, ad_dis = BootstrapTest(AD_sample, 1000)
-        mci_CI, mci_dis = BootstrapTest(MCI_sample, 1000)
-        nc_CI, nc_dis = BootstrapTest(NC_sample, 1000)
-        snc_CI, snc_dis = BootstrapTest(SNC_sample, 1000)
+    # violin plot, left and right
+    # violin = sns.violinplot(x="grp", y='Ignition', hue="hem",
+    #                 data=ign, palette=col, order=[ "SNC", "NC", "MCI", "AD"],showmeans=True)
+    # strip = sns.stripplot(y="Ignition", 
+    #             x="grp", 
+    #             data=ign, color='black', hue='hem',dodge=True, order=[ "SNC", "NC", "MCI", "AD"], edgecolor='gray')
+    # plt.title('Ignition Level')
+    # handles, labels = violin.get_legend_handles_labels()
+    # l = plt.legend(handles[0:2], labels[0:2])
+    # plt.show()
 
-        
-        plt.title(key)
-        plt.hist(snc_dis, bins='auto', color= "#FFA15A", label='SNC', alpha = 0.5)
-        # plt.axvline(x=np.round(snc_CI[0],3), label='CI at {}'.format(np.round(snc_CI,3)),c="#FFA15A", linestyle = 'dashed')
-        # plt.axvline(x=np.round(snc_CI[1],3),  c="#FFA15A", linestyle = 'dashed')
-        plt.hist(nc_dis, bins='auto', color="#AB63FA", label='NC', alpha = 0.5)
-        # plt.axvline(x=np.round(nc_CI[0],3), label='CI at {}'.format(np.round(nc_CI,3)),c="#AB63FA", linestyle = 'dashed')
-        # plt.axvline(x=np.round(nc_CI[1],3),  c="#AB63FA", linestyle = 'dashed')
-        plt.hist(mci_dis, bins='auto', color="#4682B4", label='MCI', alpha = 0.5)
-        # plt.axvline(x=np.round(mci_CI[0],3), label='CI at {}'.format(np.round(mci_CI,3)),c="#4682B4", linestyle = 'dashed')
-        # plt.axvline(x=np.round(mci_CI[1],3),  c="#4682B4", linestyle = 'dashed')
-        plt.hist(ad_dis, bins='auto', color="#66CDAA", label='AD', alpha = 0.5)
-        # plt.axvline(x=np.round(ad_CI[0],3), label='CI at {}'.format(np.round(ad_CI,3)),c="#66CDAA", linestyle = 'dashed')
-        # plt.axvline(x=np.round(ad_CI[1],3),  c="#66CDAA", linestyle = 'dashed')
-        plt.legend()
-        plt.show()    
 
 
 
 
     # ind_key = key+'_lat_sc.csv'
     # sc_data.to_csv(ind_key)
+
+
+        # #     plt.figure(figsize=(15, 5))
+    key = 'mCNG'
+    AD_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['AD']), [key]].values).astype('float')
+    MCI_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['MCI']), [key]].values).astype('float')
+    NC_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['NC']), [key]].values).astype('float')
+    SNC_sample = np.hstack(direct_sc_data.loc[direct_sc_data['grp'].isin(['SNC']), [key]].values).astype('float')
+    F_test, p_value = stats.f_oneway(AD_sample, MCI_sample, NC_sample, SNC_sample)
+    print(F_test, p_value)
+
+    # ad_CI, ad_dis = BootstrapTest(AD_sample, 1000)
+    # mci_CI, mci_dis = BootstrapTest(MCI_sample, 1000)
+    # nc_CI, nc_dis = BootstrapTest(NC_sample, 1000)
+    # snc_CI, snc_dis = BootstrapTest(SNC_sample, 1000)
+
+    
+
+    # plt.title(key)
+    # plt.hist(snc_dis, bins='auto', color= "#66CDAA", label='SNC', alpha = 0.5,histtype='bar', ec='black')
+    # # plt.axvline(x=np.round(snc_CI[0],3), label='CI at {}'.format(np.round(snc_CI,3)),c="#FFA15A", linestyle = 'dashed')
+    # # plt.axvline(x=np.round(snc_CI[1],3),  c="#FFA15A", linestyle = 'dashed')
+    # plt.hist(nc_dis, bins='auto', color="#4682B4", label='NC', alpha = 0.5,histtype='bar', ec='black')
+    # # plt.axvline(x=np.round(nc_CI[0],3), label='CI at {}'.format(np.round(nc_CI,3)),c="#AB63FA", linestyle = 'dashed')
+    # # plt.axvline(x=np.round(nc_CI[1],3),  c="#AB63FA", linestyle = 'dashed')
+    # plt.hist(mci_dis, bins='auto', color="#AB63FA", label='MCI', alpha = 0.5,histtype='bar', ec='black')
+    # # plt.axvline(x=np.round(mci_CI[0],3), label='CI at {}'.format(np.round(mci_CI,3)),c="#4682B4", linestyle = 'dashed')
+    # # plt.axvline(x=np.round(mci_CI[1],3),  c="#4682B4", linestyle = 'dashed')
+    # plt.hist(ad_dis, bins='auto', color="#FFA15A", label='AD', alpha = 0.5,histtype='bar', ec='black')
+    # # plt.axvline(x=np.round(ad_CI[0],3), label='CI at {}'.format(np.round(ad_CI,3)),c="#66CDAA", linestyle = 'dashed')
+    # # plt.axvline(x=np.round(ad_CI[1],3),  c="#66CDAA", linestyle = 'dashed')
+    # plt.legend()
+    # plt.show() 

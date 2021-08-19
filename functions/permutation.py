@@ -23,8 +23,14 @@ def PermutationTest(x,y,iteration, visualization = False):
 
     """
     # transfer data to array format
-    x = np.array(x)
-    y = np.array(y)
+    if len(y) > len(x):
+        tmp_x = y
+        tmp_y = x
+    else:
+        tmp_x = x
+        tmp_y = y
+    x = np.array(tmp_x)
+    y = np.array(tmp_y)
     np.hstack((x,y))
     orig_mean = abs(np.mean(x) - np.mean(y))
     Z = np.hstack((x, y))
@@ -38,10 +44,11 @@ def PermutationTest(x,y,iteration, visualization = False):
         i+=1
     permu_mean = np.mean(box)
     p_value = (box[box > orig_mean].shape[0] + 1) / (iteration + 1) # correction
-    print(f"The P-value of the Permutation Test is: {p_value}")
+
     
     # visualization
     if visualization == True:
+        print(f"The P-value of the Permutation Test is: {p_value}")
         plt.figure(figsize=(9,8))
         sns.histplot(data=box, bins='auto')
         plt.axvline(x=np.round(permu_mean,3), label='Permutation Mean at {}'.format(np.round(permu_mean,3)),c='g')
@@ -56,7 +63,7 @@ def PermutationTest(x,y,iteration, visualization = False):
 ### Test codes:
 # x = np.random.random_sample((20,))
 # y = np.random.random_sample((12,))
-# PermutationTest(x, y, 1000, True)
+# PermutationTest(y, x, 1000, True)
 #############################
 
 
