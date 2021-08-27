@@ -68,8 +68,10 @@ def contrast_analysis(datatable, contrast):
 
 G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
 Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
-contrast = [-1, -1, -1, 3]
-F_table = contrast_analysis(Mix_table, contrast)
+contrast = [-3, -1, 1, 3]
+contrast2 = [-1,1,-1,-2]
+contrast3 = [-1,3,-3,1]
+F_table = contrast_analysis(Mix_table, contrast2)
 print(F_table)
 
 
