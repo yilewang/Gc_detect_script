@@ -1,3 +1,4 @@
+#!/usr/bin/python
 
 import pandas as pd
 import numpy as np
@@ -15,9 +16,7 @@ import os
 """
 @Author: Yile Wang
 
-This script is used for detecting G optimal point
-The G optimal point, bascially it is the highest correlation coeficient 
-between simulated functional connectivity and empirical functional connectivity
+This script is used to calculate the homotopic meta-connectivity in four groups, SNC, NC, MCI, AD
 """
 
 # brain region labels for your reference
@@ -39,9 +38,9 @@ if __name__ == "__main__":
             # import empirical functional connectivity
             try:
                 # Here is the path of the mat file of the FC data
-                pth_efc = "C:/Users/Wayne/workdir/TS-4-Vik/"+grp+"-TS/"+ y +"/ROICorrelation_"+ y +".mat"
+                pth_efc = "C:/Users/Wayne/workdir/TS-4-Vik/"+grp+"-TS/"+ y +"/ROISignals_"+ y +".mat"
                 a2 = Case(pth_efc)
-                df2 = pd.DataFrame.from_dict(a2.readFile().get("ROICorrelation"))
+                df2 = pd.DataFrame.from_dict(a2.readFile().get("ROISignals"))
                 df2.columns = regions
                 df2.index = regions
                 # G range is from 0.01 to 0.08
@@ -53,7 +52,7 @@ if __name__ == "__main__":
                     # keep half of the correlation matrices
                     sfc = np.tril(df1, -1)
                     efc = np.tril(df2, -1)
-                    # break down them for correlation analysis
+                    # vectorized for correlation analysis
                     sfc_l = np.array([list(itertools.chain.from_iterable(np.ndarray.tolist(sfc)))])
                     sfc_array = sfc_l[np.nonzero(sfc_l)]
                     efc_l = np.array([list(itertools.chain.from_iterable(np.ndarray.tolist(efc)))])
@@ -82,10 +81,5 @@ if __name__ == "__main__":
     # ax2.set_title('0306A_eFC')
     # figpth = '0306A_Go_'+str(i)+'.png'
     # plt.savefig(figpth)
-
-
-
-
-
 
 
