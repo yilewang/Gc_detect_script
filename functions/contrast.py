@@ -57,7 +57,7 @@ def contrast_analysis(datatable, contrast):
 
 
         # for posterior contrast, using scheffe test
-        scheffe = F_critical * (num_group-1)
+        scheffe = F_critical_05 * (num_group-1)
         if F_value >= scheffe:
             p = 0.05
         else:
@@ -69,17 +69,17 @@ def contrast_analysis(datatable, contrast):
     
 
 
-# G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-# Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
+G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
 
-G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
+# G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+# Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
 
 
 contrast = [-3, -1, 1, 3]
-contrast2 = [1,-1,-1,1]
+contrast2 = [-2, -1, 1, 2]
 contrast3 = [-1,3,-3,1]
-F_table = contrast_analysis(G_table, contrast)
+F_table = contrast_analysis(Mix_table, contrast2)
 print(F_table)
 
 
