@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 import sys
 #sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\new_g_optimal')
-sys.path.append('/home/github/TVB_workflow/new_g_optimal')
+sys.path.append('/home/wayne/github/TVB_workflow/new_g_optimal')
+print(sys.path)
 from read_mat import Case
 from read_corrMatrix import ReadRaw
 import logging
@@ -29,7 +30,7 @@ groups = ['SNC', 'NC', 'MCI','AD']
 
 if __name__ == "__main__":
     for grp in groups:
-        ldir = os.listdir('/home/wayne/TS-4-Vik/'+grp+'/')
+        ldir = os.listdir('/home/wayne/TS-4-Vik/'+grp+'-TS/')
         for y in ldir:
             corrResult = []
             # import empirical functional connectivity
@@ -39,7 +40,7 @@ if __name__ == "__main__":
                 a2 = Case(pth_efc)
                 df2 = pd.DataFrame.from_dict(a2.readFile().get("ROISignals"))
                 df2.columns = regions
-                print(df2)
+
             except:
                 continue
 
