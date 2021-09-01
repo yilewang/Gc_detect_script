@@ -3,7 +3,8 @@
 import pandas as pd
 import numpy as np
 import sys
-sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\new_g_optimal')
+#sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\new_g_optimal')
+sys.path.append('/home/github/TVB_workflow/new_g_optimal')
 from read_mat import Case
 from read_corrMatrix import ReadRaw
 import logging
@@ -28,15 +29,17 @@ groups = ['SNC', 'NC', 'MCI','AD']
 
 if __name__ == "__main__":
     for grp in groups:
-        ldir = os.listdir('C:/Users/Wayne/output/'+grp+'/')
+        ldir = os.listdir('/home/wayne/TS-4-Vik/'+grp+'/')
         for y in ldir:
             corrResult = []
             # import empirical functional connectivity
             try:
                 # Here is the path of the mat file of the FC data
-                pth_efc = "C:/Users/Wayne/workdir/TS-4-Vik/"+grp+"-TS/"+ y +"/ROISignals_"+ y +".mat"
+                pth_efc = "/home/wayne/TS-4-Vik/"+grp+"-TS/"+ y +"/ROISignals_"+ y +".mat"
                 a2 = Case(pth_efc)
                 df2 = pd.DataFrame.from_dict(a2.readFile().get("ROISignals"))
                 df2.columns = regions
-                df2.index = regions
+                print(df2)
+            except:
+                continue
 
