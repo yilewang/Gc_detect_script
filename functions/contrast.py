@@ -23,59 +23,63 @@ def contrast_analysis(datatable, contrast):
     """
 
     # the number of cases for each group
+    num_group = len(contrast)
     num_cases = datatable.groupby(['groups']).count().iloc[:,0].to_numpy()
-    SNC_count = num_cases[0]
-    NC_count = num_cases[1]
-    MCI_count = num_cases[2]
-    AD_count = num_cases[3]
-
 
     F_table = pd.DataFrame(columns=['features','F_value', 'P_value'])
+    mean_array = np.zeros(num_group)
+    var_array = np.zeros(num_group)
 
     for col in datatable.columns[3:]:
-        SNC_mean = datatable.groupby(['groups']).median().loc[:,col].to_numpy()[0]
-        NC_mean = datatable.groupby(['groups']).median().loc[:,col].to_numpy()[1]
-        MCI_mean = datatable.groupby(['groups']).median().loc[:,col].to_numpy()[2]
-        AD_mean = datatable.groupby(['groups']).median().loc[:,col].to_numpy()[3]
-        meanNcontrast = np.dot([SNC_mean, NC_mean, MCI_mean, AD_mean], contrast)
+
+        # mean calculation
+        mean_array = datatable.groupby(['groups']).mean().loc[:,col].to_numpy()
+        meanNcontrast = np.dot(mean_array, contrast)
         contrast2 = np.square(contrast)
 
+        # variance calculation
+        var_array = datatable.groupby(['groups']).var().loc[:,col].to_numpy()
+        denominator = sum(num_cases) - num_group
+        # degree of freedom of the each case
+        num_cases_df = num_cases -1
 
-        SNC_var = datatable.loc[datatable['groups'].eq('1.SNC'), col].var()
-        NC_var = datatable.loc[datatable['groups'].eq('2.NC'), col].var()
-        MCI_var = datatable.loc[datatable['groups'].eq('3.aMCI'), col].var()
-        AD_var = datatable.loc[datatable['groups'].eq('4.AD'), col].var()
-
-        denominator = sum([SNC_count, NC_count, MCI_count, AD_count]) - 4
-
-        SSE = sum([SNC_var*(SNC_count-1), NC_var*(NC_count-1), MCI_var*(MCI_count-1), AD_var*(AD_count-1)])
-
+        # compute the sum of squares & mean sum of squares 
+        SSE = np.dot(var_array, num_cases_df)
         MSE = SSE/denominator
+        tmp_ms_contrast = sum(contrast2/num_cases)
 
-        MS_contrast = (meanNcontrast**2) / (contrast2[0]/SNC_count + contrast2[1]/NC_count + contrast2[2]/MCI_count + contrast2[3]/AD_count)
+        # compute the MS contrast
+        MS_contrast = (meanNcontrast**2) / tmp_ms_contrast
         F_value = MS_contrast/MSE
         F_critical_05 = scipy.stats.f.ppf(q=1-0.05, dfn=1, dfd=denominator)
         F_critical_01 = scipy.stats.f.ppf(q=1-0.01, dfn=1, dfd=denominator)
         F_critical_001 = scipy.stats.f.ppf(q=1-0.001, dfn=1, dfd=denominator)
 
 
-        if F_value >= F_critical_05:
+        # for posterior contrast, using scheffe test
+        scheffe = F_critical * (num_group-1)
+        if F_value >= scheffe:
             p = 0.05
         else:
             p = 'NA'
 
-        print(f"The {col} contrast has F_value {F_value}, and the F_critical is {F_critical_05}")
+        print(f"The {col} contrast has F_value {F_value}, and the F_critical Scheffe's Test is {scheffe}")
         F_table = F_table.append({'features':col,'F_value':F_value, 'P_value':p}, ignore_index=True)
     return F_table
     
 
 
-G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
-contrast = [-2,-1,1,2]
-contrast2 = [-1,1,1,-1]
+# G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+# Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
+
+G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
+
+
+contrast = [-3, -1, 1, 3]
+contrast2 = [1,-1,-1,1]
 contrast3 = [-1,3,-3,1]
-F_table = contrast_analysis(Mix_table, contrast2)
+F_table = contrast_analysis(G_table, contrast)
 print(F_table)
 
 
