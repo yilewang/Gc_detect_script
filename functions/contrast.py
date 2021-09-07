@@ -72,26 +72,24 @@ def contrast_analysis(datatable, contrast):
     
 
 
-G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
+# G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+# Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
 
-# G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-# Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
-
-
-# all_num = np.arange(-10, 11, 1)
-# all_comb = list(itertools.combinations_with_replacement(all_num, 4))
-# for tmp_comb in all_comb:
-#     if sum(tmp_comb) == 0:
-#         contrast = np.array(tmp_comb)
-#         F_table = contrast_analysis(Mix_table, contrast)
-#         if (F_table["F_value"] >10).any():
-#             print(F_table)
+G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
 
 
-f = open("C:/Users/Wayne/tvb/tvb_inputs/sc.txt", "r")
-sc = np.loadtxt(f)
-print(np.shape(sc))
+all_num = np.arange(-10, 11, 1)
+all_comb = list(itertools.combinations_with_replacement(all_num, 4))
+for tmp_comb in all_comb:
+    if sum(tmp_comb) == 0:
+        contrast = np.array(tmp_comb)
+        F_table = contrast_analysis(Mix_table, contrast)
+        if (F_table["F_value"] >10).any():
+            print(F_table)
+
+
+
 
 
 
