@@ -72,11 +72,11 @@ def contrast_analysis(datatable, contrast):
     
 
 
-G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
+# G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+# Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
 
-# G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-# Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
+G_table = pd.read_excel('/home/wayne/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+Mix_table = pd.read_excel('/home/wayne/stat_data/mix_final.xlsx')
 
 
 all_num = np.arange(-10, 11, 1)

@@ -46,14 +46,13 @@ if __name__ == "__main__":
             # calculate the meta-connectivity, using existing script:
             dFCstream = TS2dFCstream(df2.to_numpy(), 10, None, '2D')
             MC_Trimers = dFCstream2Trimers(dFCstream)
+            MC_avg = np.mean(MC_Trimers, 2)
             tmp_trimer = np.array([])
             for i in range(8): 
                 j = i+8
-                n = set(range(16)) - set([i,j])
-                n_range = np.array(list(n))
-                for n in n_range:
-                    homotopic = MC_Trimers[i,j,n]
-                    tmp_trimer = np.append(tmp_trimer, homotopic)
+                homotopic = MC_avg[i,j]
+                tmp_trimer = np.append(tmp_trimer, homotopic)
             Trimer_Results = Trimer_Results.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_trimer)},ignore_index=True)
-    Trimer_Results.to_excel('trimer.xlsx')
+    print(Trimer_Results)
+    #Trimer_Results.to_excel('trimer.xlsx')
 
