@@ -47,7 +47,7 @@ if __name__ == "__main__":
             dFCstream = TS2dFCstream(df2.to_numpy(), 10, None, '2D')
             MC_Trimers = dFCstream2Trimers(dFCstream)
             tmp_trimer = np.array([])
-            for i in range(8):
+            for i in range(8): 
                 j = i+8
                 n = set(range(16)) - set([i,j])
                 n_range = np.array(list(n))
