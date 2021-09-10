@@ -47,15 +47,19 @@ if __name__ == "__main__":
             df2.columns = regions
 
             # calculate the meta-connectivity, using existing script:
-            dFCstream = TS2dFCstream(df2.to_numpy(), 5, None, '2D')
+            dFCstream = TS2dFCstream(df2.to_numpy(), 10, None, '2D')
             MC_Trimers = dFCstream2Trimers(dFCstream)
+            # do the averaging in the dimension3
             MC_avg = np.mean(MC_Trimers, 2)
             tmp_trimer = np.array([])
+            # pick up homotopic connection
             for i in range(8): 
                 j = i+8
                 homotopic = MC_avg[i,j]
                 tmp_trimer = np.append(tmp_trimer, homotopic)
             Trimer_Results = Trimer_Results.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_trimer), 'aCNG':tmp_trimer[0],'mCNG':tmp_trimer[1],'pCNG':tmp_trimer[2],'HIP':tmp_trimer[3],'PHG':tmp_trimer[4],'AMY':tmp_trimer[5],'sTEMp':tmp_trimer[6],'mTEMp':tmp_trimer[7]},ignore_index=True)
-    print(Trimer_Results)
-    Trimer_Results.to_excel('trimer.xlsx')
+
+    sns.set_theme(style="whitegrid")
+    ax = sns.barplot(x="grp", y="trimer_results", data=Trimer_Results, capsize=.2)
+    plt.show()
 
