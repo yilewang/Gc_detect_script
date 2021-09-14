@@ -208,8 +208,6 @@ def Thetapeaksfinder(valleys, peaks):
     return freq_count
 
 
-
-
 if __name__ == '__main__':
     # read Gc and Go file
     coData = pd.read_excel('C:/Users/Wayne/tvb/TVB_workflow/new_g_oscillation/Gc_Go.xlsx', index_col=0)
@@ -357,46 +355,43 @@ if __name__ == '__main__':
                 #################################################
                 ### Frequencies
                 ###################################################
-    #             GammaL_num = len(GammaL)
-    #             GammaR_num = len(GammaR)
-    #             if GammaL_num >= 5:
-    #                 ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
-    #             else:
-    #                 tt_tmp_l, _ = signal.find_peaks(pcgThetaL, prominence = 0.2)
-    #                 ThetaL_num = len(tt_tmp_l)
+                # GammaL_num = len(GammaL)
+                # GammaR_num = len(GammaR)
+                # if GammaL_num >= 5:
+                #     ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
+                # else:
+                #     tt_tmp_l, _ = signal.find_peaks(pcgThetaL, prominence = 0.2)
+                #     ThetaL_num = len(tt_tmp_l)
                 
-    #             if GammaR_num >= 5:
-    #                 ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
-    #             else:
-    #                 tt_tmp_r, _ =  signal.find_peaks(pcgThetaR, prominence = 0.2)
-    #                 ThetaR_num  = len(tt_tmp_r)
+                # if GammaR_num >= 5:
+                #     ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
+                # else:
+                #     tt_tmp_r, _ =  signal.find_peaks(pcgThetaR, prominence = 0.2)
+                #     ThetaR_num  = len(tt_tmp_r)
 
 
-    #             # freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num}, ignore_index=True)
+                # freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num}, ignore_index=True)
 
 
 
     #             ######################################################
     #             ############ delay
     #             ######################################################
-                subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, delay_fs)
-                all_delay = all_delay.append({'grp':grp, 'caseid': caseid, 'delay':subj_delay}, ignore_index=True)
+                # subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, delay_fs)
+                # all_delay = all_delay.append({'grp':grp, 'caseid': caseid, 'delay':subj_delay}, ignore_index=True)
 
 
     #             ### mix table
                 # mix = mix.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num, 'ampL_abs':ampL_abs,'ampR_abs':ampR_abs,'ampL_combine':ampL_combine,'ampR_combine':ampR_combine, 'delay':subj_delay}, ignore_index=True)
 
-
-
-
             except FileNotFoundError:
                 continue
             except KeyError:
                 continue
-    # amp.to_csv('amp_abs.csv')
+    amp.to_csv('amp_abs.csv')
     # # amp.to_csv('amp_combine.csv')
-    # # amp_pro.to_csv('amp_pro_final.csv')
-    all_delay.to_excel('delay.xlsx')
+    # amp_pro.to_csv('amp_pro_final.csv')
+    # freq.to_excel('freq.xlsx')
 
 
     
