@@ -5,6 +5,65 @@ import numpy as np
 import torch
 from torch import nn
 import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
+from torchvision import datasets
+from torchvision.transforms import ToTensor, Lambda, Compose
+
+
+####################################################################
+####################################################################
+# Pytorch Tutorial
+
+training_data = datasets.FashionMNIST(
+    root='data',
+    train=True,
+    download=True,
+    transform=ToTensor,
+)
+
+test_data = datasets.FashionMNIST(
+    root='data',
+    train=False,
+    download=True,
+    transform=ToTensor(),
+)
+
+batch_size = 64
+
+# create data loaders.
+train_dataloader = DataLoader(training_data, batch_size=batch_size)
+test_dataloader = DataLoader(test_data, batch_size=batch_size)
+
+for X, y in test_dataloader:
+    print("shape of X [N,C,H,W]: ", X.shape)
+    print("shape of y: ", y.shape, y.dtype)
+    break
+
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print("Using {} device".format(device))
+
+class NeuralNetwork(nn.Module):
+    def __init__(self):
+        super(NeuralNetwork, self).__init__()
+        self.flatten = nn.Flatten()
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(28*28, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 10)
+        )
+    def forward(self, x):
+        x = self.flatten(x)
+        logits = self.linear_relu_stack(x)
+        return logits
+
+model = NeuralNetwork().to(device)
+print(model)
+
+
+
 
 
 
@@ -12,46 +71,46 @@ import matplotlib.pyplot as plt
 ##############################################################################################################################
 # basic pratical session of torch
 
-rand1 = torch.rand(5,5)
-rand2 = torch.rand(5,5)
-print(rand1)
+# rand1 = torch.rand(5,5)
+# rand2 = torch.rand(5,5)
+# print(rand1)
 
-# get value
-a = rand1[2,2].item()
-print(a)
+# # get value
+# a = rand1[2,2].item()
+# print(a)
 
-# matrix multiplication
-rand_mm = rand1.mm(rand2)
-print(rand_mm)
+# # matrix multiplication
+# rand_mm = rand1.mm(rand2)
+# print(rand_mm)
 
-#Matrix product of two tensors.if 1-d, same with np.dot; if 2-d, same with torch.mm
-b = rand1.matmul(rand2[:, 0])
-
-
-# in-place operation
-rand11 = rand1.add_(1)
-rand12 = rand1.div_(2)
-rand13 = rand1.zero_()
-
-# dimenions
-## torch.randn is from normal distribution
-ab = torch.randn(10,10)
-print(ab.unsqueeze(-1).size())
-print(ab.unsqueeze(0).size())
-print(ab.unsqueeze(1).size())
-print(ab.unsqueeze(-1).squeeze(1).size())
+# #Matrix product of two tensors.if 1-d, same with np.dot; if 2-d, same with torch.mm
+# b = rand1.matmul(rand2[:, 0])
 
 
-# different dimensions
-a = torch.randn(2)
-print(a)
-a = a.unsqueeze(-1)
-print(a)
+# # in-place operation
+# rand11 = rand1.add_(1)
+# rand12 = rand1.div_(2)
+# rand13 = rand1.zero_()
 
-# expand across dimensions
-print(a.expand(2,3))
+# # dimenions
+# ## torch.randn is from normal distribution
+# ab = torch.randn(10,10)
+# print(ab.unsqueeze(-1).size())
+# print(ab.unsqueeze(0).size())
+# print(ab.unsqueeze(1).size())
+# print(ab.unsqueeze(-1).squeeze(1).size())
 
-print(torch.cuda.is_available()) # true
+
+# # different dimensions
+# a = torch.randn(2)
+# print(a)
+# a = a.unsqueeze(-1)
+# print(a)
+
+# # expand across dimensions
+# print(a.expand(2,3))
+
+# print(torch.cuda.is_available()) # true
 
 
 

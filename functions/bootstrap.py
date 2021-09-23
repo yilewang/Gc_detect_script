@@ -59,5 +59,3 @@ def BootstrapTest(x,iteration, visualization = False):
 # x = np.random.random_sample((100,))
 # BootstrapTest(x, 1000, True)
 # ############################
-
-

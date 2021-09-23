@@ -74,12 +74,33 @@ def stats_calculator(datatable):
     return dataframe
 
 
-G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
-Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
-amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
-freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
+def bootstrap_groups(datatable, iternation:int, col:str):
+    
+    groups = pd.unique(datatable.loc[:,'groups'])
+    palette = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
+    #palette = sns.color_palette(None, len(groups))
+    container = np.zeros((len(groups), iternation))
+    for num in range(len(groups)):
+        rmd = datatable.loc[datatable['groups'].isin([groups[num]]), col].values.flatten()
+        container[num] = BootstrapTest(rmd, iternation)[1]
+    fig=plt.figure(figsize=(15,5))
+    for num in range(len(groups)):
+        sns.histplot(x=container[num,:], color=palette[num], alpha=0.7, label=groups[num])
+        plt.legend()
+    plt.show()
 
-stats_calculator(amp).to_excel('amplitude_abs_average.xlsx')
+
+#G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+# Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
+# amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
+# freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
+# ignition_cross=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='cross_regions')
+# ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
+# integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
+freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
 
 
+stats_calculator(freq_amp).to_excel('freq_amp.xlsx')
+# stats_calculator(ignition).to_excel('ignition_whole_brain.xlsx')
 
+# bootstrap_groups(G_table, iternation=10000, col='Gc')
