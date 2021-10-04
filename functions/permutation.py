@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from itertools import combinations
 """
 This is a permutation test python script
 Author: Yile Wang
@@ -37,7 +38,7 @@ def PermutationTest(x,y,iteration, visualization = False):
     box = np.array([])
     i = 0
     while i < iteration:
-        idx_x = np.random.choice(Z, size=x.shape[0])
+        idx_x = np.random.choice(Z, size= x.shape[0], replace=True)
         idx_y = np.asarray([ele for ele in Z if ele not in idx_x])
         p_mean = np.mean(idx_x) - np.mean(idx_y)
         box = np.append(box, p_mean)
@@ -58,12 +59,14 @@ def PermutationTest(x,y,iteration, visualization = False):
     return p_value
     
 
-    
 #############################
 ### Test codes:
 # x = np.random.random_sample((20,))
 # y = np.random.random_sample((12,))
-# PermutationTest(y, x, 1000, True)
+# x = [1,2,3,4,5]
+# y = [6,7]
+# xy = x+y
+# print(PermutationTest(x, y, 10000, False))
 #############################
 
 

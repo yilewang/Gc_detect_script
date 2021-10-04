@@ -10,6 +10,7 @@ import pandas as pd
 from scipy.stats import mannwhitneyu
 import os
 import itertools
+import scipy
 
 
 def add_star(data):
@@ -90,17 +91,19 @@ def bootstrap_groups(datatable, iternation:int, col:str):
     plt.show()
 
 
-#G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
 # Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
 # amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
 # freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
-# ignition_cross=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='cross_regions')
+ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
 # ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
 # integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
-freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
+# freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
 
 
-stats_calculator(freq_amp).to_excel('freq_amp.xlsx')
-# stats_calculator(ignition).to_excel('ignition_whole_brain.xlsx')
+stats_calculator(ignition).to_excel('ignition_single_regions.xlsx')
 
 # bootstrap_groups(G_table, iternation=10000, col='Gc')
+
+# levene test
+# print(scipy.stats.levene(G_table.loc[G_table['groups'].isin(['4.AD']), 'Gc'].values.flatten(), G_table.loc[G_table['groups'].isin(['2.NC']), 'Go'].values.flatten(), center='mean'))
