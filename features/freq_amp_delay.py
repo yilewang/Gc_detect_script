@@ -192,20 +192,6 @@ def DelayCal(filter_data_left, filter_data_right, valley_left, valley_right, fs)
             Delay = np.abs(right_peaks_list[0:valid_range] - left_peaks_list)
     else:
         Delay = right_peaks_list
-
-    # tt = np.arange(2220, 2221, 1)
-    # plt.plot(pcgThetaR)
-    # plt.plot(pcgThetaL)
-    # plt.plot(left)
-    # plt.plot(right)
-    # plt.plot(tt, left[tt], 'xr')
-    # plt.plot(tt, pcgThetaL[tt],'xr')
-    # plt.plot(valley_right-delay_fs, pcgThetaR[valley_right], 'xg')
-    # plt.plot(valley_left-delay_fs, pcgThetaL[valley_left], 'xg')
-    # plt.plot(left_peaks_list, left[left_peaks_list], 'or')
-    # plt.plot(right_peaks_list, right[right_peaks_list], 'or')
-    # plt.show()
-
     return np.sum(Delay/fs)
 
 
@@ -338,67 +324,51 @@ if __name__ == '__main__':
             try:
                 # change it to Gc or Go
                 gm = np.round(coData.loc[caseid, "Gc"], 3)
-
                 # store the filename and prepare for reading the data
                 dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
-
                 # pandas read the data
                 df = pd.read_csv(dataFile, index_col=0)
                 dfL = df.iloc[:, 4]
                 dfR = df.iloc[:, 5]
-
                 # Gamma Band
                 pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 35.0, 100.0)
                 pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 35.0, 100.0)
-
                 # diff
                 diffRL = np.array(pcgGammaR - pcgGammaL)
-
                 # Theta Band
                 pcgThetaL, N= fir_bandpass(np.asarray(df['pCNG-L']), fs, 1.0, 10.0)
                 pcgThetaR, N= fir_bandpass(np.asarray(df['pCNG-R']), fs, 1.0, 10.0)
-
-
                 # delay
                 delay = 0.5 * (N-1) / fs
                 delay_fs = 0.5 * (N-1)
-
                 # hilbert transform
                 hil1 = hilbert(np.array(pcgGammaL))
                 hil2 = hilbert(np.array(pcgGammaR))
-
                 # envelope
                 env1 = np.abs(hil1)
                 env2 = np.abs(hil2)
-
                 # Gamma peaks
                 GammaR, _ = signal.find_peaks(df["pCNG-R"], height=np.max(pcgThetaR), prominence = 0.4)
                 GammaL, _ = signal.find_peaks(df["pCNG-L"], height=np.max(pcgThetaL), prominence = 0.4)
-
                 # Theta peaks
                 ThetaL, _ = signal.find_peaks(pcgThetaL, prominence=0.2)
                 ThetaR, _ = signal.find_peaks(pcgThetaR, prominence=0.2)
-
                 # Theta valleys
                 _, vtmpR = peaks_valleys_finder(pcgThetaR)
                 _, vtmpL = peaks_valleys_finder(pcgThetaL)
-                
                 valleysR = valleysfinder(pcgThetaR, vtmpR, height=-1)
                 valleysL = valleysfinder(pcgThetaL, vtmpL, height=-1)
-
-                # the valleys (add the end point into the valleys)
-
 
                 ##########################################
                 ## Amplitude: The distance from the center of motion to either extreme
                 ##########################################
+                # the valleys (add the end point into the valleys)
                 valleysL = np.append(valleysL, fs-1)
                 valleysR = np.append(valleysR, fs-1)
 
                 ### the absolute value of the pCNG amplitude
                 amp_r = AmpAbs(df['pCNG-R'],pcgThetaR, valleysR, GammaR, ThetaR, delay_fs)
                 amp_l = AmpAbs(df['pCNG-L'], pcgThetaL, valleysL, GammaL, ThetaL, delay_fs)
-
                 ampL_abs = np.mean(amp_l)
                 ampR_abs = np.mean(amp_r)
 
@@ -414,51 +384,48 @@ if __name__ == '__main__':
                 amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL_abs, 'ampR':ampR_abs}, ignore_index=True)
 
                 #### the proportional value of the pCNG
-                # amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
-                # amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
+                amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
+                amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
 
-                # ampL_gamma = np.mean(amp_l_gamma)
-                # ampL_theta = np.mean(amp_l_theta)
-                # ampR_gamma = np.mean(amp_r_gamma)
-                # ampR_theta = np.mean(amp_r_theta)
-                # amp_pro = amp_pro.append({'grp':grp, 'caseid': caseid, 'ampL_gamma': ampL_gamma, 'ampR_gamma':ampR_gamma, 'ampL_theta':ampL_theta, 'ampR_theta':ampR_theta}, ignore_index=True)
+                ampL_gamma = np.mean(amp_l_gamma)
+                ampL_theta = np.mean(amp_l_theta)
+                ampR_gamma = np.mean(amp_r_gamma)
+                ampR_theta = np.mean(amp_r_theta)
+                amp_pro = amp_pro.append({'grp':grp, 'caseid': caseid, 'ampL_gamma': ampL_gamma, 'ampR_gamma':ampR_gamma, 'ampL_theta':ampL_theta, 'ampR_theta':ampR_theta}, ignore_index=True)
 
                 #################################################
                 ### Frequencies
                 ###################################################
-                # GammaL_num = len(GammaL)
-                # GammaR_num = len(GammaR)
-                # if GammaL_num >= 5:
-                #     ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
-                # else:
-                #     tt_tmp_l, _ = signal.find_peaks(pcgThetaL, prominence = 0.2)
-                #     ThetaL_num = len(tt_tmp_l)
+                GammaL_num = len(GammaL)
+                GammaR_num = len(GammaR)
+                if GammaL_num >= 5:
+                    ThetaL_num = Thetapeaksfinder(valleysL, GammaL)
+                else:
+                    tt_tmp_l, _ = signal.find_peaks(pcgThetaL, prominence = 0.2)
+                    ThetaL_num = len(tt_tmp_l)
                 
-                # if GammaR_num >= 5:
-                #     ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
-                # else:
-                #     tt_tmp_r, _ =  signal.find_peaks(pcgThetaR, prominence = 0.2)
-                #     ThetaR_num  = len(tt_tmp_r)
+                if GammaR_num >= 5:
+                    ThetaR_num = Thetapeaksfinder(valleysR, GammaR)
+                else:
+                    tt_tmp_r, _ =  signal.find_peaks(pcgThetaR, prominence = 0.2)
+                    ThetaR_num  = len(tt_tmp_r)
 
-
-                # freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num}, ignore_index=True)
+                freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num}, ignore_index=True)
 
                 ######################################################
                 ############ delay
                 ######################################################
-                # subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, fs)
-                # all_delay = all_delay.append({'grp':grp, 'caseid': caseid, 'delay':subj_delay}, ignore_index=True)
-
+                subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, fs)
+                all_delay = all_delay.append({'grp':grp, 'caseid': caseid, 'delay':subj_delay}, ignore_index=True)
 
                 ### mix table
-                # mix = mix.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num, 'ampL_abs':ampL_abs,'ampR_abs':ampR_abs,'ampL_combine':ampL_combine,'ampR_combine':ampR_combine, 'delay':subj_delay}, ignore_index=True)
+                mix = mix.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num, 'ampL_abs':ampL_abs,'ampR_abs':ampR_abs,'ampL_pro_gamma':amp_l_gamma,'ampR_pro_gamma':amp_r_gamma,'ampL_pro_theta':amp_l_theta, 'ampR_pro_theta':amp_r_theta,'delay':subj_delay}, ignore_index=True)
 
             except FileNotFoundError:
                 continue
             except KeyError:
                 continue
-    amp.to_csv('amp_abs.csv')
+    # amp.to_csv('amp_abs.csv')
     # # amp.to_csv('amp_combine.csv')
     # amp_pro.to_csv('amp_pro_final.csv')
     # freq.to_excel('freq.xlsx')
-    
