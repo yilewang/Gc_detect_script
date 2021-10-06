@@ -59,22 +59,25 @@ if __name__ == "__main__":
             for i in range(0,15,2):
                 j = i+1
                 homotopic = MC_avg[i,j]
-                heter_list = list(range(16))
+                heter_list = list(range(1,16,2))
                 heter_list.remove(j)
                 hetertopic = []
                 for x in heter_list:
                     hetertopic.append(MC_avg[i,x])
                 tmp_heter = np.append(tmp_heter, np.mean(hetertopic))
                 tmp_trimer = np.append(tmp_trimer, homotopic)
-            Trimer_Results = Trimer_Results.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_trimer), 'aCNG':tmp_trimer[0],'mCNG':tmp_trimer[1],'pCNG':tmp_trimer[2],'HIP':tmp_trimer[3],'PHG':tmp_trimer[4],'AMY':tmp_trimer[5],'sTEMp':tmp_trimer[6],'mTEMp':tmp_trimer[7]},ignore_index=True)
+            Trimer_Results = Trimer_Results.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_trimer), 'aCNG':tmp_trimer[0],'mCNG':tmp_trimer[1],'pCNG':tmp_trimer[2],'HIP':tmp_trimer[3],'PHG':tmp_trimer[4],  'AMY':tmp_trimer[5],'sTEMp':tmp_trimer[6],'mTEMp':tmp_trimer[7]},ignore_index=True)
             Trimer_Heter = Trimer_Heter.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_heter), 'aCNG':tmp_heter[0],'mCNG':tmp_heter[1],'pCNG':tmp_heter[2],'HIP':tmp_heter[3],'PHG':tmp_heter[4],'AMY':tmp_heter[5],'sTEMp':tmp_heter[6],'mTEMp':tmp_heter[7]},ignore_index=True)
 
 
     sns.set_theme(style="whitegrid")
-    for i in list(Trimer_Results.columns[2:]):
+    for i in list(Trimer_Heter.columns[2:]):
         fig = plt.figure(figsize=(10,10))
-        plt.title(f'Homotopic: {i}')
-        fig = sns.barplot(x="grp", y=i, data=Trimer_Results, capsize=.2,palette=["#66CDAA","#4682B4","#AB63FA","#FFA15A"])
+        plt.title(f'Heterotopic: {i}')
+        fig = sns.violinplot(x="grp", y=i, data=Trimer_Heter, capsize=.2,palette=["#66CDAA","#4682B4","#AB63FA","#FFA15A"])
+        fig = sns.stripplot(x="grp", y=i, data=Trimer_Heter,color='black')
+        fig.set_ylim(-0.5, 1)
+        fig.set_yticks(np.arange(-0.5, 1, 0.1))
         tmp_name = [i,'.png']
         name = ''.join(tmp_name)
         plt.savefig(name)

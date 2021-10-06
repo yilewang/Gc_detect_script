@@ -18,8 +18,6 @@ from bootstrap import BootstrapTest
 This script is designed to capture all the lateralization features required for paper writing.
 """
 
-
-
 # brain regions labels
 regions = ['aCNG-L', 'aCNG-R','mCNG-L','mCNG-R','pCNG-L','pCNG-R', 'HIP-L','HIP-R','PHG-L','PHG-R','AMY-L','AMY-R', 'sTEMp-L','sTEMP-R','mTEMp-L','mTEMp-R']
 
@@ -67,6 +65,9 @@ def peaks_valleys_finder(data):
     return Gp, Gv
 
 def valleysfinder(data, Gv, height=-1):
+    """
+    try to exclude some valley points lower than threshold
+    """
     tmp = data[Gv]
     tmp_indx = np.argwhere(tmp < height).ravel()
     Gv = np.array(Gv)
@@ -75,6 +76,9 @@ def valleysfinder(data, Gv, height=-1):
     
 
 def AmpAbs(data, filter_data, valleys, Gamma_peaks, Theta_peaks, delay_fs):
+    """
+    calculate the absolute amplitude 
+    """
     # calculate the amplitude from 0 to the first valleys
     amp_list = np.array([])
     len_valleys = len(valleys)
@@ -97,6 +101,9 @@ def AmpAbs(data, filter_data, valleys, Gamma_peaks, Theta_peaks, delay_fs):
 
 
 def AmpCombine(data, filter_data, Gamma_peaks, Theta_peaks, valleys):
+    """
+    calculate the value data-filter_data.
+    """
     amp_list = np.array([])
     v_range = np.arange(0, len(valleys)-1, 1)
     for ran in v_range:
@@ -118,6 +125,9 @@ def AmpCombine(data, filter_data, Gamma_peaks, Theta_peaks, valleys):
 
 
 def AmpPro(data, filter_data, Gamma_peaks, Theta_peaks, valleys):
+    """
+    calculate the proportional amplitude here
+    """
     amp_list_gamma = np.array([])
     amp_list_theta = np.array([])
     v_range = np.arange(0, len(valleys)-1, 1)
@@ -146,7 +156,10 @@ def AmpPro(data, filter_data, Gamma_peaks, Theta_peaks, valleys):
                 amp_list_theta = np.append(amp_list_theta, 0)
     return amp_list_gamma, amp_list_theta
 
-def DelayCal(filter_data_left, filter_data_right, valley_left, valley_right, delay_fs):
+def DelayCal(filter_data_left, filter_data_right, valley_left, valley_right, fs):
+    """
+    calculate the delay
+    """
     delay_list = np.array([])
     Theta_peak_left,_ = signal.find_peaks(filter_data_left, prominence=0.1, height= -1.25)
     Theta_peak_right,_ = signal.find_peaks(filter_data_right, prominence=0.1, height=-1.25)
@@ -193,8 +206,7 @@ def DelayCal(filter_data_left, filter_data_right, valley_left, valley_right, del
     # plt.plot(right_peaks_list, right[right_peaks_list], 'or')
     # plt.show()
 
-    return np.sum(Delay/81920)
-    
+    return np.sum(Delay/fs)
 
 
 def Thetapeaksfinder(valleys, peaks):
@@ -206,6 +218,88 @@ def Thetapeaksfinder(valleys, peaks):
         if len(epo_range) > 0:
             freq_count += 1
     return freq_count
+
+
+############################################################################
+# visualization functions
+
+def visual_raw_filter():
+    # visualization
+    fig, (ax1, ax2) = plt.subplots(2, figsize=(15,10))
+    fig.suptitle(grp+'_'+caseid + "_filtered data_"+ str(gm))
+    ax1.plot(tt, df['pCNG-R'], label = "Raw")
+    ax1.plot(tt[N-1:]-delay, pcgThetaR[N-1:], label = "theta")
+    #ax1.plot(t, env2, label = 'Envelope')             
+    #ax1.plot(t, pcgGammaR, label = "Gamma")
+    ax1.plot(GammaR[GammaR > N-1]/fs, df['pCNG-R'][GammaR[GammaR > N-1]], 'x:r')
+    ax1.plot(valleysR[valleysR > N-1]/fs-delay, pcgThetaR[valleysR[valleysR > N-1]], 'x:g')
+    ax1.legend()
+    ax1.title.set_text('Theta&Gamma Fliter Signals_R')
+    ax2.plot(tt, df['pCNG-L'], label = "Raw")
+    ax2.plot(tt[N-1:]-delay, pcgThetaL[N-1:], label = "theta")
+    #ax1.plot(t, env2, label = 'Envelope')             
+    #ax1.plot(t, pcgGammaR, label = "Gamma")
+    ax2.plot(GammaL[GammaL > N-1]/fs, df['pCNG-L'][GammaL[GammaL > N-1]], 'x:r')
+    ax2.plot(valleysL[valleysL > N-1]/fs-delay, pcgThetaL[valleysL[valleysL > N-1]], 'x:g')
+    ax2.legend()
+    ax2.title.set_text('Theta&Gamma Fliter Signals_L')
+    plt.show()
+    # pt = grp + '_' + caseid + '_' + str(gm) +'.png'
+    # #plt.savefig(pt)
+    
+def visual_violin():
+    # original data of Freq
+    key1 = 'ampL'
+    sns.boxplot(x='grp', y=key1, data=amp,  order=[ "SNC", "NC", "MCI", "AD"], palette=col, showmeans=True, meanprops={"marker":"o",
+                       "markerfacecolor":"white", 
+                       "markeredgecolor":"black",
+                      "markersize":"5"})
+    sns.stripplot(y=key1, 
+                x="grp", 
+                data=amp, color='black', order=[ "SNC", "NC", "MCI", "AD"], edgecolor='gray')
+    plt.title(key1)
+    plt.show()
+
+def visual_bootstrap():
+
+    # create bootstrap data set
+    AD_sample = np.hstack(amp.loc[amp['grp'].isin(['AD']), [key1]].values)
+    MCI_sample = np.hstack(amp.loc[amp['grp'].isin(['MCI']), [key1]].values)
+    NC_sample = np.hstack(amp.loc[amp['grp'].isin(['NC']), [key1]].values)
+    SNC_sample = np.hstack(amp.loc[amp['grp'].isin(['SNC']), [key1]].values)
+
+    PermutationTest(SNC_sample, AD_sample, 5000, True)
+    PermutationTest(NC_sample, AD_sample, 5000, True)
+    PermutationTest(MCI_sample, AD_sample, 5000, True)
+
+    ad_CI, ad_dis = BootstrapTest(AD_sample, 1000)
+    mci_CI, mci_dis = BootstrapTest(MCI_sample, 1000)
+    nc_CI, nc_dis = BootstrapTest(NC_sample, 1000)
+    snc_CI, snc_dis = BootstrapTest(SNC_sample, 1000)
+
+    plt.figure(figsize=(15, 5))
+    plt.title('Bootstrap of four groups')
+
+    plt.hist(snc_dis, bins='auto', color= "#66CDAA", label='SNC', alpha = 0.5,histtype='bar', ec='black')
+    # plt.axvline(x=np.round(snc_CI[0],3), label='CI at {}'.format(np.round(snc_CI,3)),c="#FFA15A", linestyle = 'dashed')
+    # plt.axvline(x=np.round(snc_CI[1],3),  c="#FFA15A", linestyle = 'dashed')
+    plt.hist(nc_dis, bins='auto', color="#4682B4", label='NC', alpha = 0.5,histtype='bar', ec='black')
+    # plt.axvline(x=np.round(nc_CI[0],3), label='CI at {}'.format(np.round(nc_CI,3)),c="#AB63FA", linestyle = 'dashed')
+    # plt.axvline(x=np.round(nc_CI[1],3),  c="#AB63FA", linestyle = 'dashed')
+    plt.hist(mci_dis, bins='auto', color="#AB63FA", label='MCI', alpha = 0.5,histtype='bar', ec='black')
+    # plt.axvline(x=np.round(mci_CI[0],3), label='CI at {}'.format(np.round(mci_CI,3)),c="#4682B4", linestyle = 'dashed')
+    # plt.axvline(x=np.round(mci_CI[1],3),  c="#4682B4", linestyle = 'dashed')
+    plt.hist(ad_dis, bins='auto', color="#FFA15A", label='AD', alpha = 0.5,histtype='bar', ec='black')
+    # plt.axvline(x=np.round(ad_CI[0],3), label='CI at {}'.format(np.round(ad_CI,3)),c="#66CDAA", linestyle = 'dashed')
+    # plt.axvline(x=np.round(ad_CI[1],3),  c="#66CDAA", linestyle = 'dashed')
+    plt.legend()
+    plt.show()
+    
+    print(freq.loc[freq['grp'].isin(['MCI']), ['freqL_Gamma']])
+
+# visualization functions end
+#########################################################################
+
 
 
 if __name__ == '__main__':
@@ -292,41 +386,16 @@ if __name__ == '__main__':
                 valleysR = valleysfinder(pcgThetaR, vtmpR, height=-1)
                 valleysL = valleysfinder(pcgThetaL, vtmpL, height=-1)
 
-                # visualization
-                # fig, (ax1, ax2) = plt.subplots(2, figsize=(15,10))
-                # fig.suptitle(grp+'_'+caseid + "_filtered data_"+ str(gm))
-                # ax1.plot(tt, df['pCNG-R'], label = "Raw")
-                # ax1.plot(tt[N-1:]-delay, pcgThetaR[N-1:], label = "theta")
-                # #ax1.plot(t, env2, label = 'Envelope')             
-                # #ax1.plot(t, pcgGammaR, label = "Gamma")
-                # ax1.plot(GammaR[GammaR > N-1]/fs, df['pCNG-R'][GammaR[GammaR > N-1]], 'x:r')
-                # ax1.plot(valleysR[valleysR > N-1]/fs-delay, pcgThetaR[valleysR[valleysR > N-1]], 'x:g')
-                # ax1.legend()
-                # ax1.title.set_text('Theta&Gamma Fliter Signals_R')
-                # ax2.plot(tt, df['pCNG-L'], label = "Raw")
-                # ax2.plot(tt[N-1:]-delay, pcgThetaL[N-1:], label = "theta")
-                # #ax1.plot(t, env2, label = 'Envelope')             
-                # #ax1.plot(t, pcgGammaR, label = "Gamma")
-                # ax2.plot(GammaL[GammaL > N-1]/fs, df['pCNG-L'][GammaL[GammaL > N-1]], 'x:r')
-                # ax2.plot(valleysL[valleysL > N-1]/fs-delay, pcgThetaL[valleysL[valleysL > N-1]], 'x:g')
-                # ax2.legend()
-                # ax2.title.set_text('Theta&Gamma Fliter Signals_L')
-                # plt.show()
-                # pt = grp + '_' + caseid + '_' + str(gm) +'.png'
-                # #plt.savefig(pt)
-
-
-
                 # the valleys (add the end point into the valleys)
 
 
                 ##########################################
                 ## Amplitude: The distance from the center of motion to either extreme
                 ##########################################
-
                 valleysL = np.append(valleysL, fs-1)
                 valleysR = np.append(valleysR, fs-1)
-                # the absolute value of the pCNG amplitude
+
+                ### the absolute value of the pCNG amplitude
                 amp_r = AmpAbs(df['pCNG-R'],pcgThetaR, valleysR, GammaR, ThetaR, delay_fs)
                 amp_l = AmpAbs(df['pCNG-L'], pcgThetaL, valleysL, GammaL, ThetaL, delay_fs)
 
@@ -340,9 +409,11 @@ if __name__ == '__main__':
                 # # take the mean
                 # ampL_combine = np.mean(amp_l)
                 # ampR_combine = np.mean(amp_r)
+
+                # to dataframe
                 amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL_abs, 'ampR':ampR_abs}, ignore_index=True)
 
-                # # the proportional value of the pCNG
+                #### the proportional value of the pCNG
                 # amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
                 # amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
 
@@ -372,16 +443,14 @@ if __name__ == '__main__':
 
                 # freq = freq.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num}, ignore_index=True)
 
-
-
-    #             ######################################################
-    #             ############ delay
-    #             ######################################################
-                # subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, delay_fs)
+                ######################################################
+                ############ delay
+                ######################################################
+                # subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, fs)
                 # all_delay = all_delay.append({'grp':grp, 'caseid': caseid, 'delay':subj_delay}, ignore_index=True)
 
 
-    #             ### mix table
+                ### mix table
                 # mix = mix.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num, 'ampL_abs':ampL_abs,'ampR_abs':ampR_abs,'ampL_combine':ampL_combine,'ampR_combine':ampR_combine, 'delay':subj_delay}, ignore_index=True)
 
             except FileNotFoundError:
@@ -392,67 +461,4 @@ if __name__ == '__main__':
     # # amp.to_csv('amp_combine.csv')
     # amp_pro.to_csv('amp_pro_final.csv')
     # freq.to_excel('freq.xlsx')
-
-
     
-    # original data of Freq
-    #key1 = 'ampL'
-    # sns.boxplot(x='grp', y=key1, data=amp,  order=[ "SNC", "NC", "MCI", "AD"], palette=col, showmeans=True, meanprops={"marker":"o",
-    #                    "markerfacecolor":"white", 
-    #                    "markeredgecolor":"black",
-    #                   "markersize":"5"})
-    # sns.stripplot(y=key1, 
-    #             x="grp", 
-    #             data=amp, color='black', order=[ "SNC", "NC", "MCI", "AD"], edgecolor='gray')
-    # plt.title(key1)
-    # plt.show()
-
-
-
-    # # create bootstrap data set
-
-    # AD_sample = np.hstack(amp.loc[amp['grp'].isin(['AD']), [key1]].values)
-    # MCI_sample = np.hstack(amp.loc[amp['grp'].isin(['MCI']), [key1]].values)
-    # NC_sample = np.hstack(amp.loc[amp['grp'].isin(['NC']), [key1]].values)
-    # SNC_sample = np.hstack(amp.loc[amp['grp'].isin(['SNC']), [key1]].values)
-
-    # PermutationTest(SNC_sample, AD_sample, 5000, True)
-    # PermutationTest(NC_sample, AD_sample, 5000, True)
-    # PermutationTest(MCI_sample, AD_sample, 5000, True)
-
-    # ad_CI, ad_dis = BootstrapTest(AD_sample, 1000)
-    # mci_CI, mci_dis = BootstrapTest(MCI_sample, 1000)
-    # nc_CI, nc_dis = BootstrapTest(NC_sample, 1000)
-    # snc_CI, snc_dis = BootstrapTest(SNC_sample, 1000)
-
-    # plt.figure(figsize=(15, 5))
-    # plt.title('Bootstrap of four groups')
-
-
-    # plt.hist(snc_dis, bins='auto', color= "#66CDAA", label='SNC', alpha = 0.5,histtype='bar', ec='black')
-    # # plt.axvline(x=np.round(snc_CI[0],3), label='CI at {}'.format(np.round(snc_CI,3)),c="#FFA15A", linestyle = 'dashed')
-    # # plt.axvline(x=np.round(snc_CI[1],3),  c="#FFA15A", linestyle = 'dashed')
-    # plt.hist(nc_dis, bins='auto', color="#4682B4", label='NC', alpha = 0.5,histtype='bar', ec='black')
-    # # plt.axvline(x=np.round(nc_CI[0],3), label='CI at {}'.format(np.round(nc_CI,3)),c="#AB63FA", linestyle = 'dashed')
-    # # plt.axvline(x=np.round(nc_CI[1],3),  c="#AB63FA", linestyle = 'dashed')
-    # plt.hist(mci_dis, bins='auto', color="#AB63FA", label='MCI', alpha = 0.5,histtype='bar', ec='black')
-    # # plt.axvline(x=np.round(mci_CI[0],3), label='CI at {}'.format(np.round(mci_CI,3)),c="#4682B4", linestyle = 'dashed')
-    # # plt.axvline(x=np.round(mci_CI[1],3),  c="#4682B4", linestyle = 'dashed')
-    # plt.hist(ad_dis, bins='auto', color="#FFA15A", label='AD', alpha = 0.5,histtype='bar', ec='black')
-    # # plt.axvline(x=np.round(ad_CI[0],3), label='CI at {}'.format(np.round(ad_CI,3)),c="#66CDAA", linestyle = 'dashed')
-    # # plt.axvline(x=np.round(ad_CI[1],3),  c="#66CDAA", linestyle = 'dashed')
-    # plt.legend()
-    # plt.show()
-    
-    #print(freq.loc[freq['grp'].isin(['MCI']), ['freqL_Gamma']])
-
-
-
-
-
-
-
-
-
-
-
