@@ -3,8 +3,7 @@ import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.signal import hilbert, butter, filtfilt
-from scipy.fftpack import fft,fftfreq,rfft,irfft,ifft
+from scipy.signal import hilbert
 import time
 import os
 import logging
@@ -312,7 +311,8 @@ if __name__ == '__main__':
     amp = pd.DataFrame(columns=['grp','caseid','ampL','ampR'])
     amp_pro = pd.DataFrame(columns=['grp','caseid','ampL_gamma','ampR_gamma','ampL_theta','ampR_theta'])
     all_delay = pd.DataFrame(columns=['grp','caseid','delay'])
-    mix = pd.DataFrame(columns=['grp','caseid','freqL_Gamma','freqR_Gamma', 'freqL_Theta', 'freqR_Theta', 'ampL_abs','ampR_abs','ampL_combine','ampR_combine', 'delay'])
+    mix = pd.DataFrame()
+        #columns=['grp','caseid','freqL_Gamma','freqR_Gamma', 'freqL_Theta', 'freqR_Theta', 'ampL_abs','ampR_abs','ampL_combine','ampR_combine', 'delay'])
     for grp in grp_pools:
         # obtain the data path
         pth = 'C:/Users/Wayne/tvb/LFP/'+grp
@@ -384,14 +384,14 @@ if __name__ == '__main__':
                 amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL_abs, 'ampR':ampR_abs}, ignore_index=True)
 
                 #### the proportional value of the pCNG
-                amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
-                amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
+                # amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
+                # amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
 
-                ampL_gamma = np.mean(amp_l_gamma)
-                ampL_theta = np.mean(amp_l_theta)
-                ampR_gamma = np.mean(amp_r_gamma)
-                ampR_theta = np.mean(amp_r_theta)
-                amp_pro = amp_pro.append({'grp':grp, 'caseid': caseid, 'ampL_gamma': ampL_gamma, 'ampR_gamma':ampR_gamma, 'ampL_theta':ampL_theta, 'ampR_theta':ampR_theta}, ignore_index=True)
+                # ampL_gamma = np.mean(amp_l_gamma)
+                # ampL_theta = np.mean(amp_l_theta)
+                # ampR_gamma = np.mean(amp_r_gamma)
+                # ampR_theta = np.mean(amp_r_theta)
+                # amp_pro = amp_pro.append({'grp':grp, 'caseid': caseid, 'ampL_gamma': ampL_gamma, 'ampR_gamma':ampR_gamma, 'ampL_theta':ampL_theta, 'ampR_theta':ampR_theta}, ignore_index=True)
 
                 #################################################
                 ### Frequencies
@@ -418,8 +418,49 @@ if __name__ == '__main__':
                 subj_delay = DelayCal(pcgThetaL, pcgThetaR, valleysL, valleysR, fs)
                 all_delay = all_delay.append({'grp':grp, 'caseid': caseid, 'delay':subj_delay}, ignore_index=True)
 
+                #######################################################
+                ############LI
+                ######################################################
+                freqL_Gamma=min(GammaL_num, GammaR_num)
+                freqR_Gamma=max(GammaR_num, GammaL_num) 
+                freqL_Theta= min(ThetaL_num, ThetaR_num)
+                freqR_Theta = max(ThetaR_num, ThetaL_num) 
+                ampLside=min(ampL_abs, ampR_abs)
+                ampRside=max(ampR_abs, ampL_abs)
+
+
+
+                try:
+                    LI_freq_gamma = (freqR_Gamma - freqL_Gamma)/(freqR_Gamma+freqL_Gamma)
+                    LI_freq_theta= (freqR_Theta - freqL_Theta)/(freqL_Theta+freqR_Theta)
+                    LI_amp= (ampRside - ampLside) / (ampRside + ampLside) 
+                    LI_mix_freq = ((freqR_Gamma/freqR_Theta) - (freqL_Gamma/freqL_Theta))/((freqR_Gamma/freqR_Theta) + (freqL_Gamma/freqL_Theta))
+                except ZeroDivisionError:
+                    LI_freq_gamma = 0
+                    LI_freq_theta = 0
+                    LI_amp = 0
+                    LI_mix_freq = 0
+
+
                 ### mix table
-                mix = mix.append({'grp':grp, 'caseid': caseid, 'freqL_Gamma':GammaL_num,'freqR_Gamma':GammaR_num, 'freqL_Theta':ThetaL_num, 'freqR_Theta':ThetaR_num, 'ampL_abs':ampL_abs,'ampR_abs':ampR_abs,'ampL_pro_gamma':amp_l_gamma,'ampR_pro_gamma':amp_r_gamma,'ampL_pro_theta':amp_l_theta, 'ampR_pro_theta':amp_r_theta,'delay':subj_delay}, ignore_index=True)
+                mix = mix.append({'grp':grp, 
+                'caseid': caseid, 
+                'freqL_Gamma':freqL_Gamma,
+                'freqR_Gamma':freqR_Gamma, 
+                'freqL_Theta':freqL_Theta, 
+                'freqR_Theta':freqR_Theta, 
+                'ampL_abs':ampLside,
+                'ampR_abs':ampRside ,
+                # 'ampL_pro_gamma':amp_l_gamma,
+                # 'ampR_pro_gamma':amp_r_gamma,
+                # 'ampL_pro_theta':amp_l_theta, 
+                # 'ampR_pro_theta':amp_r_theta,
+                'LI_freq_gamma':LI_freq_gamma,
+                'LI_freq_theta': LI_freq_theta,
+                'LI_amp': LI_amp,
+                'LI_mix_freq': LI_mix_freq,
+                'delay':subj_delay}, 
+                ignore_index=True, sort=False)
 
             except FileNotFoundError:
                 continue
@@ -429,3 +470,6 @@ if __name__ == '__main__':
     # # amp.to_csv('amp_combine.csv')
     # amp_pro.to_csv('amp_pro_final.csv')
     # freq.to_excel('freq.xlsx')
+    mix.to_excel('mix.xlsx')
+
+    

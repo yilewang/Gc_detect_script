@@ -71,11 +71,12 @@ if __name__ == "__main__":
 
 
     sns.set_theme(style="whitegrid")
-    for i in list(Trimer_Heter.columns[2:]):
+    for i in list(Trimer_Results.columns[2:]):
         fig = plt.figure(figsize=(10,10))
-        plt.title(f'Heterotopic: {i}')
-        fig = sns.violinplot(x="grp", y=i, data=Trimer_Heter, capsize=.2,palette=["#66CDAA","#4682B4","#AB63FA","#FFA15A"])
-        fig = sns.stripplot(x="grp", y=i, data=Trimer_Heter,color='black')
+        plt.title(f'Homotopic: {i}')
+        fig = sns.violinplot(x="grp", y=i, data=Trimer_Results, capsize=.2,palette=["#66CDAA","#4682B4","#AB63FA","#FFA15A"])
+        fig = sns.stripplot(x="grp", y=i, data=Trimer_Results,color='black')
+        fig = sns.pointplot(data=Trimer_Results, x='grp', y=i, join=False, ci=None, color='red')
         fig.set_ylim(-0.5, 1)
         fig.set_yticks(np.arange(-0.5, 1, 0.1))
         tmp_name = [i,'.png']
