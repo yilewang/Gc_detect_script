@@ -189,9 +189,10 @@ def DelayCal(filter_data_left, filter_data_right, valley_left, valley_right, fs)
         else:
             valid_range = left_peaks_list.shape[0]
             Delay = np.abs(right_peaks_list[0:valid_range] - left_peaks_list)
+        return np.sum(Delay/fs)
     else:
-        Delay = right_peaks_list
-    return np.sum(Delay/fs)
+        Delay = 3.26 + 1 + ((6 - right_peaks_list.shape[0])/ 3)
+        return Delay
 
 
 def Thetapeaksfinder(valleys, peaks):
