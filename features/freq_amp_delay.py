@@ -422,13 +422,19 @@ if __name__ == '__main__':
                 #######################################################
                 ############LI
                 ######################################################
-                freqL_Gamma=min(GammaL_num, GammaR_num)
-                freqR_Gamma=max(GammaR_num, GammaL_num) 
-                freqL_Theta= min(ThetaL_num, ThetaR_num)
-                freqR_Theta = max(ThetaR_num, ThetaL_num) 
-                ampLside=min(ampL_abs, ampR_abs)
-                ampRside=max(ampR_abs, ampL_abs)
+                # freqL_Gamma=min(GammaL_num, GammaR_num)
+                # freqR_Gamma=max(GammaR_num, GammaL_num) 
+                # freqL_Theta= min(ThetaL_num, ThetaR_num)
+                # freqR_Theta = max(ThetaR_num, ThetaL_num) 
+                # ampLside=min(ampL_abs, ampR_abs)
+                # ampRside=max(ampR_abs, ampL_abs)
 
+                freqL_Gamma=GammaL_num
+                freqR_Gamma=GammaR_num 
+                freqL_Theta= ThetaL_num
+                freqR_Theta = ThetaR_num
+                ampLside=ampL_abs
+                ampRside=ampR_abs
 
 
                 try:
@@ -437,10 +443,7 @@ if __name__ == '__main__':
                     LI_amp= (ampRside - ampLside) / (ampRside + ampLside) 
                     LI_mix_freq = ((freqR_Gamma/freqR_Theta) - (freqL_Gamma/freqL_Theta))/((freqR_Gamma/freqR_Theta) + (freqL_Gamma/freqL_Theta))
                 except ZeroDivisionError:
-                    LI_freq_gamma = 0
-                    LI_freq_theta = 0
-                    LI_amp = 0
-                    LI_mix_freq = 0
+                    LI_mix_freq = 1
 
 
                 ### mix table
@@ -451,7 +454,7 @@ if __name__ == '__main__':
                 'freqL_Theta':freqL_Theta, 
                 'freqR_Theta':freqR_Theta, 
                 'ampL_abs':ampLside,
-                'ampR_abs':ampRside ,
+                'ampR_abs':ampRside,
                 # 'ampL_pro_gamma':amp_l_gamma,
                 # 'ampR_pro_gamma':amp_r_gamma,
                 # 'ampL_pro_theta':amp_l_theta, 
@@ -471,6 +474,6 @@ if __name__ == '__main__':
     # # amp.to_csv('amp_combine.csv')
     # amp_pro.to_csv('amp_pro_final.csv')
     # freq.to_excel('freq.xlsx')
-    mix.to_excel('mix.xlsx')
+    mix.to_excel('mix2.xlsx')
 
     
