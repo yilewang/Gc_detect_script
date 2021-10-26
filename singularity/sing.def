@@ -1,0 +1,16 @@
+Bootstrap: library
+From: unbuntu:20.04
+
+%files
+    /home/tvb.cpp /src/main.cpp
+    CMakeLists.txt
+
+%post
+    export TZ="America/Chicago"
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    apt-get update && apt-get -y install libhdf5-dev libeigen3-dev cmake g++
+    mkdir build && cd build && cmake .. && make && make install && cd ..
+    apt-get remove -y libhdf5-dev libeigen3-dev cmake g++ && rm -r build && rm -r src
+
+%labels
+    Author Yile Wang, Behavioral and Brain Science, UT Dallas
