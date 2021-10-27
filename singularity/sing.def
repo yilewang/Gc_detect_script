@@ -1,16 +1,31 @@
 Bootstrap: library
-From: unbuntu:20.04
-
-%files
-    /home/tvb.cpp /src/main.cpp
-    CMakeLists.txt
+From: noahfl/tvb/tvb-ukbb
+# %files
 
 %post
     export TZ="America/Chicago"
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-    apt-get update && apt-get -y install libhdf5-dev libeigen3-dev cmake g++
-    mkdir build && cd build && cmake .. && make && make install && cd ..
-    apt-get remove -y libhdf5-dev libeigen3-dev cmake g++ && rm -r build && rm -r src
+    apt-get update && apt-get -y install libxp6
 
 %labels
-    Author Yile Wang, Behavioral and Brain Science, UT Dallas
+    User: yile.wang@utdallas.edu
+
+
+
+
+# BootStrap: library
+# From: ubuntu:16.04
+
+# %post
+#     apt-get -y update
+#     apt-get -y install date cowsay lolcat
+
+# %environment
+#     export LC_ALL=C
+#     export PATH=/usr/games:$PATH
+
+# %runscript
+#     date | cowsay | lolcat
+
+# %labels
+#     Author Sylabs
