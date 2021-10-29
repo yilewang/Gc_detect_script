@@ -35,7 +35,7 @@ def stats_calculator(datatable):
     Output
         the permutation resutls for each groups
     """
-    groups = pd.unique(datatable.loc[:,'groups'])
+    groups = pd.unique(datatable.loc[:,'grp'])
     groups_num = range(len(groups))
 
     comba = list(itertools.combinations(groups_num, 2))
@@ -51,7 +51,7 @@ def stats_calculator(datatable):
         if isinstance(datatable.iloc[0,a], (np.integer, np.float64)):
             deList = [[] for i in groups_num]
             for x in groups_num:
-                deList[x] = datatable.loc[datatable['groups'].isin([groups[x]]), [col]].values.flatten()
+                deList[x] = datatable.loc[datatable['grp'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
                 p_value = PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False)

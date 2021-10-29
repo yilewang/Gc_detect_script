@@ -474,6 +474,6 @@ if __name__ == '__main__':
     # # amp.to_csv('amp_combine.csv')
     # amp_pro.to_csv('amp_pro_final.csv')
     # freq.to_excel('freq.xlsx')
-    mix.to_excel('mix2.xlsx')
+    mix.to_excel('mix.xlsx')
 
     
