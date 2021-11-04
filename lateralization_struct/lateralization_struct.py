@@ -7,7 +7,7 @@ import seaborn as sns
 import sys
 import platform
 if platform.system() == 'Linux':
-    sys.path.append('/homw/wayne/github/TVB_worflow/functions')
+    sys.path.append('/home/wayne/github/TVB_workflow/functions')
 else:
     sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
 from pathConverter import pathcon
