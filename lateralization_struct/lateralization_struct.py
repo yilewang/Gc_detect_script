@@ -4,6 +4,13 @@ import time
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sys
+import platform
+if platform.system() == 'Linux':
+    sys.path.append('/homw/wayne/github/TVB_worflow/functions')
+else:
+    sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
+from pathConverter import pathcon
 
 
 if __name__ == '__main__':
@@ -18,12 +25,12 @@ if __name__ == '__main__':
     pcgSC = pd.DataFrame(columns=['grp', 'caseid', 'sc'])
     for grp in grp_pools:
         # obtain the data path
-        pth = 'C:/Users/Wayne/tvb/AUS/'+grp
+        pth = pathcon('AUS/') + grp
         case_pools = os.listdir(pth)
         # iterate the case id.
         # color = col[xx]
         for caseid in case_pools:
-            pth = 'C:/Users/Wayne/tvb/AUS/' + grp + '/' + caseid + '/weights.txt' 
+            pth =  pathcon('AUS/') + grp + '/' + caseid + '/weights.txt' 
             sc = pd.read_csv(pth, delimiter="\t", header=None)
             tmp = pd.DataFrame([[grp, caseid, sc.iloc[14, 15]]], columns=['grp', 'caseid', 'sc'])
             pcgSC = pcgSC.append(tmp, ignore_index=True)
