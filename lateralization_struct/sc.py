@@ -9,7 +9,12 @@ import io
 from read_mat import Case
 import seaborn as sns
 import sys
-sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
+import platform
+if platform.system() == 'Linux':
+    sys.path.append('/home/wayne/github/TVB_workflow/functions')
+else:
+    sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
+from pathConverter import pathcon
 from bootstrap import BootstrapTest
 from permutation import PermutationTest, stats_calculator
 from scipy import stats
@@ -53,7 +58,7 @@ if __name__ == '__main__':
     mean_group_matrix = np.zeros((16, 16, 4))
     for indx, grp in enumerate(grp_pools):
     # obtain the data path
-        pth = 'C:/Users/Wayne/tvb/LFP/'+grp
+        pth = pathcon('AUS/') + grp
         case_pools = os.listdir(pth)
         group_matrix = np.zeros((16, 16, len(case_pools)))
         for ind, caseid in enumerate(case_pools):
@@ -61,7 +66,7 @@ if __name__ == '__main__':
             # SC lateralization
             # fig, (ax0, ax1) = plt.subplots(1,2, figsize=(15,5))
             # fig.suptitle(grp+'_'+caseid)
-            datapath = 'C:/Users/Wayne/tvb/AUS/' + grp + '/' + caseid + '/weights.txt'
+            datapath = pathcon('AUS/') + grp + '/' + caseid + '/weights.txt'
             scl = open(datapath,"r")
             lines = scl.read()
             tmp_d = pd.read_csv(io.StringIO(lines), sep='\t', header=None, index_col=None, engine="python")
@@ -78,10 +83,22 @@ if __name__ == '__main__':
             # for n in ind:
             #     tmp = df_sc.iloc[n+1, n]
             #     m.append(tmp)
+
+
+            ###
+            # The homotopic connectivity
             connect = np.array([])
-            for index, key in enumerate(limbic):
+            hetero = np.array([])
+            for index, _ in enumerate(limbic):
+                # homotopic
                 tmp_connect = df_sc.iloc[2*index+1, 2*index]
                 connect = np.append(connect, tmp_connect)
+                # heterotopic
+                if index % 2 == 0: 
+                    tmp_hetero_left = df_sc.iloc[2*index, index] / 7
+                else:
+                    tmp_hetero_right = df_sc.iloc[2*index+1, index] / 7
+            print(tmp_hetero_left)
             tmp_c = np.concatenate(([grp, caseid], connect)).reshape((10,1)).T
             tmp_c2 = pd.DataFrame(tmp_c, columns=tmp_head)
             direct_sc_data = direct_sc_data.append(tmp_c2, ignore_index=True)
@@ -93,7 +110,7 @@ if __name__ == '__main__':
         plt.subplot(1,4,i+1)
         plt.title(grp_pools[i])
         sns.heatmap(mean_group_matrix[:,:,i], cmap="coolwarm", vmin=0, vmax=80, xticklabels=regions, yticklabels=regions)
-    plt.show()
+    # plt.show()
 
 
     
