@@ -1,18 +1,17 @@
 #!/usr/python
 
 import platform
-
 def pathcon(extend):
     """
     function path converter:
     Input: 
-        windows path
+        desktop path
     Output:
-        linux path
+        laptop path
     """
 
-    if platform.system() == 'Linux':
-        path = '/media/wayne/Linux/tvb/' + extend
+    if platform.node() == 'laptop':
+        path = 'C:/Users/wayne/tvb/' + extend
     else:
         path = 'C:/Users/Wayne/tvb/' + extend
     return path
