@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 import pandas as pd
 import numpy as np
 import sys
@@ -29,8 +28,6 @@ regions = ['aCNG-L', 'aCNG-R','mCNG-L','mCNG-R','pCNG-L','pCNG-R', 'HIP-L','HIP-
 groups = ['SNC', 'NC', 'MCI','AD']
 
 # iterate simulated functional connectivity
-
-
 if __name__ == "__main__":
     Trimer_Results = pd.DataFrame(columns=['grp','caseid', 'trimer_results','aCNG','mCNG','pCNG','HIP','PHG','AMY','sTEMp','mTEMp' ])
     Trimer_Heter  = pd.DataFrame(columns=['grp','caseid', 'trimer_results','aCNG','mCNG','pCNG','HIP','PHG','AMY','sTEMp','mTEMp' ])
@@ -68,18 +65,18 @@ if __name__ == "__main__":
                 tmp_trimer = np.append(tmp_trimer, homotopic)
             Trimer_Results = Trimer_Results.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_trimer), 'aCNG':tmp_trimer[0],'mCNG':tmp_trimer[1],'pCNG':tmp_trimer[2],'HIP':tmp_trimer[3],'PHG':tmp_trimer[4],  'AMY':tmp_trimer[5],'sTEMp':tmp_trimer[6],'mTEMp':tmp_trimer[7]},ignore_index=True)
             Trimer_Heter = Trimer_Heter.append({'grp':grp,'caseid':y,'trimer_results':np.mean(tmp_heter), 'aCNG':tmp_heter[0],'mCNG':tmp_heter[1],'pCNG':tmp_heter[2],'HIP':tmp_heter[3],'PHG':tmp_heter[4],'AMY':tmp_heter[5],'sTEMp':tmp_heter[6],'mTEMp':tmp_heter[7]},ignore_index=True)
+    Trimer_Results.to_excel("meta.xlsx")
 
-
-    sns.set_theme(style="whitegrid")
-    for i in list(Trimer_Results.columns[2:]):
-        fig = plt.figure(figsize=(10,10))
-        plt.title(f'Homotopic: {i}')
-        fig = sns.violinplot(x="grp", y=i, data=Trimer_Results, capsize=.2,palette=["#66CDAA","#4682B4","#AB63FA","#FFA15A"])
-        fig = sns.stripplot(x="grp", y=i, data=Trimer_Results,color='black')
-        fig = sns.pointplot(data=Trimer_Results, x='grp', y=i, join=False, ci=None, color='red')
-        fig.set_ylim(-0.5, 1)
-        fig.set_yticks(np.arange(-0.5, 1, 0.1))
-        tmp_name = [i,'.png']
-        name = ''.join(tmp_name)
-        plt.savefig(name)
+    # sns.set_theme(style="whitegrid")
+    # for i in list(Trimer_Results.columns[2:]):
+    #     fig = plt.figure(figsize=(10,10))
+    #     plt.title(f'Homotopic: {i}')
+    #     fig = sns.violinplot(x="grp", y=i, data=Trimer_Results, capsize=.2,palette=["#66CDAA","#4682B4","#AB63FA","#FFA15A"])
+    #     fig = sns.stripplot(x="grp", y=i, data=Trimer_Results,color='black')
+    #     fig = sns.pointplot(data=Trimer_Results, x='grp', y=i, join=False, ci=None, color='red')
+    #     fig.set_ylim(-0.5, 1)
+    #     fig.set_yticks(np.arange(-0.5, 1, 0.1))
+    #     tmp_name = [i,'.png']
+    #     name = ''.join(tmp_name)
+    #     plt.savefig(name)
 
