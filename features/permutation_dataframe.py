@@ -50,7 +50,7 @@ def stats_calculator(datatable):
                 deList[x] = datatable.loc[datatable['groups'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
-                p_value = np.round(PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False), 4)
+                p_value = np.round(PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False), 3)
                 tmp_list = np.append(tmp_list, p_value)
             overall_permu[a, :] = tmp_list
 
@@ -92,13 +92,13 @@ def bootstrap_groups(datatable, iternation:int, col:str):
 # amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
 # freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
 # ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
-data_all = pd.read_excel('C:/Users/Wayne/tvb/sc_hetero_both.xlsx', sheet_name='Sheet1')
+data_all = pd.read_excel('C:/Users/Wayne/tvb/data_all.xlsx', sheet_name='Sheet1')
 # ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
 # integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
 # freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
 
 
-stats_calculator(data_all).to_excel('sc_hetero_stats.xlsx')
+stats_calculator(data_all).to_excel('data_all_stats.xlsx')
 
 # bootstrap_groups(G_table, iternation=10000, col='Gc')
 

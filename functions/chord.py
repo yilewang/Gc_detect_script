@@ -32,13 +32,19 @@ for indx, grp in enumerate(grp_pools):
         df_sc = tmp_df.set_axis(node_names, axis=1) # set the columns
         df_sc = df_sc.reindex(index=split_codes, columns=split_codes)
         group_matrix[:,:,ind] = df_sc
+
+
     node_order = list()
     node_order.extend(split_codes[:8])  # reverse the order
     node_order.extend(split_codes[8:][::-1])
     node_angles = circular_layout(split_codes, node_order, start_pos=90,
                                 group_boundaries=[0, len(split_codes) / 2])
+    # node_angles[0:4] += 15
+    # node_angles[4:8] -= 15
+    # node_angles[8:12] -= 15
+    # node_angles[12:16] += 15
 
-    fig, axis = plot_connectivity_circle(np.array(np.mean(group_matrix, 2)), split_codes, node_angles=node_angles,colormap='Reds', facecolor='white', textcolor='black', colorbar=False, linewidth=3, title=grp, fontsize_names=10, show=False, fig = fig1)
+    fig, axis = plot_connectivity_circle(np.tril(np.array(np.mean(group_matrix, 2))), split_codes, node_angles=node_angles,colormap='Greens', facecolor='white', textcolor='black', colorbar=False, linewidth=3, title=grp, fontsize_names=10, show=False, fig = fig1, vmin=0, vmax=132.0)
     fig.savefig(f"{grp}_sc.png", dpi=300)
 
 

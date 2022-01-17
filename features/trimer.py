@@ -49,7 +49,7 @@ if __name__ == "__main__":
             dFCstream = TS2dFCstream(df2.to_numpy(), 5, None, '2D')
             MC_Trimers = dFCstream2Trimers(dFCstream)
             # do the averaging in the dimension3
-            MC_avg = np.mean(MC_Trimers, 2) #n x n 
+            MC_avg = np.mean(MC_Trimers, 2) #n x n
             tmp_trimer = np.array([])
             tmp_heter = np.array([])
             # pick up homotopic connection
