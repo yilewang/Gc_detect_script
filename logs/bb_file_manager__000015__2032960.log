@@ -1,0 +1,26 @@
+2021-06-21 16:28:50,119 - bb_file_manager - INFO - Starting the subject processing: Mon Jun 21 16:28:50 2021 
+2021-06-21 16:28:50,119 - bb_file_manager - INFO - Subject received as input: 000015 
+2021-06-21 16:28:50,151 - bb_file_manager - INFO - Performing action capitalize_and_clean on files with patterns ['*.[^log]'] 
+2021-06-21 16:28:50,152 - bb_file_manager - INFO - File names changed to upper case. 
+2021-06-21 16:28:50,169 - bb_file_manager - INFO - Performing action move_to on files with patterns ['dicom', 'DICOM'] 
+2021-06-21 16:28:50,180 - bb_file_manager - INFO - Performing action manage_struct on files with patterns ['*T1*.nii.gz'] 
+2021-06-21 16:28:50,180 - bb_file_manager - INFO - File moved/renamed: /home/yxw190015/HSAM/000015/000015_T1.nii.gz to T1/T1.nii.gz 
+2021-06-21 16:28:50,516 - bb_file_manager - INFO - Performing action manage_struct on files with patterns ['T2*FLAIR*.nii.gz', '*FLAIR*.nii.gz'] 
+2021-06-21 16:28:50,516 - bb_file_manager - ERROR - There was not an intensity-normalized T2. 
+2021-06-21 16:28:50,573 - bb_file_manager - INFO - Performing action manage_fMRI on files with patterns ['*FMRI*RESTING*.nii.gz', 'MB8*RESTING*.nii.gz', '*TASK*REST*.nii.gz', '*task*rest*.nii.gz', '*epi_rest*.nii.gz'] 
+2021-06-21 16:28:50,594 - bb_file_manager - INFO - File moved/renamed: /home/yxw190015/HSAM/000015/000015_FMRI_RESTING.nii.gz to fMRI/rfMRI.nii.gz 
+2021-06-21 16:28:51,962 - bb_file_manager - WARNING - There was no SBRef data for the subject fMRI/rfMRI.nii.gz 
+2021-06-21 16:28:51,962 - bb_file_manager - WARNING - The SBRef data will be generated now using the middle point of the subject 
+2021-06-21 16:28:51,962 - bb_file_manager - WARNING - Command to run: /home/yxw190015/tvb-pipeline2/tvb-pipeline/tvb-ukbb/bb_functional_pipeline/bb_generate_SBRef fMRI/rfMRI.nii.gz fMRI/rfMRI_SBREF.nii.gz 
+2021-06-21 16:28:51,963 - bb_file_manager - INFO - COMMAND TO RUN: 	/home/yxw190015/tvb-pipeline2/tvb-pipeline/tvb-ukbb/bb_functional_pipeline/bb_generate_SBRef fMRI/rfMRI.nii.gz fMRI/rfMRI_SBREF.nii.gz 
+2021-06-21 16:29:51,353 - bb_file_manager - INFO - COMMAND OUTPUT: 	~/HSAM/000015/fMRI/rfMRI_SBREF_tmp ~/HSAM/000015
+~/HSAM/000015 
+2021-06-21 16:29:51,419 - bb_file_manager - INFO - Performing action manage_fMRI on files with patterns ['*fmri*task*.nii.gz', '*FMRI*TASK*.nii.gz', 'MB8*TASK*.nii.gz', '*epi_movie*.nii.gz', '*epi_smt*.nii.gz'] 
+2021-06-21 16:29:51,419 - bb_file_manager - WARNING - There was no tfMRI FMRI data 
+2021-06-21 16:29:51,432 - bb_file_manager - INFO - Performing action manage_SWI on files with patterns ['SWI*nii.gz'] 
+2021-06-21 16:29:51,432 - bb_file_manager - ERROR - There should be at least 134 SWI files. Only 0 found. There will be no SWI processing 
+2021-06-21 16:29:51,482 - bb_file_manager - INFO - Performing action manage_DWI on files with patterns ['DIFF_*', 'MB3_*', '*dwi*.*', '*DWI*.*'] 
+2021-06-21 16:29:51,482 - bb_file_manager - ERROR - There was no DWI data.  There will be no DWI processing. 
+2021-06-21 16:29:51,495 - bb_file_manager - INFO - Performing action move_to on files with patterns ['SWI*.*'] 
+2021-06-21 16:29:51,508 - bb_file_manager - INFO - Performing action move_to on files with patterns ['*.[^log]'] 
+2021-06-21 16:29:51,508 - bb_file_manager - INFO - FILECONFIG: {'T1': 'T1/T1.nii.gz', 'rfMRI': 'fMRI/rfMRI.nii.gz', 'rfMRI_SBRef': 'fMRI/rfMRI_SBREF.nii.gz'} 

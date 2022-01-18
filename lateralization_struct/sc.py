@@ -55,6 +55,8 @@ if __name__ == '__main__':
     head = ['grp', 'caseid']
     tmp_head = np.concatenate((head, limbic), axis=0)
     direct_sc_data = pd.DataFrame(columns=tmp_head)
+    hetero_sc_data_left = pd.DataFrame(columns=tmp_head)
+    hetero_sc_data_right = pd.DataFrame(columns=tmp_head)
     mean_group_matrix = np.zeros((16, 16, 4))
     for indx, grp in enumerate(grp_pools):
     # obtain the data path
@@ -89,31 +91,51 @@ if __name__ == '__main__':
             # The homotopic connectivity
             connect = np.array([])
             hetero = np.array([])
-            for index, _ in enumerate(limbic):
+            tmp_hetero_left = np.array([])
+            tmp_hetero_right = np.array([])
+            for index in range(len(limbic)):
                 # homotopic
                 tmp_connect = df_sc.iloc[2*index+1, 2*index]
                 connect = np.append(connect, tmp_connect)
-                # heterotopic
-                if index % 2 == 0: 
-                    tmp_hetero_left = df_sc.iloc[2*index, index] / 7
-                else:
-                    tmp_hetero_right = df_sc.iloc[2*index+1, index] / 7
-            print(tmp_hetero_left)
             tmp_c = np.concatenate(([grp, caseid], connect)).reshape((10,1)).T
             tmp_c2 = pd.DataFrame(tmp_c, columns=tmp_head)
             direct_sc_data = direct_sc_data.append(tmp_c2, ignore_index=True)
+            for index in range(len(regions)):
+                # heterotopic
+                tmp_left = []
+                tmp_right = []
+                if index % 2 == 0:
+                    for indxx in range(1,17,2):
+                        if indxx - index != 1:
+                            tmp_left.append(df_sc.iloc[indxx, index])
+                    tmp_hetero_left = np.append(tmp_hetero_left, sum(tmp_left)/7)
+                else:
+                    for indxx in range(0, 16, 2):
+                        if index - indxx != 1:
+                            tmp_right.append(df_sc.iloc[indxx+1, index])
+                    tmp_hetero_right = np.append(tmp_hetero_right, sum(tmp_right)/7)
+            tmp_left_c = np.concatenate(([grp, caseid], tmp_hetero_left)).reshape((10,1)).T
+            tmp_left_c2 = pd.DataFrame(tmp_left_c, columns=tmp_head)
+            tmp_right_c = np.concatenate(([grp, caseid], tmp_hetero_right)).reshape((10,1)).T
+            tmp_right_c2 = pd.DataFrame(tmp_right_c, columns=tmp_head)
+            hetero_sc_data_left = hetero_sc_data_left.append(tmp_left_c2, ignore_index=True)
+            hetero_sc_data_right = hetero_sc_data_right.append(tmp_right_c2, ignore_index=True)
         end = time.time()
         logging.warning('Duration: {}'.format(end - start))
         mean_group_matrix[:,:,indx] = np.mean(group_matrix, axis=2)
-    figure = plt.figure(figsize=(20,4))
-    for i in range(len(grp_pools)):
-        plt.subplot(1,4,i+1)
-        plt.title(grp_pools[i])
-        sns.heatmap(mean_group_matrix[:,:,i], cmap="coolwarm", vmin=0, vmax=80, xticklabels=regions, yticklabels=regions)
-    # plt.show()
+    # figure = plt.figure(figsize=(20,4))
+    # for i in range(len(grp_pools)):
+    #     plt.subplot(1,4,i+1)
+    #     plt.title(grp_pools[i])
+    #     sns.heatmap(mean_group_matrix[:,:,i], cmap="coolwarm", vmin=0, vmax=80, xticklabels=regions, yticklabels=regions)
+    # # plt.show()
 
 
     
     # avg_direct_sc = pd.DataFrame({'grp':direct_sc_data.iloc[:,0],'avg_direct_sc':np.mean(np.array(direct_sc_data.iloc[:, 2:].values).astype('float'), axis=1)})
     # print(stats_calculator(avg_direct_sc))
     # violin_plot(avg_direct_sc, "avg_direct_sc")
+    # avg_hetero_sc_left = pd.DataFrame({'grp':hetero_sc_data_left.iloc[:,0],'avg_hetero_sc_left':np.mean(np.array(hetero_sc_data_left.iloc[:, 2:].values).astype('float'), axis=1)})
+    avg_hetero_sc_right = pd.DataFrame({'grp':hetero_sc_data_right.iloc[:,0],'avg_hetero_sc_right':np.mean(np.array(hetero_sc_data_right.iloc[:, 2:].values).astype('float'), axis=1)})
+    print(stats_calculator(avg_hetero_sc_right))
+    violin_plot(avg_hetero_sc_right, "avg_hetero_sc_right")

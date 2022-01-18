@@ -35,7 +35,7 @@ def stats_calculator(datatable):
     Output
         the permutation resutls for each groups
     """
-    groups = pd.unique(datatable.loc[:,'grp'])
+    groups = pd.unique(datatable.loc[:,'groups'])
     groups_num = range(len(groups))
 
     comba = list(itertools.combinations(groups_num, 2))
@@ -51,7 +51,7 @@ def stats_calculator(datatable):
         if isinstance(datatable.iloc[0,a], (np.integer, np.float64)):
             deList = [[] for i in groups_num]
             for x in groups_num:
-                deList[x] = datatable.loc[datatable['grp'].isin([groups[x]]), [col]].values.flatten()
+                deList[x] = datatable.loc[datatable['groups'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
                 p_value = PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False)
@@ -91,17 +91,18 @@ def bootstrap_groups(datatable, iternation:int, col:str):
     plt.show()
 
 
-G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
+# G_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', sheet_name='Gc_Go')
 # Mix_table = pd.read_excel('C:/Users/Wayne/tvb/stat_data/mix_final.xlsx')
 # amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
 # freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
-ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
+# ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
+mix_final = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/mix_final.xlsx', sheet_name='mix_final')
 # ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
 # integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
 # freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
 
 
-stats_calculator(ignition).to_excel('ignition_single_regions.xlsx')
+stats_calculator(mix_final).to_excel('mix_final_stats.xlsx')
 
 # bootstrap_groups(G_table, iternation=10000, col='Gc')
 
