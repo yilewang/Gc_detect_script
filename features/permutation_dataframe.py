@@ -8,9 +8,7 @@ from bootstrap import BootstrapTest
 from permutation import PermutationTest
 import pandas as pd
 from scipy.stats import mannwhitneyu
-import os
 import itertools
-import scipy
 
 
 def add_star(data):
@@ -23,8 +21,6 @@ def add_star(data):
     else:
         tmp_data = data
     return tmp_data
-
-
 
 
 
@@ -54,7 +50,7 @@ def stats_calculator(datatable):
                 deList[x] = datatable.loc[datatable['groups'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
-                p_value = PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False)
+                p_value = np.round(PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False), 3)
                 tmp_list = np.append(tmp_list, p_value)
             overall_permu[a, :] = tmp_list
 
@@ -96,13 +92,13 @@ def bootstrap_groups(datatable, iternation:int, col:str):
 # amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
 # freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
 # ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
-mix_final = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/mix_final.xlsx', sheet_name='mix_final')
+data_all = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/mix_final.xlsx', sheet_name='mix_final')
 # ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
 # integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
 # freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
 
 
-stats_calculator(mix_final).to_excel('mix_final_stats.xlsx')
+stats_calculator(data_all).to_excel('data_all_stats.xlsx')
 
 # bootstrap_groups(G_table, iternation=10000, col='Gc')
 

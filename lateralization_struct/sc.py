@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -23,12 +22,13 @@ import itertools
 """
 Author: Yile
 This script is designed to calculate the the direct weight connection
-
 """
+
 
 # brain regions labels
 regions = ['aCNG-L', 'aCNG-R','mCNG-L','mCNG-R','pCNG-L','pCNG-R', 'HIP-L','HIP-R','PHG-L','PHG-R','AMY-L','AMY-R', 'sTEMp-L','sTEMp-R','mTEMp-L','mTEMp-R']
 cmap = sns.diverging_palette(230, 20, as_cmap=True)
+
 
 def violin_plot(dataframe, column):
     fig = plt.figure(figsize=(10,10))
@@ -39,9 +39,6 @@ def violin_plot(dataframe, column):
     # fig.set_ylim(-0.5, 1)
     # fig.set_yticks(np.arange(-0.5, 1, 0.1))
     plt.show()
-
-
-
 
 
 if __name__ == '__main__':
@@ -86,7 +83,6 @@ if __name__ == '__main__':
             #     tmp = df_sc.iloc[n+1, n]
             #     m.append(tmp)
 
-
             ###
             # The homotopic connectivity
             connect = np.array([])
@@ -123,19 +119,26 @@ if __name__ == '__main__':
         end = time.time()
         logging.warning('Duration: {}'.format(end - start))
         mean_group_matrix[:,:,indx] = np.mean(group_matrix, axis=2)
-    # figure = plt.figure(figsize=(20,4))
-    # for i in range(len(grp_pools)):
-    #     plt.subplot(1,4,i+1)
-    #     plt.title(grp_pools[i])
-    #     sns.heatmap(mean_group_matrix[:,:,i], cmap="coolwarm", vmin=0, vmax=80, xticklabels=regions, yticklabels=regions)
-    # # plt.show()
+    direct_sc_data.to_excel("sc_data.xlsx")
+    hetero_sc_data_left.to_excel("sc_hetero_left.xlsx")
+    hetero_sc_data_right.to_excel("sc_hetero_right.xlsx")
+    figure = plt.figure(figsize=(25,25))
+    sns.set(font_scale=2)
+    for i in range(len(grp_pools)):
+        plt.subplot(2,2,i+1)
+        plt.title(grp_pools[i])
+        heat = sns.heatmap(mean_group_matrix[:,:,i], cmap="coolwarm", vmin=0, vmax=80, xticklabels=regions, yticklabels=regions)
+        heat.set_xticklabels(heat.get_xticklabels(), rotation=45)
+    # plt.savefig("heatmap_weight.png", dpi=100)
 
 
     
-    # avg_direct_sc = pd.DataFrame({'grp':direct_sc_data.iloc[:,0],'avg_direct_sc':np.mean(np.array(direct_sc_data.iloc[:, 2:].values).astype('float'), axis=1)})
+    # avg_direct_sc = pd.DataFrame({'grp':direct_sc_data.iloc[:,0],'avg_direct_sc':np.mean(np.array(direct_sc_data.iloc[:, 2:].values).astype('float'), axis=1)}
     # print(stats_calculator(avg_direct_sc))
     # violin_plot(avg_direct_sc, "avg_direct_sc")
+
     # avg_hetero_sc_left = pd.DataFrame({'grp':hetero_sc_data_left.iloc[:,0],'avg_hetero_sc_left':np.mean(np.array(hetero_sc_data_left.iloc[:, 2:].values).astype('float'), axis=1)})
-    avg_hetero_sc_right = pd.DataFrame({'grp':hetero_sc_data_right.iloc[:,0],'avg_hetero_sc_right':np.mean(np.array(hetero_sc_data_right.iloc[:, 2:].values).astype('float'), axis=1)})
-    print(stats_calculator(avg_hetero_sc_right))
-    violin_plot(avg_hetero_sc_right, "avg_hetero_sc_right")
+
+    # avg_hetero_sc_right = pd.DataFrame({'grp':hetero_sc_data_right.iloc[:,0],'avg_hetero_sc_right':np.mean(np.array(hetero_sc_data_right.iloc[:, 2:].values).astype('float'), axis=1)})
+    # print(stats_calculator(avg_hetero_sc_right))
+    # violin_plot(avg_hetero_sc_right, "avg_hetero_sc_right")
