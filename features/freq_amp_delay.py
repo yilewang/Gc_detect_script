@@ -9,8 +9,8 @@ import os
 import logging
 import sys
 sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
-from permutation import PermutationTest
-from bootstrap import BootstrapTest
+# from permutation import PermutationTest
+# from bootstrap import BootstrapTest
 
 """
 @ Author: Yile Wang
@@ -290,7 +290,9 @@ def visual_bootstrap():
 
 if __name__ == '__main__':
     # read Gc and Go file
-    coData = pd.read_excel('C:/Users/Wayne/tvb/TVB_workflow/new_g_oscillation/Gc_Go.xlsx', index_col=0)
+    laptop = r"C:\Users\wayne\OneDrive - The University of Texas at Dallas\tvb\stat_data"
+    desktop = 'C:/Users/Wayne/tvb/TVB_workflow/new_g_oscillation/Gc_Go.xlsx'
+    coData = pd.read_excel(desktop, index_col=0)
     # the sampling rate
     fs = 81920
 
@@ -331,6 +333,13 @@ if __name__ == '__main__':
                 df = pd.read_csv(dataFile, index_col=0)
                 dfL = df.iloc[:, 4]
                 dfR = df.iloc[:, 5]
+                # spectrogram representation
+                plt.figure(figsize=(10,10))
+                powerSpectrum, freqenciesFound, time, imageAxis = plt.specgram(dfR, Fs=fs)
+                plt.xlabel('Time')
+                plt.ylabel('Frequency')
+                plt.show()
+                break
                 # Gamma Band
                 pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 35.0, 100.0)
                 pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 35.0, 100.0)

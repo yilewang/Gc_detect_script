@@ -92,7 +92,7 @@ def bootstrap_groups(datatable, iternation:int, col:str):
 # amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
 # freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
 # ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
-data_all = pd.read_excel('C:/Users/Wayne/tvb/data_all.xlsx', sheet_name='Sheet1')
+data_all = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/mix_final.xlsx', sheet_name='mix_final')
 # ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
 # integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
 # freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
