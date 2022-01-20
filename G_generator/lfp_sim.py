@@ -14,24 +14,24 @@ if __name__ ==  '__main__':
     import functools
     import joblib
 
-    if __name__ == "__main__":
-        coData = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', index_col=0)
-        grp_pools = ['SNC','NC','MCI', 'AD']
-        for grp in grp_pools:
-            try:
-                case_pools = list(coData.index)
-                # iterate the case id.
-                # funcs = [functools.partial(tvb_sim.tvb_simulation, caseid, grp, np.array(np.round(coData.loc[caseid, "Gc"], 3))) for caseid in case_pools]
+    coData = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', index_col=0)
+    grp_pools = ['SNC','NC','MCI', 'AD']
+    for grp in grp_pools:
+        try:
+            case_pools = list(coData.index)
+            # iterate the case id.
+            # funcs = [functools.partial(tvb_sim.tvb_simulation, caseid, grp, np.array(np.round(coData.loc[caseid, "Gc"], 3))) for caseid in case_pools]
 
-                # three parameters in tvb_simulation(caseid, group info, scaling factor global coupling)
-                joblib.Parallel(n_jobs=4)(joblib.delayed(tvb_sim.tvb_simulation(caseid, grp, np.array(np.round(coData.loc[caseid, "Gc"], 3)))) for caseid in case_pools)
-                # with mp.Pool() as p:
-                #     [p.apply(tvb_sim.tvb_simulation, args=(caseid, grp, np.array(np.round(coData.loc[caseid, "Gc"], 3)))) for caseid in case_pools]
-                #     p.close()
-            except FileNotFoundError:
-                continue
-            except KeyError:
-                continue
+            # three parameters in tvb_simulation(caseid, group info, scaling factor global coupling)
+            joblib.Parallel(n_jobs=4)(joblib.delayed(tvb_sim.tvb_simulation(caseid, grp, np.array(np.round(coData.loc[caseid, "Gc"], 3)))) for caseid in case_pools)
+
+            # with mp.Pool() as p:
+            #     [p.apply(tvb_sim.tvb_simulation, args=(caseid, grp, np.array(np.round(coData.loc[caseid, "Gc"], 3)))) for caseid in case_pools]
+            #     p.close()
+        except FileNotFoundError:
+            continue
+        except KeyError:
+            continue
 
 
 
