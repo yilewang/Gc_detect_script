@@ -15,7 +15,7 @@ def tvb_simulation(caseid, grp, gc):
     sim = simulator.Simulator(
     model=ReducedSetHindmarshRose(),
     connectivity=connectivity.Connectivity.from_file(file),
-    coupling=coupling.Linear(a=gc),
+    coupling=coupling.Linear(a=np.array([gc])),
     simulation_length=1e4,
     integrator=integrators.HeunStochastic(dt=0.01220703125, noise=noise.Additive(nsig=np.array([0.00001]), ntau=0.0,
                                                                                 random_stream=np.random.RandomState(seed=42))),
