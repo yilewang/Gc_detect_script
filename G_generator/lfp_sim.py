@@ -1,4 +1,3 @@
-
 from py import process
 from tvb.simulator.models.stefanescu_jirsa import ReducedSetHindmarshRose
 from tvb.simulator.lab import *
@@ -10,10 +9,8 @@ import logging
 import sys
 sys.path.insert(0, 'C:/Users/Wayne/tvb/TVB_workflow/functions/')
 import multiprocessing as mp
-# pool = mp.Pool(mp.cpu_count())
 import tvb_sim
-import functools
-import joblib
+
 
 
 if __name__ ==  '__main__':
@@ -22,9 +19,9 @@ if __name__ ==  '__main__':
     cores = mp.cpu_count()
     pool = mp.Pool(processes=cores)
     case_pools = list(coData.index)
-
-    task = [(caseid, grp, np.round(coData.loc[caseid, "Gc"], 3)) for grp in grp_pools for caseid in case_pools]
+    task = [(caseid, grp, np.round(coData.loc[caseid, "Gc"], 3)) for grp, caseid in zip(grp_pools, case_pools)]
     pool.starmap(tvb_sim.tvb_simulation, task)
+    pool.close()
 
     # for grp in grp_pools:
     #     try:

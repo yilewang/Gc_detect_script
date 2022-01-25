@@ -291,7 +291,7 @@ def visual_bootstrap():
 if __name__ == '__main__':
     # read Gc and Go file
     laptop = r"C:\Users\wayne\OneDrive - The University of Texas at Dallas\tvb\stat_data"
-    desktop = 'C:/Users/Wayne/tvb/TVB_workflow/new_g_oscillation/Gc_Go.xlsx'
+    desktop = 'C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx'
     coData = pd.read_excel(desktop, index_col=0)
     # the sampling rate
     fs = 81920

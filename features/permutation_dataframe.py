@@ -35,12 +35,10 @@ def stats_calculator(datatable):
     groups_num = range(len(groups))
 
     comba = list(itertools.combinations(groups_num, 2))
-
-    # give labels to comba
-    comba_with_name = []
-    for a, x in enumerate(comba):
-        tmp_one = (groups[x[0]], groups[x[1]])
-        comba_with_name.append(tmp_one)
+    comba_with_name = list(itertools.combinations(groups, 2))
+    for a, x in enumerate(comba_with_name):
+        tmp = ' & '.join(x)
+        comba_with_name[a] = tmp
 
     overall_permu =np.zeros((len(datatable.columns), len(comba)))
     for a,col in enumerate(datatable.columns):

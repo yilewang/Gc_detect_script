@@ -96,7 +96,7 @@ def Thetapeaksfinder(valleys, peaks):
 
 if __name__ == '__main__':
     # read Gc and Go file
-    coData = pd.read_excel('C:/Users/Wayne/tvb/TVB_workflow/new_g_oscillation/Gc_Go.xlsx', index_col=0)
+    coData = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Gc_Go.xlsx', index_col=0)
     # the sampling rate
     fs = 81920
     # the time
@@ -167,25 +167,27 @@ if __name__ == '__main__':
 
 
                 # visualization
-                # fig, (ax1, ax2) = plt.subplots(2, figsize=(15,10))
-                # fig.suptitle(grp+'_'+caseid + "_filtered data_"+ str(gm))
-                # ax1.plot(tt, df['pCNG-R'], label = "Raw")
-                # ax1.plot(tt[N-1:]-delay, pcgThetaR[N-1:], label = "theta")
-                # #ax1.plot(t, env2, label = 'Envelope')             
-                # #ax1.plot(t, pcgGammaR, label = "Gamma")
-                # ax1.plot(GammaR[GammaR > N-1]/fs, df['pCNG-R'][GammaR[GammaR > N-1]], 'x:r')
-                # ax1.plot(valleysR[valleysR > N-1]/fs-delay, pcgThetaR[valleysR[valleysR > N-1]], 'x:g')
-                # ax1.legend()
-                # ax1.title.set_text('Theta&Gamma Fliter Signals_R')
-                # ax2.plot(tt, df['pCNG-L'], label = "Raw")
-                # ax2.plot(tt[N-1:]-delay, pcgThetaL[N-1:], label = "theta")
-                # #ax1.plot(t, env2, label = 'Envelope')             
-                # #ax1.plot(t, pcgGammaR, label = "Gamma")
-                # ax2.plot(GammaL[GammaL > N-1]/fs, df['pCNG-L'][GammaL[GammaL > N-1]], 'x:r')
-                # ax2.plot(valleysL[valleysL > N-1]/fs-delay, pcgThetaL[valleysL[valleysL > N-1]], 'x:g')
-                # ax2.legend()
-                # ax2.title.set_text('Theta&Gamma Fliter Signals_L')
-                # plt.show()
+                fig, (ax1, ax2) = plt.subplots(2, figsize=(15,10))
+                fig.suptitle(grp+'_'+caseid + "_filtered data_"+ str(gm))
+                ax1.plot(tt, df['pCNG-R'], label = "Raw")
+                print(N)
+                break
+                ax1.plot(tt[N-1:]-delay, pcgThetaR[N-1:], label = "theta")
+                #ax1.plot(t, env2, label = 'Envelope')             
+                #ax1.plot(t, pcgGammaR, label = "Gamma")
+                ax1.plot(GammaR[GammaR > N-1]/fs, df['pCNG-R'][GammaR[GammaR > N-1]], 'x:r')
+                ax1.plot(valleysR[valleysR > N-1]/fs-delay, pcgThetaR[valleysR[valleysR > N-1]], 'x:g')
+                ax1.legend()
+                ax1.title.set_text('Theta&Gamma Fliter Signals_R')
+                ax2.plot(tt, df['pCNG-L'], label = "Raw")
+                ax2.plot(tt[N-1:]-delay, pcgThetaL[N-1:], label = "theta")
+                #ax1.plot(t, env2, label = 'Envelope')             
+                #ax1.plot(t, pcgGammaR, label = "Gamma")
+                ax2.plot(GammaL[GammaL > N-1]/fs, df['pCNG-L'][GammaL[GammaL > N-1]], 'x:r')
+                ax2.plot(valleysL[valleysL > N-1]/fs-delay, pcgThetaL[valleysL[valleysL > N-1]], 'x:g')
+                ax2.legend()
+                ax2.title.set_text('Theta&Gamma Fliter Signals_L')
+                plt.show()
                 # pt = grp + '_' + caseid + '_' + str(gm) +'.png'
                 # #plt.savefig(pt)
 
