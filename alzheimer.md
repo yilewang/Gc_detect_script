@@ -14,3 +14,9 @@ steps to NFT (neurofibrillary tangles)
 4. neuron death. Connectivity breakdown
 
 
+## a flow of the AD
+```mermaid
+flowchart TD
+	A[AD overview] --> B{no cure};
+	B --> C[Our approach];
+```
