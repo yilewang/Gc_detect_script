@@ -14,9 +14,37 @@ steps to NFT (neurofibrillary tangles)
 4. neuron death. Connectivity breakdown
 
 
-## a flow of the AD
+## A flow of the AD
 ```mermaid
 flowchart TD
 	A[AD overview] --> B{no cure};
 	B --> C[Our approach];
 ```
+
+## Questions I need to know about the Alzheimer's Disease
+
+1. how to make diagnosis of AD?
+	The definitive dignosis of AD requires post-mortem evaluation (Jason Weller et al., 2018)
+2. The stages of AD
+	Braak and Braak
+3. Neurobiology of AD
+4. 
+
+
+
+
+---------------------
+### Genetic
+Apolipoprotein E (APOE) well-known risk factor gene.
+
+
+### Some pahognomonic types (special pathological changes)
+1. Abeta plaque, extra-neuronal neuritic plaques evident by post-mortem histopathological examination.
+2. Neurofibrillary tangles, p-tau is the protein of neurofibrillary tangles and more AD specific protein than total tau. 
+3. brain atrophy, by MRI.
+
+
+
+
+
+
