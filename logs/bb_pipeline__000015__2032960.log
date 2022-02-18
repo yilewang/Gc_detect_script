@@ -1,7 +1,0 @@
-2021-06-21 16:28:50,118 - bb_pipeline - INFO - Starting the subject processing: Mon Jun 21 16:28:50 2021 
-2021-06-21 16:28:50,118 - bb_pipeline - INFO - Subject received as input: 000015 
-2021-06-21 16:28:50,118 - bb_pipeline - INFO - Running file manager 
-2021-06-21 16:29:51,510 - bb_pipeline - INFO - File configuration before QC: {'T1': 'T1/T1.nii.gz', 'rfMRI': 'fMRI/rfMRI.nii.gz', 'rfMRI_SBRef': 'fMRI/rfMRI_SBREF.nii.gz'} 
-2021-06-21 16:29:51,514 - bb_pipeline - INFO - File configuration after running file manager: {'T1': 'T1/T1.nii.gz', 'rfMRI': 'fMRI/rfMRI.nii.gz', 'rfMRI_SBRef': 'fMRI/rfMRI_SBREF.nii.gz'} 
-2021-06-21 16:29:51,514 - bb_pipeline - ERROR - There is no proper DWI data. Thus, the B0 file cannot be generated in order to run topup 
-2021-06-21 18:29:48,076 - bb_pipeline - INFO - Main processing file finished at: Mon Jun 21 18:29:48 2021 

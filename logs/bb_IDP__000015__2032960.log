@@ -1,4 +1,0 @@
-2021-06-21 18:23:51,807 - bb_IDP - INFO - Starting the subject processing: Mon Jun 21 18:23:51 2021 
-2021-06-21 18:23:51,807 - bb_IDP - INFO - Subject received as input: 000015 
-2021-06-21 18:23:51,807 - bb_IDP - INFO - COMMAND TO RUN: 	${FSLDIR}/bin/fsl_sub -q ${QUEUE_STANDARD} -N "bb_IDP_000015" -j ,-1,  -l /home/yxw190015/HSAM/000015/logs/ $BB_BIN_DIR/bb_IDP/bb_IDP 000015 
-2021-06-21 18:29:48,076 - bb_IDP - INFO - COMMAND OUTPUT: 	2043399 

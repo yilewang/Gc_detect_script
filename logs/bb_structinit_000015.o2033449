@@ -1,5 +1,0 @@
-HOST INFO: Linux compute-1-1-39 4.18.0-193.19.1.el8_2.x86_64 #1 SMP Mon Sep 14 14:37:00 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-COMMAND RUN: /home/yxw190015/tvb-pipeline2/tvb-pipeline/tvb-ukbb/bb_structural_pipeline/bb_struct_init
-Starting time: Mon Jun 21 16:29:51 CDT 2021
-WARNING: No T2 in 000015
-2041741
