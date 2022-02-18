@@ -17,8 +17,8 @@ steps to NFT (neurofibrillary tangles)
 ## A flow of the AD
 ```mermaid
 flowchart TD
-	A[AD incidents and prevalence] --> B[However, there is no cure for it];
-	B --> C[Our approach];
+	A[AD overview] --> B[The challenging, and no cure];
+	B --> C[the approached we can use];
 	C --> D[meaning of the computational methods];
 	D --> E[TVB introduction];
 	E --> F[previous studies, biophysical parameters more salient];
