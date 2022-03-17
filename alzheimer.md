@@ -17,15 +17,15 @@ steps to NFT (neurofibrillary tangles)
 ## A flow of the AD
 ```mermaid
 flowchart TD
-	A[AD overview] --> B[no cure];
-	B --> C[Our approach];
-	C --> D[meaning of the computational methods];
+	A[AD overview] --> B[The current issues, and no cure];
+	B --> C[The approaches we can use];
+	C --> D[Meaning of the computational methods];
 	D --> E[TVB introduction];
-	E --> F[previous studies, biophysical parameters more salient];
+	E --> F[Previous studies, biophysical parameters more salient];
 	F --> G[Interhemisphere];
 	G --> H[Corpus Callosum];
 	H --> I[AD with lateralized deposite of tau, Abeta, structural, functional];
-	I --> J[limbic lateralization?];
+	I --> J[Limbic lateralization?];
 	J --> K[Based on, our objective, brain dynamics];
 ```
 
