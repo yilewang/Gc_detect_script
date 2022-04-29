@@ -170,8 +170,6 @@ if __name__ == '__main__':
                 fig, (ax1, ax2) = plt.subplots(2, figsize=(15,10))
                 fig.suptitle(grp+'_'+caseid + "_filtered data_"+ str(gm))
                 ax1.plot(tt, df['pCNG-R'], label = "Raw")
-                print(N)
-                break
                 ax1.plot(tt[N-1:]-delay, pcgThetaR[N-1:], label = "theta")
                 #ax1.plot(t, env2, label = 'Envelope')             
                 #ax1.plot(t, pcgGammaR, label = "Gamma")

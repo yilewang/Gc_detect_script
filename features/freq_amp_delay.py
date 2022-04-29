@@ -318,7 +318,7 @@ if __name__ == '__main__':
         #columns=['grp','caseid','freqL_Gamma','freqR_Gamma', 'freqL_Theta', 'freqR_Theta', 'ampL_abs','ampR_abs','ampL_combine','ampR_combine', 'delay'])
     for grp in grp_pools:
         # obtain the data path
-        pth = 'C:/Users/Wayne/tvb/LFP/'+grp
+        pth = 'D:/data/LFP/'+grp
         #case_pools = ['3168A']
         case_pools = os.listdir(pth)
         # iterate the case id.
@@ -328,18 +328,18 @@ if __name__ == '__main__':
                 # change it to Gc or Go
                 gm = np.round(coData.loc[caseid, "Gc"], 3)
                 # store the filename and prepare for reading the data
-                dataFile = 'C:/Users/Wayne/tvb/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
+                dataFile = 'D:/data/LFP/'+grp+'/'+caseid+'/'+caseid+'_'+str(gm)+'.csv'
                 # pandas read the data
                 df = pd.read_csv(dataFile, index_col=0)
                 dfL = df.iloc[:, 4]
                 dfR = df.iloc[:, 5]
-                # spectrogram representation
-                plt.figure(figsize=(10,10))
-                powerSpectrum, freqenciesFound, time, imageAxis = plt.specgram(dfR, Fs=fs)
-                plt.xlabel('Time')
-                plt.ylabel('Frequency')
-                plt.show()
-                break
+                # # spectrogram representation
+                # plt.figure(figsize=(10,10))
+                # powerSpectrum, freqenciesFound, time, imageAxis = plt.specgram(dfR, Fs=fs)
+                # plt.xlabel('Time')
+                # plt.ylabel('Frequency')
+                # plt.show()
+                
                 # Gamma Band
                 pcgGammaL, N = fir_bandpass(np.asarray(df['pCNG-L']), fs, 35.0, 100.0)
                 pcgGammaR , N = fir_bandpass(np.asarray(df['pCNG-R']), fs, 35.0, 100.0)
@@ -377,31 +377,31 @@ if __name__ == '__main__':
                 valleysR = np.append(valleysR, fs-1)
 
                 ### the absolute value of the pCNG amplitude
-                amp_r = AmpAbs(df['pCNG-R'],pcgThetaR, valleysR, GammaR, ThetaR, delay_fs)
-                amp_l = AmpAbs(df['pCNG-L'], pcgThetaL, valleysL, GammaL, ThetaL, delay_fs)
-                ampL_abs = np.mean(amp_l)
-                ampR_abs = np.mean(amp_r)
+                # amp_r = AmpAbs(df['pCNG-R'],pcgThetaR, valleysR, GammaR, ThetaR, delay_fs)
+                # amp_l = AmpAbs(df['pCNG-L'], pcgThetaL, valleysL, GammaL, ThetaL, delay_fs)
+                # ampL_abs = np.mean(amp_l)
+                # ampR_abs = np.mean(amp_r)
 
-                # # the combine value of the pCNG amplitude
-                # amp_r = AmpCombine(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
-                # amp_l = AmpCombine(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
+                # # # the combine value of the pCNG amplitude
+                # # amp_r = AmpCombine(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
+                # # amp_l = AmpCombine(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
 
-                # # take the mean
-                # ampL_combine = np.mean(amp_l)
-                # ampR_combine = np.mean(amp_r)
+                # # # take the mean
+                # # ampL_combine = np.mean(amp_l)
+                # # ampR_combine = np.mean(amp_r)
 
-                # to dataframe
-                amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL_abs, 'ampR':ampR_abs}, ignore_index=True)
+                # # to dataframe
+                # amp = amp.append({'grp':grp, 'caseid': caseid, 'ampL': ampL_abs, 'ampR':ampR_abs}, ignore_index=True)
 
-                #### the proportional value of the pCNG
-                # amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
-                # amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
+                ### the proportional value of the pCNG
+                amp_r_gamma, amp_r_theta  = AmpPro(df['pCNG-R'], pcgThetaR, GammaR, ThetaR, valleysR)
+                amp_l_gamma, amp_l_theta  = AmpPro(df['pCNG-L'], pcgThetaL, GammaL, ThetaL, valleysL)
 
-                # ampL_gamma = np.mean(amp_l_gamma)
-                # ampL_theta = np.mean(amp_l_theta)
-                # ampR_gamma = np.mean(amp_r_gamma)
-                # ampR_theta = np.mean(amp_r_theta)
-                # amp_pro = amp_pro.append({'grp':grp, 'caseid': caseid, 'ampL_gamma': ampL_gamma, 'ampR_gamma':ampR_gamma, 'ampL_theta':ampL_theta, 'ampR_theta':ampR_theta}, ignore_index=True)
+                ampL_gamma = np.mean(amp_l_gamma)
+                ampL_theta = np.mean(amp_l_theta)
+                ampR_gamma = np.mean(amp_r_gamma)
+                ampR_theta = np.mean(amp_r_theta)
+                amp_pro = amp_pro.append({'grp':grp, 'caseid': caseid, 'ampL_gamma': ampL_gamma, 'ampR_gamma':ampR_gamma, 'ampL_theta':ampL_theta, 'ampR_theta':ampR_theta}, ignore_index=True)
 
                 #################################################
                 ### Frequencies
@@ -442,14 +442,14 @@ if __name__ == '__main__':
                 freqR_Gamma=GammaR_num 
                 freqL_Theta= ThetaL_num
                 freqR_Theta = ThetaR_num
-                ampLside=ampL_abs
-                ampRside=ampR_abs
+                # ampLside=ampL_gamma
+                # ampRside=ampR_abs
 
 
                 try:
                     LI_freq_gamma = (freqR_Gamma - freqL_Gamma)/(freqR_Gamma+freqL_Gamma)
                     LI_freq_theta= (freqR_Theta - freqL_Theta)/(freqL_Theta+freqR_Theta)
-                    LI_amp= (ampRside - ampLside) / (ampRside + ampLside) 
+                    #LI_amp= (ampRside - ampLside) / (ampRside + ampLside) 
                     LI_mix_freq = ((freqR_Gamma/freqR_Theta) - (freqL_Gamma/freqL_Theta))/((freqR_Gamma/freqR_Theta) + (freqL_Gamma/freqL_Theta))
                 except ZeroDivisionError:
                     LI_mix_freq = 1
@@ -462,15 +462,15 @@ if __name__ == '__main__':
                 'freqR_Gamma':freqR_Gamma, 
                 'freqL_Theta':freqL_Theta, 
                 'freqR_Theta':freqR_Theta, 
-                'ampL_abs':ampLside,
-                'ampR_abs':ampRside,
-                # 'ampL_pro_gamma':amp_l_gamma,
-                # 'ampR_pro_gamma':amp_r_gamma,
-                # 'ampL_pro_theta':amp_l_theta, 
-                # 'ampR_pro_theta':amp_r_theta,
+                # 'ampL_abs':ampLside,
+                # 'ampR_abs':ampRside,
+                'ampL_pro_gamma':amp_l_gamma,
+                'ampR_pro_gamma':amp_r_gamma,
+                'ampL_pro_theta':amp_l_theta, 
+                'ampR_pro_theta':amp_r_theta,
                 'LI_freq_gamma':LI_freq_gamma,
                 'LI_freq_theta': LI_freq_theta,
-                'LI_amp': LI_amp,
+                #'LI_amp': LI_amp,
                 'LI_mix_freq': LI_mix_freq,
                 'delay':subj_delay}, 
                 ignore_index=True, sort=False)
@@ -481,7 +481,7 @@ if __name__ == '__main__':
                 continue
     # amp.to_csv('amp_abs.csv')
     # # amp.to_csv('amp_combine.csv')
-    # amp_pro.to_csv('amp_pro_final.csv')
+    amp_pro.to_csv('amp_pro_final.csv')
     # freq.to_excel('freq.xlsx')
     mix.to_excel('mix.xlsx')
 

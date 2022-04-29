@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
+sys.path.append('C:\\Users\\Wayne\\tvb\\tvbtools\\functions')
 from bootstrap import BootstrapTest
 from permutation import PermutationTest
 import pandas as pd
@@ -48,7 +48,7 @@ def stats_calculator(datatable):
                 deList[x] = datatable.loc[datatable['groups'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
-                p_value = np.round(PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False), 3)
+                p_value = np.round(PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False), 5)
                 tmp_list = np.append(tmp_list, p_value)
             overall_permu[a, :] = tmp_list
 
@@ -90,13 +90,14 @@ def bootstrap_groups(datatable, iternation:int, col:str):
 # amp = pd.read_excel('C:/Users/Wayne/tvb/amp_abs.xlsx')
 # freq = pd.read_excel('C:/Users/Wayne/tvb/freq.xlsx')
 # ignition=pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/ignition_table_merge.xlsx', sheet_name='ignition_merge')
-data_all = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/mix_final.xlsx', sheet_name='mix_final')
+#data_all = pd.read_excel('C:/Users/Wayne/tvb/Weighted_Node_degree.xlsx', sheet_name='rplot')
+data_all = pd.read_excel('C:/Users/Wayne/tvb/amp_pro_final.xlsx', sheet_name='amp_pro_final')
 # ignition=pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Ignition_whole_brain')
 # integration = pd.read_excel('C:/Users/Wayne/tvb/stat_data/Ignition_regroups.xlsx', sheet_name='Integration')
 # freq_amp = pd.read_excel('C:/Users/Wayne/R.TVB_Ignition/freq_amp_combination.xlsx')
 
 
-stats_calculator(data_all).to_excel('data_all_stats.xlsx')
+stats_calculator(data_all).to_excel('data_amp_pro.xlsx')
 
 # bootstrap_groups(G_table, iternation=10000, col='Gc')
 
