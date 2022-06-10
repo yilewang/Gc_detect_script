@@ -8,9 +8,7 @@ import time
 import os
 import logging
 import sys
-sys.path.append('C:\\Users\\Wayne\\tvb\\TVB_workflow\\functions')
-# from permutation import PermutationTest
-# from bootstrap import BootstrapTest
+from tools.statTools import PermutationTest, BootstrapTest
 
 """
 @ Author: Yile Wang
@@ -246,7 +244,7 @@ def visual_violin():
     plt.title(key1)
     plt.show()
 
-def visual_bootstrap():
+def visual_bootstrap(key1):
 
     # create bootstrap data set
     AD_sample = np.hstack(amp.loc[amp['grp'].isin(['AD']), [key1]].values)

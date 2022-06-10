@@ -14,7 +14,6 @@ from scipy.integrate import simps
 from scipy import integrate
 from scipy.linalg import dft
 from scipy.interpolate import InterpolatedUnivariateSpline
-from statsmodels.tsa.stattools import adfuller, kpss, acf, pacf, grangercausalitytests
 
 
 datana = []

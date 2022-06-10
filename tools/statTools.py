@@ -6,12 +6,54 @@ import seaborn as sns
 from itertools import combinations
 import itertools
 import pandas as pd
-"""
-This is a permutation test python script
-Author: Yile Wang
-Date: 07/11/2021
 
 """
+This is a python script with statistical tools
+Author: Yile Wang
+Date: 06/10/2022
+"""
+
+def BootstrapTest(x,iteration, visualization = False):
+    """
+    Args:   
+        x: data list1 1-d array
+        iteration: iteration number for the test
+        visualization (boolean): the default value is False. If it is True, the bootstrap histgram will be generated
+    Returns:
+        CI the bootstrap test
+        bootstrap distribution
+
+    """
+    # transfer data to array format
+    x = np.array(x)
+    box = np.array([])
+    i = 0
+    while i < iteration:
+        idx_x = np.random.choice(x, size=x.shape[0], replace=True)
+        p_mean = np.mean(idx_x)
+        box = np.append(box, p_mean)
+        i+=1
+    bt_mean = np.mean(box)
+    sorted_box = np.sort(box)
+    low_CI = np.percentile(sorted_box, 2.5)
+    high_CI = np.percentile(sorted_box, 97.5)
+    CI = (low_CI, high_CI)
+    
+    #p_value = (box[box > np.mean(x)].shape[0] + 1) / (iteration + 1) # correction
+    print(f"The CI of the Bootstrap Test is: {CI}")
+    
+    # visualization
+    if visualization == True:
+        plt.figure(figsize=(9,8))
+        sns.histplot(data=box, bins='auto')
+        plt.axvline(x=np.round(CI[0],3), label='2.5% CI at {}'.format(np.round(CI[0],3)),c='g', linestyle = 'dashed')
+        plt.axvline(x=np.round(CI[1],3), label='97.5% CI at {}'.format(np.round(CI[1],3)), c='g', linestyle = 'dashed')
+        plt.axvline(x = np.mean(x), c='r', label = 'original mean at {}'.format(np.mean(x)))
+        plt.axvline(x = np.round(bt_mean, 3), c='r', label = 'bootstrap mean at {}'.format(np.round(bt_mean, 3)), linestyle='dashed')
+        plt.legend()
+        plt.show()
+    return CI, box
+
 
 
 def PermutationTest(x,y,iteration, visualization = False):
@@ -59,18 +101,6 @@ def PermutationTest(x,y,iteration, visualization = False):
         plt.legend()
         plt.show()
     return p_value
-    
-
-#############################
-### Test codes:
-# x = np.random.random_sample((20,))
-# y = np.random.random_sample((12,))
-# x = [1,2,3,4,5]
-# y = [6,7]
-# xy = x+y
-# print(PermutationTest(x, y, 10000, False))
-#############################
-
 
 def add_star(data):
     if data <= 0.001:
@@ -130,5 +160,33 @@ def stats_calculator(datatable):
             dataframe.iloc[i,k] = add_star(dataframe.iloc[i,k])
     return dataframe
 
+def bootstrap_groups(datatable, iternation:int, col:str):
+    
+    groups = pd.unique(datatable.loc[:,'groups'])
+    palette = ["#66CDAA","#4682B4","#AB63FA","#FFA15A"]
+    #palette = sns.color_palette(None, len(groups))
+    container = np.zeros((len(groups), iternation))
+    for num in range(len(groups)):
+        rmd = datatable.loc[datatable['groups'].isin([groups[num]]), col].values.flatten()
+        container[num] = BootstrapTest(rmd, iternation)[1]
+    fig=plt.figure(figsize=(15,5))
+    for num in range(len(groups)):
+        sns.histplot(x=container[num,:], color=palette[num], alpha=0.7, label=groups[num])
+        plt.legend()
+    plt.show()
+
+
+
+#############################
+### Test codes:
+# x = np.random.random_sample((20,))
+# y = np.random.random_sample((12,))
+# x = [1,2,3,4,5]
+# y = [6,7]
+# xy = x+y
+# print(PermutationTest(x, y, 10000, False))
+# data_all = pd.read_excel('/mnt/c/Users/Wayne/tvb/amp_pro_final.xlsx', sheet_name='amp_pro_final')
+# stats_calculator(data_all).to_excel('data_amp_pro.xlsx')
+#############################
 
 
