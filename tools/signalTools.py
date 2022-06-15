@@ -14,7 +14,7 @@ def hdf5Reader(filename):
         return dset
 
 
-def psd(data, samplinginterval, visual=False, *args, **kwargs):
+def psd(data, samplinginterval, visual=False, xlim=100., *args, **kwargs):
     """
     This function is for power spectrum density analysis
     Input:
@@ -22,17 +22,19 @@ def psd(data, samplinginterval, visual=False, *args, **kwargs):
     Output:
         Freq axis, PSD of the signal
     """
+    total = len(data)
+    duration = total * samplinginterval
     fourierSignal = np.fft.fft(np.array(data) - np.array(data).mean())
-    spectrum = 2 * (samplinginterval) ** 2 / 1000 * (fourierSignal * fourierSignal.conj())
+    spectrum = 2 * (samplinginterval) ** 2 / duration * (fourierSignal * fourierSignal.conj())
     spectrum = spectrum[:int(len(np.array(data)) / 2)]
-    time_all = 1 / 1
+    time_all = 1 / duration
     fNQ = 1/samplinginterval/2 # Nyquist frequency
     faxis = np.arange(0, fNQ, time_all) # frequency axis
     if visual:
-        fig, axs = plt.subplots(*args, **plt_kwargs)
-        psd_freq, psd_signal = psd(np.array(data), samplinginterval)
-        axs.plot(psd_freq, psd_signal, color='r', label = 'PSD Results', *args, **kwargs)
+        fig, axs = plt.subplots()
+        axs.plot(faxis, spectrum.real, color='r', label = 'PSD Results', *args, **kwargs)
         axs.legend()
+        axs.set_xlim([0, xlim])
         plt.show()
     return faxis, spectrum.real
 
@@ -61,7 +63,7 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
     return filtered_signal, N, delay
 
 
-def freqCount(data, prominence, fs, filter=False, visual = False, length=10, height=5, dpi = 50, *args, **kwargs):
+def freqCount(data, prominence, fs, filter=False, highpass = 2., lowpass = 10.,visual = False, length=10, height=5, dpi=50, *args, **kwargs):
     """
     The *args argument in a function definition allows 
     the function to process an unspecified number of positional arguments.
@@ -76,7 +78,7 @@ def freqCount(data, prominence, fs, filter=False, visual = False, length=10, hei
     spikesdata, _ = signal.find_peaks(data, prominence = prominence)
 
     if filter:
-        postfilter, N, delay= fir_bandpass(data, fs, 2., 10.)
+        postfilter, N, delay= fir_bandpass(data, fs, highpass, lowpass)
         spikesfiltered, _ = signal.find_peaks(postfilter, prominence = prominence)
     # visualization
     if visual:
@@ -97,7 +99,19 @@ def freqCount(data, prominence, fs, filter=False, visual = False, length=10, hei
         return len(spikesdata)
 
 
-def ampCount():
+def ampHilbert(data, fs, visual=True):
+    analytic = signal.hilbert(data)
+    amplitude_envelope = np.abs(analytic)
+    if visual:
+        time = np.arange(0, len(data)/fs, 1/fs)
+        fig, ax = plt.subplots()
+        ax.plot(time, data, label = "signal")
+        ax.plot(time, amplitude_envelope, label = "envelop")
+        plt.legend()
+        plt.show
+    return amplitude_envelope
+
+def ampPeak2Peak(data):
 
 
-def phaseDelay():
+# def phaseDelay():
