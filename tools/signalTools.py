@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import signal
 import h5py
+import sklearn
 
 def hdf5Reader(filename):
     with h5py.File(filename, "r") as f:
@@ -65,13 +66,25 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
 
 def freqCount(data, prominence, fs, filter=False, highpass = 2., lowpass = 10.,visual = False, length=10, height=5, dpi=50, *args, **kwargs):
     """
-    The *args argument in a function definition allows 
-    the function to process an unspecified number of positional arguments.
-    
-    You can use the *args notation to “unpack” a sequence 
-    into a series of positional arguments for any function. 
+    A function designed to do spike counting.
+    Input:
+        data: the 1-D array signal;
+        prominence: used in signal.find_peaks function, how salient the peaks are;
+        fs: sampling frequency;
+        filter (default False): apply FIR filter or not;
+        highpass: if filter = True, the low threshold;
+        lowpass: if filter = True, the high cutoff threshold;
+        visual (default False): the visualization;
+        length: if visual = True, the pic length;
+        height: if visual = True, the pic height;
+        dpi: if visual = True, the pic's resolution;
+    Output:
+        if filter applied:
+            (number of filtered signal, number of raw signal)
+        else:
+            (number of raw signal)
 
-    **kwargs: To do this, you must package the keyword-value pairs in a dictionary.
+
     """
     data = np.array(data)
     time = np.arange(0, len(data)/fs, 1/fs)
@@ -99,19 +112,42 @@ def freqCount(data, prominence, fs, filter=False, highpass = 2., lowpass = 10.,v
         return len(spikesdata)
 
 
-def ampHilbert(data, fs, visual=True):
-    analytic = signal.hilbert(data)
-    amplitude_envelope = np.abs(analytic)
-    if visual:
-        time = np.arange(0, len(data)/fs, 1/fs)
-        fig, ax = plt.subplots()
-        ax.plot(time, data, label = "signal")
-        ax.plot(time, amplitude_envelope, label = "envelop")
-        plt.legend()
-        plt.show
-    return amplitude_envelope
+def ampCount(data, fs , mode = "peak2xais", visual=True):
+    """
+    Input:
+        data: 1-d list or np.array
+            The single channel LFPs signal
+        fs: int or float
+            the sampling frequency
+        mode: str, "peak2valley", or "peak2xais", or "hilbert"
+            methods to calculate the amplitude. 
+    """
 
-def ampPeak2Peak(data):
+    
+    if mode == ["peak2valley", 'p2v']:
+
+    
+    if mode == ["peak2zero", 'p20']:
+
+
+
+
+    if mode in ["hilbert","h"]:
+        analytic = signal.hilbert(data)
+        amplitude_envelope = np.abs(analytic)
+        amplitude_data = np.mean(amplitude_envelope)
+        if visual:
+            time = np.arange(0, len(data)/fs, 1/fs)
+            fig, ax = plt.subplots()
+            ax.plot(time, data, label = "signal")
+            ax.plot(time, amplitude_envelope, label = "envelop")
+            plt.legend()
+            plt.show
+    else:
+        raise ValueError("Invalid mode. Expected one of: %s" % mode)
+    return amplitude_data
+
+
 
 
 # def phaseDelay():
