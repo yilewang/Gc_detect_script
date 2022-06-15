@@ -14,7 +14,7 @@ def hdf5Reader(filename):
         return dset
 
 
-def psd(data, samplinginterval, visual=False, *args, **plt_kwargs):
+def psd(data, samplinginterval, visual=False, *args, **kwargs):
     """
     This function is for power spectrum density analysis
     Input:
@@ -24,14 +24,14 @@ def psd(data, samplinginterval, visual=False, *args, **plt_kwargs):
     """
     fourierSignal = np.fft.fft(np.array(data) - np.array(data).mean())
     spectrum = 2 * (samplinginterval) ** 2 / 1000 * (fourierSignal * fourierSignal.conj())
-    spectrum = spectrum[:int(len(np.array(data)) / 2)] 
+    spectrum = spectrum[:int(len(np.array(data)) / 2)]
     time_all = 1 / 1
     fNQ = 1/samplinginterval/2 # Nyquist frequency
     faxis = np.arange(0, fNQ, time_all) # frequency axis
     if visual:
         fig, axs = plt.subplots(*args, **plt_kwargs)
         psd_freq, psd_signal = psd(np.array(data), samplinginterval)
-        axs.plot(psd_freq, psd_signal, color='r', label = 'PSD Results', *args, **plt_kwargs)
+        axs.plot(psd_freq, psd_signal, color='r', label = 'PSD Results', *args, **kwargs)
         axs.legend()
         plt.show()
     return faxis, spectrum.real
@@ -82,11 +82,11 @@ def freqCount(data, prominence, fs, filter=False, visual = False, length=10, hei
     if visual:
         fig, ax = plt.subplots(figsize=(length, height), dpi = dpi)
         ax.plot(time, data, label = "signal", *args, **kwargs)
-        ax.plot(spikesdata/fs, data[spikesdata], '+', label = "signal spikes")
+        ax.plot(spikesdata/fs, data[spikesdata], '+', label = "signal spikes", *args, **kwargs)
         if filter:
-            ax.plot(time[N-1:]-delay, postfilter[N-1:], label = "filtered signal")
+            ax.plot(time[N-1:]-delay, postfilter[N-1:], label = "filtered signal", *args, **kwargs)
             if len(spikesfiltered) > 0:
-                ax.plot(spikesfiltered[spikesfiltered > N-1]/fs - delay, postfilter[spikesfiltered[spikesfiltered > N-1]],'x', label = "filtered spikes")
+                ax.plot(spikesfiltered[spikesfiltered > N-1]/fs - delay, postfilter[spikesfiltered[spikesfiltered > N-1]],'x', label = "filtered spikes", *args, **kwargs)
         ax.legend()
         plt.show()
 
@@ -95,5 +95,9 @@ def freqCount(data, prominence, fs, filter=False, visual = False, length=10, hei
         return (len(spikesdata), len(spikesfiltered))
     else:
         return len(spikesdata)
-    
-        
+
+
+def ampCount():
+
+
+def phaseDelay():
