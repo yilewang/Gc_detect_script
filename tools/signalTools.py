@@ -7,8 +7,11 @@ from scipy import signal
 import h5py
 from typing import Union, List
 
+
+
+
 class signalToolkit:
-    def __init__(self, filename, fs, caseid, group) -> None:
+    def __init__(self, filename, fs, caseid=None, group=None) -> None:
         self.filename = filename
         self.fs = fs
         self.samplinginterval = 1/fs
@@ -32,6 +35,8 @@ class signalToolkit:
             key = list(f.keys())
             self.dset = f[key[0]][:]
             return self.dset
+
+
 
     def fir_bandpass(self, data, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0):
         """
@@ -69,22 +74,29 @@ class signalToolkit:
         delay = 0.5 * (N-1) / self.fs
         return filtered_signal, N, delay
 
-    # def visualization():
-    def signalpreprocessing(self, channelNum, filter=True, spikesDetection = True):
+    
+
+    def signalpreprocessing(self, channelNum, filter=True, low=None, high=None, spikesDetection = True):
         self.hdf5Reader()
-        self.channel = self.dset[:,channelNum]
+        self.signal = self.dset[:,channelNum]
         if filter:
-            self.filtered, self.N, self.delay = self.fir_bandpass(self.channel, 2.0, 10.0)
+            self.filtered, self.N, self.delay = self.fir_bandpass(self.signal, low, high)
             if spikesDetection:
                 self.peaks, _ = signal.find_peaks(self.filtered)
             return self.filtered, self.peaks
         if spikesDetection:
-            self.peaks, _ = signal.find_peaks(self.channel)
-            return self.channel, self.peaks
+            self.peaks, _ = signal.find_peaks(self.signal)
+            return self.signal, self.peaks
 
-
-
-    def psd(self, data, visual=False, xlim=100., *args, **kwargs):
+    def visual(pltFunc):
+        def addFigAxes(self, figsize=None, digit=111, *args, **kwds):
+            fig = plt.figure(figsize)
+            axes = fig.add_subplot(digit)
+            return pltFunc(self, axes, *args, **kwds)
+        return addFigAxes
+    
+    @visual
+    def psd(self, axes, visual=False, xlim=100., *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
@@ -100,19 +112,19 @@ class signalToolkit:
         ----------------------
             Freq axis, PSD of the signal
         """
-        total = len(data)
+        total = len(self.signal)
         duration = total * self.samplinginterval
-        fourierSignal = np.fft.fft(np.array(data) - np.array(data).mean())
+        fourierSignal = np.fft.fft(np.array(self.signal) - np.array(self.signal).mean())
         spectrum = 2 * (self.samplinginterval) ** 2 / duration * (fourierSignal * fourierSignal.conj())
-        spectrum = spectrum[:int(len(np.array(data)) / 2)]
+        spectrum = spectrum[:int(len(np.array(self.signal)) / 2)]
         time_all = 1 / duration
         fNQ = 1/self.samplinginterval/2 # Nyquist frequency
         faxis = np.arange(0, fNQ, time_all) # frequency axis
         if visual:
-            fig, axs = plt.subplots()
-            axs.plot(faxis, spectrum.real, color='r', label = 'PSD Results', *args, **kwargs)
-            axs.legend()
-            axs.set_xlim([0, xlim])
+            #fig, axs = plt.subplots()
+            axes.plot(faxis, spectrum.real, color='r', label = 'PSD Results', *args, **kwargs)
+            axes.legend()
+            axes.set_xlim([0, xlim])
             plt.show()
         return faxis, spectrum.real
 
@@ -243,11 +255,14 @@ class signalToolkit:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
 
 
-    # def phaseDelay(self, data1, data2, mode = "spikesInterval"):
-    #     if mode in ["spikeInterval", "SI"]:
+    def phaseDelay(self, channelNum1, channelNum2, mode = "spikesInterval"):
+        peakslist1, data1 = self.signalpreprocessing(channelNum1)
+        peakslist2, data2 = self.signalpreprocessing(channelNum2)
+        # if mode in ["spikeInterval", "SI"]:
 
 
-    #     elif mode in ["instaPhase", "IP"]:
+
+        # elif mode in ["instaPhase", "IP"]:
         
-    #     else:
-    #         raise ValueError("Invalid mode. Expected one of: %s" % mode)
+        # else:
+        #     raise ValueError("Invalid mode. Expected one of: %s" % mode)
