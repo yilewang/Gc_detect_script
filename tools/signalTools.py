@@ -65,6 +65,8 @@ class signalToolkit:
                 (for plotting)
             when plot, align the axis by `plt.plot(time[N-1:]-delay, filtered_data[N-1:])`
         """
+        if cut_off_low - cut_off_high >=0:
+            raise ValueError("Low pass value needs to be larger than High pass value.")
         nyq_rate = self.fs / 2.0
         wid = width/nyq_rate
         N, beta = signal.kaiserord(ripple_db, wid)
@@ -82,21 +84,21 @@ class signalToolkit:
         if filter:
             self.filtered, self.N, self.delay = self.fir_bandpass(self.signal, low, high)
             if spikesDetection:
-                self.peaks, _ = signal.find_peaks(self.filtered)
-            return self.filtered, self.peaks
+                self.peaksFiltered, _ = signal.find_peaks(self.filtered)
+            return self.filtered, self.peaksFiltered
         if spikesDetection:
             self.peaks, _ = signal.find_peaks(self.signal)
             return self.signal, self.peaks
 
     def visual(pltFunc):
-        def addFigAxes(self, figsize=None, digit=111, *args, **kwds):
+        def addFigAxes(self, figsize=None, digit = 111, *args, **kwds):
             fig = plt.figure(figsize)
             axes = fig.add_subplot(digit)
             return pltFunc(self, axes, *args, **kwds)
         return addFigAxes
     
     @visual
-    def psd(self, axes, visual=False, xlim=100., *args, **kwargs):
+    def psd(self, axes, data=None, visual=False, filtered=True, xlim=100., *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
@@ -112,11 +114,15 @@ class signalToolkit:
         ----------------------
             Freq axis, PSD of the signal
         """
-        total = len(self.signal)
+        if data is None:
+            data = self.signal
+        if filtered:
+            data = self.filtered
+        total = len(data)
         duration = total * self.samplinginterval
-        fourierSignal = np.fft.fft(np.array(self.signal) - np.array(self.signal).mean())
+        fourierSignal = np.fft.fft(np.array(data) - np.array(data).mean())
         spectrum = 2 * (self.samplinginterval) ** 2 / duration * (fourierSignal * fourierSignal.conj())
-        spectrum = spectrum[:int(len(np.array(self.signal)) / 2)]
+        spectrum = spectrum[:int(len(np.array(data)) / 2)]
         time_all = 1 / duration
         fNQ = 1/self.samplinginterval/2 # Nyquist frequency
         faxis = np.arange(0, fNQ, time_all) # frequency axis
@@ -132,8 +138,8 @@ class signalToolkit:
 
 
 
-
-    def freqCount(self, data: Union[List[float], np.ndarray], prominence:Union[int, float], fs:float, normalization = False, filter=False, highpass = 2., lowpass = 10.,visual = False, figsize=None, dpi=None, *args, **kwargs) -> float:
+    @visual
+    def freqCount(self, axes, data=None, prominence=None, fs=None, normalization = False, filter=False, highpass = 2., lowpass = 10.,visual = False, figsize=None, dpi=None, *args, **kwargs) -> float:
         """
         A function designed to do spike counting.
         Parameters:
@@ -165,6 +171,8 @@ class signalToolkit:
             else:
                 (number of raw signal)
         """
+        if data is None:
+            data = self.signal
         data = np.array(data)
         if normalization:
             data -= np.mean(data)
@@ -176,14 +184,13 @@ class signalToolkit:
             spikesfiltered, _ = signal.find_peaks(postfilter, prominence = prominence)
         # visualization
         if visual:
-            fig, ax = plt.subplots(figsize=figsize, dpi = dpi)
-            ax.plot(time, data, label = "signal", *args, **kwargs)
-            ax.plot(spikesdata/fs, data[spikesdata], '+', label = "signal spikes", *args, **kwargs)
+            axes.plot(time, data, label = "signal", *args, **kwargs)
+            axes.plot(spikesdata/fs, data[spikesdata], '+', label = "signal spikes", *args, **kwargs)
             if filter:
-                ax.plot(time[N-1:]-delay, postfilter[N-1:], label = "filtered signal", *args, **kwargs)
+                axes.plot(time[N-1:]-delay, postfilter[N-1:], label = "filtered signal", *args, **kwargs)
                 if len(spikesfiltered) > 0:
-                    ax.plot(spikesfiltered[spikesfiltered > N-1]/fs - delay, postfilter[spikesfiltered[spikesfiltered > N-1]],'x', label = "filtered spikes", *args, **kwargs)
-            ax.legend()
+                    axes.plot(spikesfiltered[spikesfiltered > N-1]/fs - delay, postfilter[spikesfiltered[spikesfiltered > N-1]],'x', label = "filtered spikes", *args, **kwargs)
+            axes.legend()
             plt.show()
 
         # return output
@@ -192,7 +199,7 @@ class signalToolkit:
         else:
             return len(spikesdata)
 
-
+    @visual
     def ampCount(self, data:Union[List[float], np.ndarray], fs, prominence = None, threshold = None, width = None, normalization = None, mode = "peak2xais", ampType='proportional', visual=False) -> np.ndarray:
         """
         Parameters:
@@ -224,6 +231,8 @@ class signalToolkit:
             Amplitude_data: float
                 the average of amplitude across all cycles. The result depends on what mode is used in function. 
         """
+        if data is None:
+            data = self.signal
         if mode in ["peak2valley", 'p2v']:
             spikes, _ = signal.find_peaks(data, prominence=prominence)
             valley, _ = signal.find_peaks(-data, prominence=prominence, threshold=threshold, width=width)
@@ -254,10 +263,10 @@ class signalToolkit:
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
 
-
+    @visual
     def phaseDelay(self, channelNum1, channelNum2, mode = "spikesInterval"):
-        peakslist1, data1 = self.signalpreprocessing(channelNum1)
-        peakslist2, data2 = self.signalpreprocessing(channelNum2)
+        peakslist1, data1 = (channelNum1)
+        peakslist2, data2 = (channelNum2)
         # if mode in ["spikeInterval", "SI"]:
 
 
