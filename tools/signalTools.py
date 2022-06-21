@@ -1,6 +1,5 @@
 #!/bin/usr/python
 
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,13 +8,18 @@ import h5py
 import sklearn
 from typing import Union, List
 
+
+
+
 def hdf5Reader(filename):
     """
     This function is for reading hdf5 file
-    Input:
+    Parameters:
+    -----------------
         filename: str
             the path of the h5 file
-    Output:
+    Returns:
+    -----------------
         dataset: np array
             
     """
@@ -34,14 +38,17 @@ def hdf5Reader(filename):
 def psd(data, samplinginterval, visual=False, xlim=100., *args, **kwargs):
     """
     This function is for power spectrum density analysis
-    Input:
+    
+    Parameters:
+    ---------------------
         data: list or array
             LFPs single channel signal
         sampling interval: int or float
             sampling interval is the reciprocal of sampling frequency (1/fs)
         visual: boole, default is False
 
-    Output:
+    Returns:
+    ----------------------
         Freq axis, PSD of the signal
     """
     total = len(data)
@@ -65,7 +72,8 @@ def psd(data, samplinginterval, visual=False, xlim=100., *args, **kwargs):
 def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0):
     """
     The FIR bandpass filter
-    Args:
+    Parameters:
+    --------------------
         data: list or np.array
             1-d array
         fs: int or float
@@ -78,7 +86,8 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
             the time windows for filtering
         ripple_db: int or float
 
-    Return:
+    Returns:
+    ---------------------
         filtered data: list or np.array
 
         N: int or float
@@ -100,7 +109,8 @@ def fir_bandpass(data, fs, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0)
 def freqCount(data: Union[List[float], np.ndarray], prominence:Union[int, float], fs:float, normalization = False, filter=False, highpass = 2., lowpass = 10.,visual = False, figsize=None, dpi=None, *args, **kwargs) -> float:
     """
     A function designed to do spike counting.
-    Input:
+    Parameters:
+    ------------------
         data: list or np array
             the 1-D array signal
         prominence: int or float
@@ -121,7 +131,8 @@ def freqCount(data: Union[List[float], np.ndarray], prominence:Union[int, float]
             the size of the plot
         dpi: default = None
             if visual = True, the pic's resolution;
-    Output:
+    Returns:
+    -------------------
         if filter applied:
             (number of filtered signal, number of raw signal)
         else:
@@ -157,7 +168,8 @@ def freqCount(data: Union[List[float], np.ndarray], prominence:Union[int, float]
 
 def ampCount(data:Union[List[float], np.ndarray], fs, prominence = None, threshold = None, normalization = None, mode = "peak2xais", visual=False) -> np.ndarray:
     """
-    Input:
+    Parameters:
+    ---------------
         data: 1-d list or np.array
             The single channel LFPs signal
         fs: int or float
@@ -178,7 +190,8 @@ def ampCount(data:Union[List[float], np.ndarray], fs, prominence = None, thresho
                 apply hilbert transformation to the signal. Warning: hilbert method only works in partial conditions.
         visual: boole, True or False
             display matplotlib plot.
-    Output:
+    Returns:
+    --------------
         Amplitude_data: float
             the average of amplitude across all cycles. The result depends on what mode is used in function. 
     """
