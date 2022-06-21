@@ -78,17 +78,21 @@ class signalToolkit:
 
     
 
-    def signalpreprocessing(self, channelNum, filter=True, low=None, high=None, spikesDetection = True):
+    def signalpreprocessing(self, channelNum, filter=True, low=None, high=None, spikesDetection = True, normalization = False):
         self.hdf5Reader()
         self.signal = self.dset[:,channelNum]
-        if filter:
+        if filter and normalization:
             self.filtered, self.N, self.delay = self.fir_bandpass(self.signal, low, high)
-            if spikesDetection:
-                self.peaksFiltered, _ = signal.find_peaks(self.filtered)
-            return self.filtered, self.peaksFiltered
-        if spikesDetection:
-            self.peaks, _ = signal.find_peaks(self.signal)
-            return self.signal, self.peaks
+            self.filterednorm = self.filtered - np.mean(self.filtered)
+            return self.filterednorm
+        elif filter and not normalization:
+            return self.filtered
+        elif normalization and not filter:
+            self.signalnorm = self.signal - np.mean(self.signal)
+        return self.signal
+
+
+    def peaksValleys(self):
 
     def visual(pltFunc):
         def addFigAxes(self, figsize=None, digit = 111, *args, **kwds):
@@ -200,7 +204,7 @@ class signalToolkit:
             return len(spikesdata)
 
     @visual
-    def ampCount(self, data:Union[List[float], np.ndarray], fs, prominence = None, threshold = None, width = None, normalization = None, mode = "peak2xais", ampType='proportional', visual=False) -> np.ndarray:
+    def ampCount(self, axes, data:Union[List[float], np.ndarray], fs, prominence = None, threshold = None, width = None, filter = True, normalization = None, mode = "peak2xais", ampType='proportional', visual=False) -> np.ndarray:
         """
         Parameters:
         ---------------
@@ -246,7 +250,7 @@ class signalToolkit:
         elif mode in ["peak2axis", 'p20']:
             if normalization:
                 data = data - np.mean(data)
-            spikes, _ = signal.find_peaks(data, prominence=prominence, threshold=threshold)
+                spikes, _ = signal.find_peaks(data, prominence=prominence, threshold=threshold)
             return np.mean(data[spikes])
 
         elif mode in ["hilbert","h"]:
@@ -254,9 +258,8 @@ class signalToolkit:
             amplitude_envelope = np.abs(analytic)
             if visual:
                 time = np.arange(0, len(data)/fs, 1/fs)
-                fig, ax = plt.subplots()
-                ax.plot(time, data, label = "signal")
-                ax.plot(time, amplitude_envelope, label = "envelop")
+                axes.plot(time, data, label = "signal")
+                axes.plot(time, amplitude_envelope, label = "envelop")
                 plt.legend()
                 plt.show
             return np.mean(amplitude_envelope)
@@ -264,14 +267,20 @@ class signalToolkit:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
 
     @visual
-    def phaseDelay(self, channelNum1, channelNum2, mode = "spikesInterval"):
-        peakslist1, data1 = (channelNum1)
-        peakslist2, data2 = (channelNum2)
-        # if mode in ["spikeInterval", "SI"]:
+    def phaseDelay(self, data1=None, data2=None, channelNum1=None, channelNum2=None, filtered=True, mode = "spikesInterval"):
+        if data1 or data2 is None:
+            if filtered:
+                data1, data1spikes = self.signalpreprocessing(channelNum1)
+                data2, data2spikes = self.signalpreprocessing(channelNum2)
+            else:
+                data1, data1spikes = self.signalpreprocessing(channelNum1, filter=False)
+                data2, data2spikes = self.signalpreprocessing(channelNum2, filter=False)
+
+        if mode in ["spikeInterval", "SI"]:
 
 
 
-        # elif mode in ["instaPhase", "IP"]:
+        elif mode in ["instaPhase", "IP"]:
         
-        # else:
-        #     raise ValueError("Invalid mode. Expected one of: %s" % mode)
+        else:
+            raise ValueError("Invalid mode. Expected one of: %s" % mode)
