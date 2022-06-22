@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from scipy import signal
 import h5py
 from typing import Union, List, Optional
-
-
+import neurokit2 as nk
+import decorator
 
 
 
@@ -124,20 +124,35 @@ class signalToolkit:
         
 
     def panel(pltFunc):
-        def addFigAxes(self, figsize=None, *args, **kwds):
-            fig = plt.figure(figsize)
+        def addFigAxes(self, figsize=(15,5), *args, **kwds):
+            fig = plt.figure(figsize=figsize)
             return pltFunc(self, fig, *args, **kwds)
         return addFigAxes
-    
+
+    @decorator.decorator
+    def NoneCheck(self, f, *args,**kwargs):
+        if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
+            data1= self.signalpreprocessing(channelNum1, **preproparas)
+            spikeslist1, valleyslist1 = self.peaksValleys(data1, **spikesparas, **valleysparas)
+            data2= self.signalpreprocessing(channelNum2, **preproparas)
+            spikeslist2, valleyslist2 = self.peaksValleys(data2, **spikesparas,**valleysparas)
+            #raise ValueError("None's aren't welcome here")
+        if None in (data, spikeslist, valleyslist):
+            data= self.signalpreprocessing(channelNum, **preproparas)
+            spikeslist, valleyslist = self.peaksValleys(data, **spikesparas, **valleysparas)
+        return f(*args,**kwargs)
+
+
     @panel
-    def signal_AF(self, fig, time, data, spikeslist, valleylist, N, delay, afterFiltered, spikeslistAF, valleyslistAF,digit=111, newkwargs={}):
+    # @NoneCheck
+    def signal_AF(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, afterFiltered=None, spikeslistAF=None, valleyslistAF=None,digit=111, time=None, **kwargs):
         axes = fig.add_subplot(digit)
-        axes.plot(time, data, label = "signal")
+        axes.plot(self.time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
-        axes.plot(time[N-1:]-delay, afterFiltered[N-1:], label = "filtered signal")
+        axes.plot(self.time[N-1:]-delay, afterFiltered[N-1:], label = "filtered signal")
         if len(spikeslistAF) > 0:
-            axes.plot(spikeslistAF[spikeslistAF > N-1]/self.fs - delay, spikeslistAF[spikeslistAF > N-1],'x', label = "filtered spikes")
-        axes.plot(**newkwargs)
+            axes.plot(spikeslistAF[spikeslistAF > N-1]/self.fs - delay, afterFiltered[spikeslistAF[spikeslistAF > N-1]],'x', label = "filtered spikes")
+        axes.plot(**kwargs)
         axes.legend()
         plt.show()
     
@@ -242,15 +257,43 @@ class signalToolkit:
         
         if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
             data1= self.signalpreprocessing(channelNum1, **preproparas)
-            spikeslist1, valleyslist1 = self.peaksValleys(data1, spikesparas, valleysparas)
+            spikeslist1, valleyslist1 = self.peaksValleys(data1, **spikesparas, **valleysparas)
             data2= self.signalpreprocessing(channelNum2, **preproparas)
-            spikeslist2, valleyslist2 = self.peaksValleys(data2, spikesparas,valleysparas)
+            spikeslist2, valleyslist2 = self.peaksValleys(data2, **spikesparas,**valleysparas)
         
 
         if mode in ["spikeInterval", "SI"]:
+            def firstSpike(spikeslist, valleyslist):
+                cycle1spikes = []
+                for one in range(len(valleyslist)-1):
+                    firstspike = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]][0]
+                    cycle1spikes.append(firstspike)
+                return cycle1spikes
+            data1spikes = firstSpike(spikeslist1, valleyslist1)
+            data2spikes = firstSpike(spikeslist2, valleyslist2)
+            # get shorter list length
+            spikeslen = min(len(data1spikes), len(data2spikes))
+            delaylist = []
+            for one in range(spikeslen):
+                if data1spikes[0] > data2spikes[0]:
+                    diff = data2spikes[one] - data1spikes
+                    delaylist.append(diff)
+                else:
+                    diff = data1spikes[one] - data2spikes
+                    delaylist.append(diff)
+            return np.mean(delaylist)
             
 
         elif mode in ["instaPhase", "IP"]:
+            phase1 = np.angle(signal.hilbert(data1),deg=False)
+            phase2 = np.angle(signal.hilbert(data2),deg=False)
+            synchrony = 1 - np.sin(np.abs(phase1 - phase2) / 2)
+            return synchrony
+
+        elif mode in ["windowsPhase", "WP"]:
+            synchrony = nk.signal_synchrony(data1, data2, method="correlation", window_size=50)
+            return synchrony
         
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
+
