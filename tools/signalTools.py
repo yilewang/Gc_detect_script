@@ -5,7 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import signal
 import h5py
-from typing import Union, List
+from typing import Union, List, Optional
+
+
+
 
 
 
@@ -78,31 +81,68 @@ class signalToolkit:
 
     
 
-    def signalpreprocessing(self, channelNum, filter=True, low=None, high=None, spikesDetection = True, normalization = False):
-        self.hdf5Reader()
-        self.signal = self.dset[:,channelNum]
+    def signalpreprocessing(self, data=None, channelNum=None, filter=True, low=None, high=None, normalization = True):
+        if data is None:
+            self.hdf5Reader()
+            self.signal = self.dset[:,channelNum]
+            data = self.signal
+        self.time = np.arange(0, len(data)/self.fs, 1/self.fs)
         if filter and normalization:
-            self.filtered, self.N, self.delay = self.fir_bandpass(self.signal, low, high)
-            self.filterednorm = self.filtered - np.mean(self.filtered)
-            return self.filterednorm
+            afterFiltered, N, delay = self.fir_bandpass(data, low, high)
+            afterFiltered = afterFiltered - np.mean(afterFiltered)
+            return afterFiltered, N, delay
         elif filter and not normalization:
-            return self.filtered
+            afterFiltered, N, delay = self.fir_bandpass(data, low, high)
+            return afterFiltered, N, delay
         elif normalization and not filter:
-            self.signalnorm = self.signal - np.mean(self.signal)
-        return self.signal
+            data = data - np.mean(data)
+            return data
+        else:
+            return data
 
 
-    def peaksValleys(self):
+    def peaksValleys(self, data, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None):
+        """
+        function support to customize the `find_peaks` function to generate spikes and valleys data list
+        Parameters
+        ----------------------------
+            data: 1-D list or np.ndarray
+                LFP channel signal
+            spikesparas: dict
+                parameters such as prominence, width, or threshold
+        
 
-    def visual(pltFunc):
-        def addFigAxes(self, figsize=None, digit = 111, *args, **kwds):
+        Return
+        -----------------------------
+            spikeslist: list
+            valleyslist: list
+        
+        """
+        spikeslist, _ = signal.find_peaks(data, **spikesparas)
+        valleyslist, _ = signal.find_peaks(-data, **valleysparas)
+        return spikeslist, valleyslist
+        
+
+    def panel(pltFunc):
+        def addFigAxes(self, figsize=None, *args, **kwds):
             fig = plt.figure(figsize)
-            axes = fig.add_subplot(digit)
-            return pltFunc(self, axes, *args, **kwds)
+            return pltFunc(self, fig, *args, **kwds)
         return addFigAxes
     
-    @visual
-    def psd(self, axes, data=None, visual=False, filtered=True, xlim=100., *args, **kwargs):
+    @panel
+    def signal_AF(self, fig, time, data, spikeslist, valleylist, N, delay, afterFiltered, spikeslistAF, valleyslistAF,digit=111, newkwargs={}):
+        axes = fig.add_subplot(digit)
+        axes.plot(time, data, label = "signal")
+        axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
+        axes.plot(time[N-1:]-delay, afterFiltered[N-1:], label = "filtered signal")
+        if len(spikeslistAF) > 0:
+            axes.plot(spikeslistAF[spikeslistAF > N-1]/self.fs - delay, spikeslistAF[spikeslistAF > N-1],'x', label = "filtered spikes")
+        axes.plot(**newkwargs)
+        axes.legend()
+        plt.show()
+    
+    @panel
+    def psd(self, fig, digit=None, data=None, visual=False, filtered=True, xlim=100., *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
@@ -131,7 +171,7 @@ class signalToolkit:
         fNQ = 1/self.samplinginterval/2 # Nyquist frequency
         faxis = np.arange(0, fNQ, time_all) # frequency axis
         if visual:
-            #fig, axs = plt.subplots()
+            axes = fig.add_subplot(digit)
             axes.plot(faxis, spectrum.real, color='r', label = 'PSD Results', *args, **kwargs)
             axes.legend()
             axes.set_xlim([0, xlim])
@@ -139,87 +179,22 @@ class signalToolkit:
         return faxis, spectrum.real
 
 
-
-
-
-    @visual
-    def freqCount(self, axes, data=None, prominence=None, fs=None, normalization = False, filter=False, highpass = 2., lowpass = 10.,visual = False, figsize=None, dpi=None, *args, **kwargs) -> float:
+    def freqCount(self, spikeslist) -> float:
         """
         A function designed to do spike counting.
         Parameters:
         ------------------
-            data: list or np array
-                the 1-D array signal
-            prominence: int or float
-                used in signal.find_peaks function, how salient the peaks are;
-            fs: int or float
-                sampling frequency;
-            normalization: boole, default False
-                normalize data by mean
-            filter: boole, default False
-                apply FIR filter or not;
-            highpass: int or float
-                if filter = True, the low threshold;
-            lowpass: int or float
-                if filter = True, the high cutoff threshold;
-            visual: boole, default False
-                the visualization;
-            figsize: tuple
-                the size of the plot
-            dpi: default = None
-                if visual = True, the pic's resolution;
         Returns:
         -------------------
-            if filter applied:
-                (number of filtered signal, number of raw signal)
-            else:
-                (number of raw signal)
+            (number of raw signal)
         """
-        if data is None:
-            data = self.signal
-        data = np.array(data)
-        if normalization:
-            data -= np.mean(data)
-        time = np.arange(0, len(data)/fs, 1/fs)
-        spikesdata, _ = signal.find_peaks(data, prominence = prominence)
+        return len(spikeslist)
 
-        if filter:
-            postfilter, N, delay= self.fir_bandpass(data, fs, highpass, lowpass)
-            spikesfiltered, _ = signal.find_peaks(postfilter, prominence = prominence)
-        # visualization
-        if visual:
-            axes.plot(time, data, label = "signal", *args, **kwargs)
-            axes.plot(spikesdata/fs, data[spikesdata], '+', label = "signal spikes", *args, **kwargs)
-            if filter:
-                axes.plot(time[N-1:]-delay, postfilter[N-1:], label = "filtered signal", *args, **kwargs)
-                if len(spikesfiltered) > 0:
-                    axes.plot(spikesfiltered[spikesfiltered > N-1]/fs - delay, postfilter[spikesfiltered[spikesfiltered > N-1]],'x', label = "filtered spikes", *args, **kwargs)
-            axes.legend()
-            plt.show()
-
-        # return output
-        if filter:
-            return (len(spikesdata), len(spikesfiltered))
-        else:
-            return len(spikesdata)
-
-    @visual
-    def ampCount(self, axes, data:Union[List[float], np.ndarray], fs, prominence = None, threshold = None, width = None, filter = True, normalization = None, mode = "peak2xais", ampType='proportional', visual=False) -> np.ndarray:
+    @panel
+    def ampCount(self, data, spikeslist, valleyslist, mode = "peak2xais", ampType='proportional', visual=False, fig=None, digit=None, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None) -> np.ndarray:
         """
         Parameters:
         ---------------
-            data: 1-d list or np.array
-                The single channel LFPs signal
-            fs: int or float
-                the sampling frequency
-            prominence: int or float
-
-            threshold: int or float
-
-            width: int or float
-
-            normalization: boole, default is True
-                normalization provided in this function is mean method.
             mode: str, "peak2valley", or "peak2xais", or "hilbert"
                 different methods to calculate the amplitude:
                 "peak2valley" mode:
@@ -237,27 +212,23 @@ class signalToolkit:
         """
         if data is None:
             data = self.signal
+            spikeslist, valleyslist = self.peaksValleys(self.signal, spikesparas, valleysparas)
         if mode in ["peak2valley", 'p2v']:
-            spikes, _ = signal.find_peaks(data, prominence=prominence)
-            valley, _ = signal.find_peaks(-data, prominence=prominence, threshold=threshold, width=width)
             cycleSpikesMean = []
-            for one in range(len(valley)-1):
-                cycleSpikes = spikes[spikes > valley[one] and spikes < valley[one+1]]
-                print(cycleSpikes)
-                cycleSpikesMean.append(np.mean(cycleSpikes))
+            for one in range(len(valleyslist)-1):
+                cycleSpikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
+                cycleSpikesMean.append(np.mean(data[cycleSpikes]))
             return np.mean(cycleSpikesMean)
 
         elif mode in ["peak2axis", 'p20']:
-            if normalization:
-                data = data - np.mean(data)
-                spikes, _ = signal.find_peaks(data, prominence=prominence, threshold=threshold)
-            return np.mean(data[spikes])
+            return np.mean(data[spikeslist])
 
         elif mode in ["hilbert","h"]:
-            analytic = signal.hilbert(data)
+            analytic = signal.hilbert(self.signal)
             amplitude_envelope = np.abs(analytic)
             if visual:
-                time = np.arange(0, len(data)/fs, 1/fs)
+                time = np.arange(0, len(data)/self.fs, 1/self.fs)
+                axes = fig.add_subplot(digit)
                 axes.plot(time, data, label = "signal")
                 axes.plot(time, amplitude_envelope, label = "envelop")
                 plt.legend()
@@ -266,19 +237,18 @@ class signalToolkit:
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
 
-    @visual
-    def phaseDelay(self, data1=None, data2=None, channelNum1=None, channelNum2=None, filtered=True, mode = "spikesInterval"):
-        if data1 or data2 is None:
-            if filtered:
-                data1, data1spikes = self.signalpreprocessing(channelNum1)
-                data2, data2spikes = self.signalpreprocessing(channelNum2)
-            else:
-                data1, data1spikes = self.signalpreprocessing(channelNum1, filter=False)
-                data2, data2spikes = self.signalpreprocessing(channelNum2, filter=False)
+    @panel
+    def phaseDelay(self, data1=None, data2=None, spikeslist1 = None, valleyslist1=None, spikeslist2 = None, valleyslist2 = None, channelNum1:Optional[int] = None, channelNum2:Optional[int] = None, preproparas:Optional[dict] = None, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, mode = "spikesInterval"):
+        
+        if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
+            data1= self.signalpreprocessing(channelNum1, **preproparas)
+            spikeslist1, valleyslist1 = self.peaksValleys(data1, spikesparas, valleysparas)
+            data2= self.signalpreprocessing(channelNum2, **preproparas)
+            spikeslist2, valleyslist2 = self.peaksValleys(data2, spikesparas,valleysparas)
+        
 
         if mode in ["spikeInterval", "SI"]:
-
-
+            
 
         elif mode in ["instaPhase", "IP"]:
         
