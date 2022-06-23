@@ -129,26 +129,27 @@ class signalToolkit:
             return pltFunc(self, fig, *args, **kwds)
         return addFigAxes
 
-    @decorator.decorator
-    def NoneCheck(self, f, *args,**kwargs):
-        if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
-            data1= self.signalpreprocessing(channelNum1, **preproparas)
-            spikeslist1, valleyslist1 = self.peaksValleys(data1, **spikesparas, **valleysparas)
-            data2= self.signalpreprocessing(channelNum2, **preproparas)
-            spikeslist2, valleyslist2 = self.peaksValleys(data2, **spikesparas,**valleysparas)
-            #raise ValueError("None's aren't welcome here")
-        if None in (data, spikeslist, valleyslist):
-            data= self.signalpreprocessing(channelNum, **preproparas)
-            spikeslist, valleyslist = self.peaksValleys(data, **spikesparas, **valleysparas)
-        return f(*args,**kwargs)
+    # @decorator.decorator
+    # def NoneCheck(self, f, *args,**kwargs):
+    #     if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
+    #         data1= self.signalpreprocessing(channelNum1, **preproparas)
+    #         spikeslist1, valleyslist1 = self.peaksValleys(data1, **spikesparas, **valleysparas)
+    #         data2= self.signalpreprocessing(channelNum2, **preproparas)
+    #         spikeslist2, valleyslist2 = self.peaksValleys(data2, **spikesparas,**valleysparas)
+    #         #raise ValueError("None's aren't welcome here")
+    #     if None in (data, spikeslist, valleyslist):
+    #         data= self.signalpreprocessing(channelNum, **preproparas)
+    #         spikeslist, valleyslist = self.peaksValleys(data, **spikesparas, **valleysparas)
+    #     return f(*args,**kwargs)
 
 
     @panel
     # @NoneCheck
-    def signal_AF(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, afterFiltered=None, spikeslistAF=None, valleyslistAF=None,digit=111, time=None, **kwargs):
+    def signal_AF(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, afterFiltered=None, spikeslistAF=None, digit=111, time=None, **kwargs):
         axes = fig.add_subplot(digit)
         axes.plot(self.time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
+        axes.plot(valleyslist/self.fs, data[valleyslist], 'o', label = "signal valleys")
         axes.plot(self.time[N-1:]-delay, afterFiltered[N-1:], label = "filtered signal")
         if len(spikeslistAF) > 0:
             axes.plot(spikeslistAF[spikeslistAF > N-1]/self.fs - delay, afterFiltered[spikeslistAF[spikeslistAF > N-1]],'x', label = "filtered spikes")
@@ -232,7 +233,10 @@ class signalToolkit:
             cycleSpikesMean = []
             for one in range(len(valleyslist)-1):
                 cycleSpikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
-                cycleSpikesMean.append(np.mean(data[cycleSpikes]))
+                if len(cycleSpikes) >0:
+                    cycleSpikesMean.append(np.mean(data[cycleSpikes]))
+                else:
+                    pass
             return np.mean(cycleSpikesMean)
 
         elif mode in ["peak2axis", 'p20']:
@@ -267,7 +271,10 @@ class signalToolkit:
                 cycle1spikes = []
                 for one in range(len(valleyslist)-1):
                     firstspike = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]][0]
-                    cycle1spikes.append(firstspike)
+                    if len(firstspike)>0:
+                        cycle1spikes.append(firstspike)
+                    else:
+                        pass
                 return cycle1spikes
             data1spikes = firstSpike(spikeslist1, valleyslist1)
             data2spikes = firstSpike(spikeslist2, valleyslist2)
