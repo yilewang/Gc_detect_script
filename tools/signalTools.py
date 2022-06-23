@@ -13,6 +13,19 @@ import decorator
 
 class signalToolkit:
     def __init__(self, filename, fs, caseid=None, group=None) -> None:
+        """
+        The initial parameters required for the data analysis
+        Parameters:
+        ----------------
+            filename:str
+                path of the file
+            fs: float
+                the sampling frequency
+            caseid:str
+                the subject's case ID number
+            group:str
+                group information of the subject
+        """
         self.filename = filename
         self.fs = fs
         self.samplinginterval = 1/fs
@@ -46,25 +59,22 @@ class signalToolkit:
         --------------------
             data: list or np.array
                 1-d array
-            fs: int or float
-                frequency (sampling rate)
             cut_off_low: int or float
-                the low threshold
+                the high pass threshold
             cut_off_high: int or float
-                the high threshold
+                the low pass threshold
             width: int or float
                 the time windows for filtering
             ripple_db: int or float
-
+                Ripples are the fluctuations (measured in dB) in the pass band, or stop band, of a filter's frequency magnitude response curve
         Returns:
         ---------------------
             filtered data: list or np.array
-
+                data after filtered
             N: int or float
-
+                The truncation signal points
             delay: int or float
-                (for plotting)
-            when plot, align the axis by `plt.plot(time[N-1:]-delay, filtered_data[N-1:])`
+                (for plotting) when plot, align the axis by `plt.plot(time[N-1:]-delay, filtered_data[N-1:])`
         """
         if cut_off_low - cut_off_high >=0:
             raise ValueError("Low pass value needs to be larger than High pass value.")
@@ -80,6 +90,29 @@ class signalToolkit:
     
 
     def signalpreprocessing(self, data=None, channelNum=None, filter=True, low=None, high=None, normalization = True):
+        """
+        The function to help doing FIR bandpass filter and normalization for the signal
+        Parameters:
+        -----------------
+            data:list or np.ndarray
+                the signal
+            channelNum(optional):int
+                if you don't have data and you want to read data and do the preprocessing together, you can use this channelNum to specify which channel you want to use for data preprocessing.
+            filter: boole
+                filter or not
+            low (optional):float
+                if filter is True, you have to provide high pass parameter
+            high (optional):float
+                if filter is True, you have to provide low pass parameter
+            normalization: boole
+                to choose if you want to normalize your data or not
+        Returns:
+        -------------------
+            if filter is True:
+                return data_afterfiltered, N and delay
+            else:
+                data itself
+        """
         if data is None:
             self.hdf5Reader()
             self.signal = self.dset[:,channelNum]
@@ -108,13 +141,12 @@ class signalToolkit:
                 LFP channel signal
             spikesparas: dict
                 parameters such as prominence, width, or threshold
-        
-
+            valleysparas: dict
+                parameters such as prominence, width, or threshold
         Return
         -----------------------------
             spikeslist: list
             valleyslist: list
-        
         """
         spikeslist, _ = signal.find_peaks(data, **spikesparas)
         valleyslist, _ = signal.find_peaks(-data, **valleysparas)
@@ -122,6 +154,9 @@ class signalToolkit:
         
 
     def panel(pltFunc):
+        """
+        A python decorator to provide plot panel for 
+        """
         def addFigAxes(self, figsize=(15,5), *args, **kwds):
             fig = plt.figure(figsize=figsize)
             return pltFunc(self, fig, *args, **kwds)
@@ -156,7 +191,7 @@ class signalToolkit:
         plt.show()
     
     @panel
-    def psd(self, fig, digit=None, data=None, visual=False, xlim=100., *args, **kwargs):
+    def psd(self, fig, digit=111, data=None, visual=False, xlim=100., *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
