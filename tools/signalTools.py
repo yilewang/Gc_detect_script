@@ -11,8 +11,6 @@ import decorator
 
 
 
-
-
 class signalToolkit:
     def __init__(self, filename, fs, caseid=None, group=None) -> None:
         self.filename = filename
@@ -158,7 +156,7 @@ class signalToolkit:
         plt.show()
     
     @panel
-    def psd(self, fig, digit=None, data=None, visual=False, filtered=True, xlim=100., *args, **kwargs):
+    def psd(self, fig, digit=None, data=None, visual=False, xlim=100., *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
@@ -176,8 +174,6 @@ class signalToolkit:
         """
         if data is None:
             data = self.signal
-        if filtered:
-            data = self.filtered
         total = len(data)
         duration = total * self.samplinginterval
         fourierSignal = np.fft.fft(np.array(data) - np.array(data).mean())
@@ -229,6 +225,7 @@ class signalToolkit:
         if data is None:
             data = self.signal
             spikeslist, valleyslist = self.peaksValleys(self.signal, spikesparas, valleysparas)
+
         if mode in ["peak2valley", 'p2v']:
             cycleSpikesMean = []
             for one in range(len(valleyslist)-1):
