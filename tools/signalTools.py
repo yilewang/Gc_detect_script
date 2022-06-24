@@ -201,11 +201,13 @@ class signalToolkit:
             digit:int, default 111
                 add subplot to the panel
         """
+        if time is None:
+            time = self.time
         axes = fig.add_subplot(digit)
-        axes.plot(self.time, data, label = "signal")
+        axes.plot(time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
         axes.plot(valleyslist/self.fs, data[valleyslist], 'o', label = "signal valleys")
-        axes.plot(self.time[N-1:]-delay, afterFiltered[N-1:], label = "filtered signal")
+        axes.plot(time[N-1:]-delay, afterFiltered[N-1:], label = "filtered signal")
         if len(spikeslistAF) > 0:
             axes.plot(spikeslistAF[spikeslistAF > N-1]/self.fs - delay, afterFiltered[spikeslistAF[spikeslistAF > N-1]],'x', label = "filtered spikes")
         axes.plot(**kwargs)
@@ -253,8 +255,8 @@ class signalToolkit:
             plt.show()
         return faxis, spectrum.real
 
-
-    def freqCount(self, spikeslist) -> float:
+    @panel
+    def freqCount(self, spikeslist,visual=False, data=False,fig=False,digit=111) -> float:
         """
         A function designed to do spike counting.
         Parameters:
@@ -265,10 +267,15 @@ class signalToolkit:
         -------------------
             number of spikes in signal:int
         """
+        if visual:
+            axes = fig.add_subplot(digit)
+            for one in spikeslist:
+                axes.axvline(one, ymin=0, ymax=data[one])
+                plt.show()
         return len(spikeslist)
 
     @panel
-    def ampCount(self, data, spikeslist, valleyslist, mode = "peak2xais", ampType='proportional', visual=False, fig=None, digit=111, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None) -> np.ndarray:
+    def ampCount(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, N:Optional[float]=None, delay:Optional[float]=None, fig=None, digit=111, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, afterFiltered:Optional[list] = None, spikeslistAF:Optional[list] = None):
         """
         Parameters:
         ---------------
@@ -280,10 +287,12 @@ class signalToolkit:
                 valleys points of the signal
             mode: str, "peak2valley", or "peak2xais", or "hilbert"
                 different methods to calculate the amplitude:
-                "peak2valley" mode:
+                "peak2valley" mode:str
                     calculates the amplitude based on the maxmium distance between valley and spike within each cycle.
-                "peak2xais" mode:
+                "peak2xais" mode:str
                     calculate the absolute amplitude from spike to xais.
+                "ampProportional" mode:str
+                    calculate the proportional info between signal amplitude and signal afterfiltered amplitude.
                 "hilbert" mode:
                     apply hilbert transformation to the signal. Warning: hilbert method only works in partial conditions.
             visual: boole, True or False
@@ -294,25 +303,67 @@ class signalToolkit:
                 for adding subplot
         Returns:
         --------------
-            Amplitude_data: float
-                the average of amplitude across all cycles. The result depends on what mode is used in function. 
+            Amplitude_data: list
+                the amplitude of all cycles. The result depends on what mode is used in function. 
         """
         if data is None:
             data = self.signal
             spikeslist, valleyslist = self.peaksValleys(self.signal, spikesparas, valleysparas)
-
+            
         if mode in ["peak2valley", 'p2v']:
             cycleSpikesMean = []
             for one in range(len(valleyslist)-1):
                 cycleSpikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
                 if len(cycleSpikes) >0:
-                    cycleSpikesMean.append(np.mean(data[cycleSpikes]))
+                    peak2val = np.mean(data[cycleSpikes])-np.mean(data[valleyslist[one]], data[valleyslist[one+1]])
+                    cycleSpikesMean.append(peak2val)
                 else:
                     pass
-            return np.mean(cycleSpikesMean)
+            if visual:
+                axes = fig.add_subplot(digit)
+                for one in cycleSpikesMean:
+                    axes.axvline(one, ymin=0, ymax=data[one])
+                    plt.show()
+            return cycleSpikesMean
 
         elif mode in ["peak2axis", 'p20']:
-            return np.mean(data[spikeslist])
+            cycleSpikesMean = []
+            for one in range(len(valleyslist)-1):
+                cycleSpikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
+                if len(cycleSpikes) >0:
+                    peak2val = np.mean(data[cycleSpikes])
+                    cycleSpikesMean.append(peak2val)
+                else:
+                    pass
+            if visual:
+                axes = fig.add_subplot(digit)
+                for one in spikeslist:
+                    axes.axvline(one, ymin=0, ymax=data[one])
+                    plt.show()
+            return cycleSpikesMean
+        
+        elif mode in ["ampProportional", "ap", "AP"]:
+            ampUpperPro = []
+            ampLowerPro = []
+            for one in range(len(valleyslist)-1):
+                rawspikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
+                AFspikes = spikeslistAF[spikeslistAF > valleyslist[one] and spikeslistAF < valleyslist[one+1]]
+                if len(rawspikes) and len(AFspikes) >0:
+                    peak2val = np.mean(data[rawspikes]-np.mean(data[valleyslist[one]], data[valleyslist[one+1]]))
+                    AFpeak2val = np.mean(data[AFspikes]-np.mean(data[valleyslist[one]], data[valleyslist[one+1]]))
+                    upperPro = (peak2val - AFpeak2val)/peak2val
+                    lowerPro = AFpeak2val / peak2val
+                    ampUpperPro.append(upperPro)
+                    ampLowerPro.append(lowerPro)
+                else:
+                    pass
+            if visual:
+                axes = fig.add_subplot(digit)
+                for one,two in zip(ampUpperPro,ampLowerPro):
+                    axes.axvline(one, ymin=0, ymax=data[one])
+                    plt.axvline(two, ymin=0, ymax=data[two])
+                    plt.show()
+            return ampUpperPro, ampLowerPro
 
         elif mode in ["hilbert","h"]:
             analytic = signal.hilbert(self.signal)
@@ -324,9 +375,12 @@ class signalToolkit:
                 axes.plot(time, amplitude_envelope, label = "envelop")
                 plt.legend()
                 plt.show
-            return np.mean(amplitude_envelope)
+            return amplitude_envelope
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
+    
+
+
 
     @panel
     def phaseDelay(self, data1=None, data2=None, spikeslist1 = None, valleyslist1=None, spikeslist2 = None, valleyslist2 = None, channelNum1:Optional[int] = None, channelNum2:Optional[int] = None, preproparas:Optional[dict] = None, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, mode = "spikesInterval"):
