@@ -256,7 +256,7 @@ class signalToolkit:
         return faxis, spectrum.real
 
     @panel
-    def freqCount(self, spikeslist,visual=False, data=False,fig=False,digit=111) -> float:
+    def freqCount(self, spikeslist,visual=False, data:Optional[list]=None,fig:Optional[float]=None,digit:Optional[int]=111) -> float:
         """
         A function designed to do spike counting.
         Parameters:
@@ -269,13 +269,14 @@ class signalToolkit:
         """
         if visual:
             axes = fig.add_subplot(digit)
+            axes.plot(data)
             for one in spikeslist:
                 axes.axvline(one, ymin=0, ymax=data[one])
                 plt.show()
         return len(spikeslist)
 
     @panel
-    def ampCount(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, N:Optional[float]=None, delay:Optional[float]=None, fig=None, digit=111, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, afterFiltered:Optional[list] = None, spikeslistAF:Optional[list] = None):
+    def ampCount(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, fig=None, digit=111, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, spikeslistAF:Optional[list] = None, afterFiltered=None, N=None, delay=None):
         """
         Parameters:
         ---------------
@@ -321,6 +322,7 @@ class signalToolkit:
                     pass
             if visual:
                 axes = fig.add_subplot(digit)
+                axes.plot(data)
                 for one in cycleSpikesMean:
                     axes.axvline(one, ymin=0, ymax=data[one])
                     plt.show()
@@ -337,6 +339,7 @@ class signalToolkit:
                     pass
             if visual:
                 axes = fig.add_subplot(digit)
+                axes.plot(data)
                 for one in spikeslist:
                     axes.axvline(one, ymin=0, ymax=data[one])
                     plt.show()
@@ -359,9 +362,11 @@ class signalToolkit:
                     pass
             if visual:
                 axes = fig.add_subplot(digit)
+                axes.plot(data)
+                axes.plot(afterFiltered)
                 for one,two in zip(ampUpperPro,ampLowerPro):
                     axes.axvline(one, ymin=0, ymax=data[one])
-                    plt.axvline(two, ymin=0, ymax=data[two])
+                    axes.axvline(two[two>N-1]-delay*self.fs, ymin=0, ymax=afterFiltered[two[two>N-1]])
                     plt.show()
             return ampUpperPro, ampLowerPro
 
@@ -379,8 +384,6 @@ class signalToolkit:
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
     
-
-
 
     @panel
     def phaseDelay(self, data1=None, data2=None, spikeslist1 = None, valleyslist1=None, spikeslist2 = None, valleyslist2 = None, channelNum1:Optional[int] = None, channelNum2:Optional[int] = None, preproparas:Optional[dict] = None, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, mode = "spikesInterval"):
