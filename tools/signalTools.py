@@ -155,7 +155,7 @@ class signalToolkit:
 
     def panel(pltFunc):
         """
-        A python decorator to provide plot panel for 
+        A python decorator to provide plot panel
         """
         def addFigAxes(self, figsize=(15,5), *args, **kwds):
             fig = plt.figure(figsize=figsize)
@@ -177,8 +177,30 @@ class signalToolkit:
 
 
     @panel
-    # @NoneCheck
     def signal_AF(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, afterFiltered=None, spikeslistAF=None, digit=111, time=None, **kwargs):
+        """
+        A plotting function to visualize signal, signal after filtered, spikes, spikes after filtered, valleys in one plot
+        Parameters:
+        ---------------
+            fig:function
+                inherit from decorator
+            data:list or np.ndarray
+                the signal
+            spikeslist:list
+                The collection of spikes points
+            valleyslist:list
+                the collection of vallyes points
+            N: int or float
+                truncate data points number in the beginning of the signal. Inherited from `fir_bandpass` function
+            delay: int or float
+                time delay from `fir_bandpass` function
+            afterFiltered: list or np.ndarray
+                signal after filtered
+            spikeslistAF: list
+                the spikes points of the filtered signal
+            digit:int, default 111
+                add subplot to the panel
+        """
         axes = fig.add_subplot(digit)
         axes.plot(self.time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
