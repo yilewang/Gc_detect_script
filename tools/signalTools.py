@@ -334,13 +334,20 @@ class signalToolkit:
         A function used to calculate the delay between two signals
         Parameters:
         -----------------------
-            data1:
-            dara2:
-            spikeslist1:
-            spikeslist2:
-            valleyslist1:
-            valleyslist2:
-        
+            data1:list, np.ndarray
+                signal 1
+            dara2:list, np.ndarray
+                signal 2
+            spikeslist1:list, np.ndarray
+                the spikes points of the signal 1
+            spikeslist2:list, np.ndarray
+                the spikes points of the signal 2
+            valleyslist1:list, np.ndarray
+                the valleys points of the signal 1
+            valleyslist2:list, np.ndarray
+                the valleys points of the signal 2
+            mode:str, the options are `spikesInterval`, `instaPhase`, and `windowsPhase`
+                spikesInterval aims to calculate the 
         Return:
         -----------------------
             delay list
