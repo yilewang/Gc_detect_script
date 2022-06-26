@@ -5,7 +5,7 @@ import math
 
 
 
-class listNode:
+class ListNode:
     def __init__(self, value=0, next=None) -> None:
         self.val = value
         self.next = next

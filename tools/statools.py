@@ -13,13 +13,16 @@ Author: Yile Wang
 Date: 06/10/2022
 """
 
-def BootstrapTest(x,iteration, visualization = False):
+def bootstrap_test(x,iteration, visual = False):
     """
-    Args:   
+    A script for bootstrap analysis
+    Parameters:
+    ---------------------   
         x: data list1 1-d array
         iteration: iteration number for the test
-        visualization (boolean): the default value is False. If it is True, the bootstrap histgram will be generated
+        visual (boolean): the default value is False. If it is True, the bootstrap histgram will be generated
     Returns:
+    ---------------------
         CI the bootstrap test
         bootstrap distribution
 
@@ -42,8 +45,8 @@ def BootstrapTest(x,iteration, visualization = False):
     #p_value = (box[box > np.mean(x)].shape[0] + 1) / (iteration + 1) # correction
     print(f"The CI of the Bootstrap Test is: {CI}")
     
-    # visualization
-    if visualization == True:
+    # visual
+    if visual == True:
         plt.figure(figsize=(9,8))
         sns.histplot(data=box, bins='auto')
         plt.axvline(x=np.round(CI[0],3), label='2.5% CI at {}'.format(np.round(CI[0],3)),c='g', linestyle = 'dashed')
@@ -56,13 +59,13 @@ def BootstrapTest(x,iteration, visualization = False):
 
 
 
-def PermutationTest(x,y,iteration, visualization = False):
+def permutation_test(x,y,iteration, visual = False):
     """
     Args:   
         x: data list1 1-d array
         y: data list2 1-d array
         iteration: iteration number for the test
-        visualization (boolean): the default value is False. If it is True, the permutation histgram will be generated
+        visual (boolean): the default value is False. If it is True, the permutation histgram will be generated
     Returns:
         p-value of the permutation test
 
@@ -91,8 +94,8 @@ def PermutationTest(x,y,iteration, visualization = False):
     p_value = (box[box > orig_mean].shape[0] + 1) / (iteration + 1) # correction
 
     
-    # visualization
-    if visualization == True:
+    # visual
+    if visual == True:
         print(f"The P-value of the Permutation Test is: {p_value}")
         plt.figure(figsize=(9,8))
         sns.histplot(data=box, bins='auto')
@@ -140,7 +143,7 @@ def stats_calculator(datatable):
                 deList[x] = datatable.loc[datatable['grp'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
-                p_value = PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visualization = False)
+                p_value = PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
                 tmp_list = np.append(tmp_list, p_value)
             overall_permu[a, :] = tmp_list
 
