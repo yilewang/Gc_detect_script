@@ -1,5 +1,6 @@
 #!/bin/usr/python
 
+from cmath import phase
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,8 +8,7 @@ from scipy import signal
 import h5py
 from typing import Union, List, Optional
 import neurokit2 as nk
-import decorator
-
+from functools import wraps
 
 
 class SignalToolkit:
@@ -32,6 +32,8 @@ class SignalToolkit:
         self.casid = caseid
         self.group = group
 
+
+
     def hdf5_reader(self):
         """
         This function is for reading hdf5 file
@@ -47,8 +49,8 @@ class SignalToolkit:
         with h5py.File(self.filename, "r") as f:
         ### get key of h5 file
             key = list(f.keys())
-            self.dset = f[key[0]][:]
-            return self.dset
+            dset = f[key[0]][:]
+            return dset
 
 
 
@@ -87,17 +89,15 @@ class SignalToolkit:
         delay = 0.5 * (N-1) / self.fs
         return filtered_signal, N, delay
 
-    
 
-    def signal_preprocessing(self, data=None, channel_num=None, filter=True, low=None, high=None, normalization = True):
+
+    def signal_preprocessing(self, data, filter=True, low=None, high=None, normalization = True):
         """
         The function to help doing FIR bandpass filter and normalization for the signal
         Parameters:
         -----------------
             data:list or np.ndarray
                 the signal
-            channel_num(optional):int
-                if you don't have data and you want to read data and do the preprocessing together, you can use this channel_num to specify which channel you want to use for data preprocessing.
             filter: boole
                 filter or not
             low (optional):float
@@ -113,10 +113,6 @@ class SignalToolkit:
             else:
                 data itself
         """
-        if data is None:
-            self.hdf5_reader()
-            self.signal = self.dset[:,channel_num]
-            data = self.signal
         self.time = np.arange(0, len(data)/self.fs, 1/self.fs)
         if filter and normalization:
             after_filtered, N, delay = self.fir_bandpass(data, low, high)
@@ -130,6 +126,31 @@ class SignalToolkit:
             return data
         else:
             return data
+
+
+
+
+    # def none_check2signals(func):
+    #     @wraps(func)
+    #     def wrapper(self, *args, **kwargs):
+    #         if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
+    #             data1= self.signalpreprocessing(channel_num1, **preproparas)
+    #             spikeslist1, valleyslist1 = self.peaks_valleys(data1, **spikesparas, **valleysparas)
+    #             data2= self.signalpreprocessing(channel_num2, **preproparas)
+    #             spikeslist2, valleyslist2 = self.peaks_valleys(data2, **spikesparas,**valleysparas)
+    #             #raise ValueError("None's aren't welcome here")
+    #             return func(self, *args, **kwargs)
+    #     return wrapper
+
+    # def none_check_signal(func):
+    #     @wraps(func)
+    #     def wrapper(self, *args, **kwargs):
+    #         if None in (data, spikeslist, valleyslist):
+    #             data= self.signalpreprocessing(channel_num, **preproparas)
+    #             spikeslist, valleyslist = self.peaks_valleys(data, **spikesparas, **valleysparas)
+    #             return func(self, *args, **kwargs)
+    #     return wrapper
+            
 
 
     def peaks_valleys(self, data, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None):
@@ -162,18 +183,7 @@ class SignalToolkit:
             return func(self, fig, *args, **kwargs)
         return addFigAxes
 
-    # @decorator.decorator
-    # def NoneCheck(self, f, *args,**kwargs):
-    #     if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
-    #         data1= self.signalpreprocessing(channel_num1, **preproparas)
-    #         spikeslist1, valleyslist1 = self.peaks_valleys(data1, **spikesparas, **valleysparas)
-    #         data2= self.signalpreprocessing(channel_num2, **preproparas)
-    #         spikeslist2, valleyslist2 = self.peaks_valleys(data2, **spikesparas,**valleysparas)
-    #         #raise ValueError("None's aren't welcome here")
-    #     if None in (data, spikeslist, valleyslist):
-    #         data= self.signalpreprocessing(channel_num, **preproparas)
-    #         spikeslist, valleyslist = self.peaks_valleys(data, **spikesparas, **valleysparas)
-    #     return f(*args,**kwargs)
+
 
 
     @panel
@@ -214,7 +224,7 @@ class SignalToolkit:
         axes.legend()
         plt.show()
     
-    def psd(self, figsize=(15,5), digit=111, data=None, sampling_interval = None, visual=False, xlim=100., *args, **kwargs):
+    def psd(self, data, sampling_interval = None, visual=False, xlim=100.,figsize=(15,5), digit=111, *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
@@ -232,8 +242,6 @@ class SignalToolkit:
         ----------------------
             Freq axis, PSD of the signal
         """
-        if data is None:
-            data = self.signal
 
         if sampling_interval is None:
             sampling_interval = self.sampling_interval
@@ -255,7 +263,7 @@ class SignalToolkit:
             plt.show()
         return faxis, spectrum.real
 
-    def freq_count(self, figsize=(15,5), spikeslist=None,visual=False, data:Optional[list]=None, digit:Optional[int]=111) -> float:
+    def freq_count(self, data, spikeslist, visual=False, digit:Optional[int]=111, figsize=(15,5) ) -> float:
         """
         A function designed to do spike counting.
         Parameters:
@@ -269,8 +277,6 @@ class SignalToolkit:
         if visual:
             fig = plt.figure(figsize=figsize)
             axes = fig.add_subplot(digit)
-            if data is None:
-                data = self.signal
             axes.plot(data)
             for one in spikeslist:
                 axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
@@ -278,7 +284,7 @@ class SignalToolkit:
             axes.set_title("frequency spikes count")
         return len(spikeslist)
 
-    def amp_count(self,  data, spikeslist, valleyslist, mode = "peak2xais", visual=False,  spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, spikeslist_af:Optional[list] = None, after_filtered=None, N=None, delay=None, figsize=(15,5),digit=111):
+    def amp_count(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, spikeslist_af:Optional[list] = None, after_filtered=None, N=None, delay=None, figsize=(15,5), digit=111):
         """
         Parameters:
         ---------------
@@ -309,9 +315,6 @@ class SignalToolkit:
             Amplitude_data: list
                 the amplitude of all cycles. The result depends on what mode is used in function. 
         """
-        if data is None:
-            data = self.signal
-            spikeslist, valleyslist = self.peaks_valleys(self.signal, spikesparas, valleysparas)
             
         if mode in ["peak2valley", 'p2v']:
             cycle_spikes_mean = []
@@ -391,7 +394,7 @@ class SignalToolkit:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
     
 
-    def phase_delay(self, data1=None, data2=None, spikeslist1 = None, valleyslist1=None, spikeslist2 = None, valleyslist2 = None, channel_num1:Optional[int] = None, channel_num2:Optional[int] = None, preproparas:Optional[dict] = None, spikesparas:Optional[dict] = None, valleysparas:Optional[dict] = None, mode = "spikesInterval"):
+    def phase_delay(self, data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2, mode = "spikesInterval"):
         """
         A function used to calculate the delay between two signals
         Parameters:
@@ -414,12 +417,6 @@ class SignalToolkit:
         -----------------------
             delay list
         """
-        
-        if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
-            data1= self.signalpreprocessing(channel_num1, **preproparas)
-            spikeslist1, valleyslist1 = self.peaks_valleys(data1, **spikesparas, **valleysparas)
-            data2= self.signalpreprocessing(channel_num2, **preproparas)
-            spikeslist2, valleyslist2 = self.peaks_valleys(data2, **spikesparas,**valleysparas)
         
 
         if mode in ["spikeInterval", "SI"]:
@@ -459,4 +456,34 @@ class SignalToolkit:
         
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
+    
+    def phase_locking(self, data1,data2, visual=False):
+        """
+        A function to calculate phase locking value. The mathematical formula is 
+        $$PLV_t = \frac{1}{N}\abs{\sum_{n=1}{N}exp(\mathbf j \theta (t, n)}$$
+        Parameters:
+        ----------------------------
+            data1:list or np.ndarray
+                signal 1
+            data2:list or np.ndarray
+                siganl 2
+        Returns:
+        ----------------------------
+            phase locking value
+        """
+
+        h1=signal.hilbert(data1)
+        h2=signal.hilbert(data2)
+        # pdt=(np.inner(sig1_hill,np.conj(sig2_hill))/(np.sqrt(np.inner(sig1_hill,
+        #            np.conj(sig1_hill))*np.inner(sig2_hill,np.conj(sig2_hill)))))
+        # phase = np.angle(pdt)
+        diff = h1 - h2
+        plv = np.exp(np.array([complex(0, diff[i]) for i in range(len(diff))]))
+        plv = np.abs(plv)
+        if visual:
+            fig = plt.figure(figsize=(15,5))
+            axes = fig.add_subplot(111)
+            axes.plot(plv)
+            plt.show()
+        return plv
 
