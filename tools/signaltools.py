@@ -91,7 +91,7 @@ class SignalToolkit:
 
 
 
-    def signal_preprocessing(self, data, filter=True, low=None, high=None, normalization = True):
+    def signal_preprocessing(self, data, filter=True, low=None, high=None, normalization = False):
         """
         The function to help doing FIR bandpass filter and normalization for the signal
         Parameters:
@@ -127,7 +127,30 @@ class SignalToolkit:
         else:
             return data
 
-
+    def region_info_package(self, dset, channel_num, label, normalization = True,spikesparas=None, valleysparas=None, spikesparas_af=None):
+        """
+        a function to return signal preprocessing info in a pack
+        Parameters:
+        -----------------------
+            dset:np.ndarray
+                the dataset return from `self.hdf5_reader`
+            channel_num:int
+                the channel number to be analyzed
+            label:str
+                the name of the brain region
+            Normalization:boole
+                to normalize data
+        Returns:
+        -----------------------
+            packdict:dict
+                A dict including all necessary information
+        """
+        roi = self.signal_preprocessing(dset[:,channel_num], filter=False, normalization=normalization)
+        roi_af, N, delay = self.signal_preprocessing(roi, filter = True, normalization = normalization, low=2., high=10.)
+        spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
+        spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas)
+        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist, "N":N, "delay":delay, "label":label}
+        return packdict
 
 
     # def none_check2signals(func):
@@ -187,7 +210,7 @@ class SignalToolkit:
 
 
     @panel
-    def signal_af(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, after_filtered=None, spikeslist_af=None, digit=111, time=None, **kwargs):
+    def signal_af(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, after_filtered=None, spikeslist_af=None, digit=111, time=None, label=None):
         """
         A plotting function to visualize signal, signal after filtered, spikes, spikes after filtered, valleys in one plot
         Parameters:
@@ -214,13 +237,13 @@ class SignalToolkit:
         if time is None:
             time = self.time
         axes = fig.add_subplot(digit)
+        axes.set_title(label)
         axes.plot(time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
         axes.plot(valleyslist/self.fs, data[valleyslist], 'o', label = "signal valleys")
         axes.plot(time[N-1:]-delay, after_filtered[N-1:], label = "filtered signal")
         if len(spikeslist_af) > 0:
             axes.plot(spikeslist_af[spikeslist_af > N-1]/self.fs - delay, after_filtered[spikeslist_af[spikeslist_af > N-1]],'x', label = "filtered spikes")
-        axes.plot(**kwargs)
         axes.legend()
         plt.show()
     
