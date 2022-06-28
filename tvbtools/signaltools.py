@@ -463,9 +463,11 @@ class SignalToolkit:
             cycle1spikes = []
             _init=0
             for one in valleyslist:
-                firstspike = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end = one)[0]
-                if firstspike>0:
+                try:
+                    firstspike = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end = one)[0]
                     cycle1spikes.append(firstspike)
+                except IndexError:
+                    pass
                 _init = one
             return cycle1spikes
 
