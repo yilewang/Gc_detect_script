@@ -91,7 +91,7 @@ class SignalToolkit:
 
 
 
-    def signal_preprocessing(self, data, filter=True, low=None, high=None, normalization = False):
+    def signal_preprocessing(self, data, truncate = 3., filter=True, low=None, high=None, normalization = False):
         """
         The function to help doing FIR bandpass filter and normalization for the signal
         Parameters:
@@ -113,6 +113,10 @@ class SignalToolkit:
             else:
                 data itself
         """
+        if truncate > 0:
+            data = data[self.fs*truncate:]
+        elif truncate < 0:
+            raise ValueError("truncate number must be over 0")
         self.time = np.arange(0, len(data)/self.fs, 1/self.fs)
         if filter and normalization:
             after_filtered, N, delay = self.fir_bandpass(data, low, high)
@@ -127,7 +131,7 @@ class SignalToolkit:
         else:
             return data
 
-    def region_info_package(self, dset, channel_num, label, normalization = True,spikesparas=None, valleysparas=None, spikesparas_af=None):
+    def signal_package(self, dset, channel_num, label, low, high, normalization = True,spikesparas=None, valleysparas=None, spikesparas_af=None):
         """
         a function to return signal preprocessing info in a pack
         Parameters:
@@ -144,12 +148,21 @@ class SignalToolkit:
         -----------------------
             packdict:dict
                 A dict including all necessary information
+                {"data":roi, 
+                "after_filtered":roi_af, 
+                "spikeslist":spikeslist, 
+                "spikeslist_af":spikeslist_af, 
+                "valleyslist":valleyslist, 
+                "valleyslist_af":vallyeslist_af,
+                "N":N, 
+                "delay":delay, 
+                "label":label}
         """
         roi = self.signal_preprocessing(dset[:,channel_num], filter=False, normalization=normalization)
-        roi_af, N, delay = self.signal_preprocessing(roi, filter = True, normalization = normalization, low=2., high=10.)
+        roi_af, N, delay = self.signal_preprocessing(roi, filter = True, normalization = normalization, low=low, high=high)
         spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
         spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas)
-        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist, "N":N, "delay":delay, "label":label}
+        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
         return packdict
 
 
@@ -209,8 +222,8 @@ class SignalToolkit:
 
 
 
-    @panel
-    def signal_af(self, fig=None, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, after_filtered=None, spikeslist_af=None, digit=111, time=None, label=None):
+    #@panel
+    def signal_af(self, axes, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, after_filtered=None, spikeslist_af=None, digit=111, time=None, label=None, **kwargs):
         """
         A plotting function to visualize signal, signal after filtered, spikes, spikes after filtered, valleys in one plot
         Parameters:
@@ -236,16 +249,15 @@ class SignalToolkit:
         """
         if time is None:
             time = self.time
-        axes = fig.add_subplot(digit)
-        axes.set_title(label)
+        # axes = fig.add_subplot(digit)
         axes.plot(time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
         axes.plot(valleyslist/self.fs, data[valleyslist], 'o', label = "signal valleys")
         axes.plot(time[N-1:]-delay, after_filtered[N-1:], label = "filtered signal")
         if len(spikeslist_af) > 0:
             axes.plot(spikeslist_af[spikeslist_af > N-1]/self.fs - delay, after_filtered[spikeslist_af[spikeslist_af > N-1]],'x', label = "filtered spikes")
-        axes.legend()
-        plt.show()
+        return axes
+
     
     def psd(self, data, sampling_interval = None, visual=False, xlim=100.,figsize=(15,5), digit=111, *args, **kwargs):
         """
@@ -355,7 +367,7 @@ class SignalToolkit:
                 for one in cycle_spikes_mean:
                     axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
                 plt.show()
-            return cycle_spikes_mean
+            return np.mean(cycle_spikes_mean)
 
         elif mode in ["peak2axis", 'p20']:
             cycle_spikes_mean = []
@@ -373,7 +385,7 @@ class SignalToolkit:
                 for one in spikeslist:
                     axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
                 plt.show()
-            return cycle_spikes_mean
+            return np.mean(cycle_spikes_mean)
         
         elif mode in ["ampProportional", "ap", "AP"]:
             amp_upper_pro = []
@@ -399,7 +411,7 @@ class SignalToolkit:
                     axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
                     axes.vlines(two[two>N-1]-delay*self.fs, ymin=0, ymax=after_filtered[two[two>N-1]], colors = 'green')
                 plt.show()
-            return amp_upper_pro, amp_lower_pro
+            return np.mean(amp_upper_pro), np.mean(amp_lower_pro)
 
         elif mode in ["hilbert","h"]:
             analytic = signal.hilbert(self.signal)
@@ -412,7 +424,7 @@ class SignalToolkit:
                 axes.plot(time, amplitude_envelope, label = "envelop")
                 plt.legend()
                 plt.show
-            return amplitude_envelope
+            return np.mean(amplitude_envelope)
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
     
@@ -471,11 +483,11 @@ class SignalToolkit:
             phase1 = np.angle(signal.hilbert(data1),deg=False)
             phase2 = np.angle(signal.hilbert(data2),deg=False)
             synchrony = 1 - np.sin(np.abs(phase1 - phase2) / 2)
-            return synchrony
+            return np.mean(synchrony)
 
         elif mode in ["windowsPhase", "WP"]:
             synchrony = nk.signal_synchrony(data1, data2, method="correlation", window_size=50)
-            return synchrony
+            return np.mean(synchrony)
         
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
@@ -508,5 +520,5 @@ class SignalToolkit:
             axes = fig.add_subplot(111)
             axes.plot(plv)
             plt.show()
-        return plv
+        return np.mean(plv)
 
