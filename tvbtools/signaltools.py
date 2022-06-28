@@ -91,7 +91,7 @@ class SignalToolkit:
 
 
 
-    def signal_preprocessing(self, data, truncate = 3., filter=True, low=None, high=None, normalization = False):
+    def signal_preprocessing(self, data, truncate = 0, filter=True, low=None, high=None, normalization = False):
         """
         The function to help doing FIR bandpass filter and normalization for the signal
         Parameters:
@@ -114,7 +114,8 @@ class SignalToolkit:
                 data itself
         """
         if truncate > 0:
-            data = data[self.fs*truncate:]
+            ind = int(self.fs*truncate)
+            data = data[ind:]
         elif truncate < 0:
             raise ValueError("truncate number must be over 0")
         self.time = np.arange(0, len(data)/self.fs, 1/self.fs)
@@ -159,7 +160,7 @@ class SignalToolkit:
                 "label":label}
         """
         roi = self.signal_preprocessing(dset[:,channel_num], filter=False, normalization=normalization)
-        roi_af, N, delay = self.signal_preprocessing(roi, filter = True, normalization = normalization, low=low, high=high)
+        roi_af, N, delay = self.signal_preprocessing(roi, truncate = 0, filter = True, normalization = normalization, low=low, high=high)
         spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
         spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas)
         packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
@@ -298,7 +299,7 @@ class SignalToolkit:
             plt.show()
         return faxis, spectrum.real
 
-    def freq_count(self, data, spikeslist, visual=False, digit:Optional[int]=111, figsize=(15,5) ) -> float:
+    def freq_count(self,spikeslist, data=None,  visual=False, digit:Optional[int]=111, figsize=(15,5) ) -> float:
         """
         A function designed to do spike counting.
         Parameters:
@@ -318,6 +319,12 @@ class SignalToolkit:
             plt.show()
             axes.set_title("frequency spikes count")
         return len(spikeslist)
+
+    @staticmethod
+    def range_peaks(spikeslist, valleyslist, init, end):
+            spikeslist = np.array(spikeslist)
+            valleyslist= np.array(valleyslist)
+            return spikeslist[np.where(np.logical_and(spikeslist>=init, spikeslist<=end))]
 
     def amp_count(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, spikeslist_af:Optional[list] = None, after_filtered=None, N=None, delay=None, figsize=(15,5), digit=111):
         """
@@ -350,16 +357,16 @@ class SignalToolkit:
             Amplitude_data: list
                 the amplitude of all cycles. The result depends on what mode is used in function. 
         """
-            
+        
         if mode in ["peak2valley", 'p2v']:
             cycle_spikes_mean = []
-            for one in range(len(valleyslist)-1):
-                cycle_spikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
+            _init = 0
+            for one in valleyslist:
+                cycle_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end=one)
                 if len(cycle_spikes) >0:
-                    peak2val = np.mean(data[cycle_spikes])-np.mean(data[valleyslist[one]], data[valleyslist[one+1]])
+                    peak2val = np.mean(data[cycle_spikes])-np.mean([data[_init], data[one]])
                     cycle_spikes_mean.append(peak2val)
-                else:
-                    pass
+                _init = one
             if visual:
                 fig = plt.figure(figsize=figsize)
                 axes = fig.add_subplot(digit)
@@ -371,13 +378,13 @@ class SignalToolkit:
 
         elif mode in ["peak2axis", 'p20']:
             cycle_spikes_mean = []
-            for one in range(len(valleyslist)-1):
-                cycle_spikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
+            _init = 0
+            for one in valleyslist:
+                cycle_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end=one)
                 if len(cycle_spikes) >0:
                     peak2val = np.mean(data[cycle_spikes])
                     cycle_spikes_mean.append(peak2val)
-                else:
-                    pass
+                _init = one
             if visual:
                 fig = plt.figure(figsize=figsize)
                 axes = fig.add_subplot(digit)
@@ -390,18 +397,18 @@ class SignalToolkit:
         elif mode in ["ampProportional", "ap", "AP"]:
             amp_upper_pro = []
             amp_lower_pro = []
-            for one in range(len(valleyslist)-1):
-                raw_spikes = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]]
-                spikes_af = spikeslist_af[spikeslist_af > valleyslist[one] and spikeslist_af < valleyslist[one+1]]
+            _init = 0
+            for one in valleyslist:
+                raw_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end = one)
+                spikes_af = self.range_peaks(spikeslist=spikeslist_af, valleyslist=valleyslist, init=_init, end = one)
                 if len(raw_spikes) and len(spikes_af) >0:
-                    peak2val = np.mean(data[raw_spikes]-np.mean(data[valleyslist[one]], data[valleyslist[one+1]]))
-                    peak2val_af = np.mean(data[spikes_af]-np.mean(data[valleyslist[one]], data[valleyslist[one+1]]))
+                    peak2val = np.mean(data[raw_spikes]-np.mean([data[_init], data[one]]))
+                    peak2val_af = np.mean(data[spikes_af]-np.mean([data[_init], data[one]]))
                     upper_pro = (peak2val - peak2val_af)/peak2val
                     lower_pro = peak2val_af / peak2val
                     amp_upper_pro.append(upper_pro)
                     amp_lower_pro.append(lower_pro)
-                else:
-                    pass
+                _init = one
             if visual:
                 fig = plt.figure(figsize=figsize)
                 axes = fig.add_subplot(digit)
@@ -452,31 +459,30 @@ class SignalToolkit:
         -----------------------
             delay list
         """
-        
+        def first_spike(spikeslist, valleyslist):
+            cycle1spikes = []
+            _init=0
+            for one in valleyslist:
+                firstspike = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end = one)[0]
+                if firstspike>0:
+                    cycle1spikes.append(firstspike)
+                _init = one
+            return cycle1spikes
 
         if mode in ["spikeInterval", "SI"]:
-            def firstSpike(spikeslist, valleyslist):
-                cycle1spikes = []
-                for one in range(len(valleyslist)-1):
-                    firstspike = spikeslist[spikeslist > valleyslist[one] and spikeslist < valleyslist[one+1]][0]
-                    if len(firstspike)>0:
-                        cycle1spikes.append(firstspike)
-                    else:
-                        pass
-                return cycle1spikes
-            data1spikes = firstSpike(spikeslist1, valleyslist1)
-            data2spikes = firstSpike(spikeslist2, valleyslist2)
+            data1spikes = first_spike(spikeslist1, valleyslist1)
+            data2spikes = first_spike(spikeslist2, valleyslist2)
             # get shorter list length
             spikeslen = min(len(data1spikes), len(data2spikes))
             delaylist = []
             for one in range(spikeslen):
                 if data1spikes[0] > data2spikes[0]:
-                    diff = data2spikes[one] - data1spikes
+                    diff = data2spikes[one] - data1spikes[one]
                     delaylist.append(diff)
                 else:
-                    diff = data1spikes[one] - data2spikes
+                    diff = data1spikes[one] - data2spikes[one]
                     delaylist.append(diff)
-            return np.mean(delaylist)
+            return np.mean(delaylist)/self.fs
             
 
         elif mode in ["instaPhase", "IP"]:
