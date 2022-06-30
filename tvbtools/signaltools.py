@@ -203,7 +203,7 @@ class SignalToolkit:
         roi_af, N, delay = self.signal_preprocessing(roi, truncate = 0, filter = True, normalization = normalization, low=low, high=high)
         spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
         spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas_af)
-        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
+        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist_af, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
         return packdict
             
 
