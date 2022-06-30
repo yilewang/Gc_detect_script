@@ -5,14 +5,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import signal
+import scipy
 import h5py
-from typing import Union, List, Optional
+from typing import Type, Union, List, Optional
 import neurokit2 as nk
 from functools import wraps
-
+import os
+import io
 
 class SignalToolkit:
-    def __init__(self, filename, fs, caseid=None, group=None) -> None:
+    def __init__(self, filename=None, fs=None, caseid=None, group=None) -> None:
         """
         The initial parameters required for the data analysis
         Parameters:
@@ -28,11 +30,33 @@ class SignalToolkit:
         """
         self.filename = filename
         self.fs = fs
-        self.sampling_interval = 1/fs
+        if self.fs is None:
+            pass
+        else:
+            self.sampling_interval = 1/fs
         self.casid = caseid
         self.group = group
 
 
+
+
+    def txt_reader(self) -> np.ndarray:
+        openSC = open(self.filename,"r")
+        lines = openSC.read()
+        df = pd.read_csv(io.StringIO(lines), sep='\t', header=None, index_col=None, engine="python")
+        return df.to_numpy()
+
+    def csv_reader(self) -> np.ndarray:
+        df = pd.read_csv(self.filename, index_col=0)
+        return df.to_numpy()
+
+    def excel_reader(self) -> np.ndarray:
+        df = pd.read_excel(self.filename, index_col=0)
+        return df.to_numpy()
+    
+    def mat_reader(self) -> dict:
+        mat = scipy.io.loadmat(self.filename)
+        return mat
 
     def hdf5_reader(self):
         """
@@ -52,9 +76,23 @@ class SignalToolkit:
             dset = f[key[0]][:]
             return dset
 
+    def data_reader(self):
+        _, file_extension = os.path.splitext(self.filename)
+        if file_extension in [".csv"]:
+            data = self.csv_reader()
+        elif file_extension in [".xlsx"]:
+            data = self.excel_reader()
+        elif file_extension in [".txt"]:
+            data = self.txt_reader()
+        elif file_extension in [".hdf5", ".h5"]:
+            data = self.hdf5_reader()
+        elif file_extension in [".mat"]:
+            data = self.mat_reader()
+        else:
+            raise TypeError("The data type is not supported by this reader. Please contact yile.wang@utdallas.edu to add support to other datatypes. Thanks")
+        return data
 
-
-    def fir_bandpass(self, data, cut_off_low, cut_off_high, width=2.0, ripple_db=10.0):
+    def fir_bandpass(self, data, cut_off_low, cut_off_high, fs=None, width=2.0, ripple_db=10.0):
         """
         The FIR bandpass filter
         Parameters:
@@ -78,15 +116,17 @@ class SignalToolkit:
             delay: int or float
                 (for plotting) when plot, align the axis by `plt.plot(time[N-1:]-delay, filtered_data[N-1:])`
         """
+        if fs is None:
+            fs = self.fs
         if cut_off_low - cut_off_high >=0:
             raise ValueError("Low pass value needs to be larger than High pass value.")
-        nyq_rate = self.fs / 2.0
+        nyq_rate = fs / 2.0
         wid = width/nyq_rate
         N, beta = signal.kaiserord(ripple_db, wid)
         taps = signal.firwin(N, cutoff = [cut_off_low, cut_off_high],
-                    window = 'hamming', pass_zero = False, fs=self.fs)
+                    window = 'hamming', pass_zero = False, fs=fs)
         filtered_signal = signal.lfilter(taps, 1.0, data)
-        delay = 0.5 * (N-1) / self.fs
+        delay = 0.5 * (N-1) / fs
         return filtered_signal, N, delay
 
 
@@ -132,7 +172,7 @@ class SignalToolkit:
         else:
             return data
 
-    def signal_package(self, dset, channel_num, label, low, high, normalization = True,spikesparas=None, valleysparas=None, spikesparas_af=None):
+    def signal_package(self, data, channel_num, label, low, high, normalization = True,spikesparas=None, valleysparas=None, spikesparas_af=None, valleysparas_af = None,truncate = 0):
         """
         a function to return signal preprocessing info in a pack
         Parameters:
@@ -159,34 +199,12 @@ class SignalToolkit:
                 "delay":delay, 
                 "label":label}
         """
-        roi = self.signal_preprocessing(dset[:,channel_num], filter=False, normalization=normalization)
+        roi = self.signal_preprocessing(data[:,channel_num], filter=False, normalization=normalization, truncate=truncate)
         roi_af, N, delay = self.signal_preprocessing(roi, truncate = 0, filter = True, normalization = normalization, low=low, high=high)
         spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
-        spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas)
+        spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas_af)
         packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
         return packdict
-
-
-    # def none_check2signals(func):
-    #     @wraps(func)
-    #     def wrapper(self, *args, **kwargs):
-    #         if None in (data1, data2, spikeslist1, valleyslist1, spikeslist2, valleyslist2):
-    #             data1= self.signalpreprocessing(channel_num1, **preproparas)
-    #             spikeslist1, valleyslist1 = self.peaks_valleys(data1, **spikesparas, **valleysparas)
-    #             data2= self.signalpreprocessing(channel_num2, **preproparas)
-    #             spikeslist2, valleyslist2 = self.peaks_valleys(data2, **spikesparas,**valleysparas)
-    #             #raise ValueError("None's aren't welcome here")
-    #             return func(self, *args, **kwargs)
-    #     return wrapper
-
-    # def none_check_signal(func):
-    #     @wraps(func)
-    #     def wrapper(self, *args, **kwargs):
-    #         if None in (data, spikeslist, valleyslist):
-    #             data= self.signalpreprocessing(channel_num, **preproparas)
-    #             spikeslist, valleyslist = self.peaks_valleys(data, **spikesparas, **valleysparas)
-    #             return func(self, *args, **kwargs)
-    #     return wrapper
             
 
 
@@ -211,20 +229,18 @@ class SignalToolkit:
         return spikeslist, valleyslist
         
 
-    def panel(func):
-        """
-        A python decorator to provide plot panel
-        """
-        def addFigAxes(self, figsize=(15,5), *args, **kwargs):
-            fig = plt.figure(figsize=figsize)
-            return func(self, fig, *args, **kwargs)
-        return addFigAxes
-
-
-
+    # def panel(func):
+    #     """
+    #     A python decorator to provide plot panel
+    #     """
+    #     def addFigAxes(self, figsize=(15,5), *args, **kwargs):
+    #         fig = plt.figure(figsize=figsize)
+    #         return func(self, fig, *args, **kwargs)
+    #     return addFigAxes
+    
 
     #@panel
-    def signal_af(self, axes, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, after_filtered=None, spikeslist_af=None, digit=111, time=None, label=None, **kwargs):
+    def signal_af(self, axes, data=None, spikeslist=None, valleyslist=None, N=None, delay=None, after_filtered=None, spikeslist_af=None, valleyslist_af = None, digit=111, time=None, label=None, **kwargs):
         """
         A plotting function to visualize signal, signal after filtered, spikes, spikes after filtered, valleys in one plot
         Parameters:
@@ -250,17 +266,18 @@ class SignalToolkit:
         """
         if time is None:
             time = self.time
-        # axes = fig.add_subplot(digit)
+        if axes is None:
+            fig = plt.figure(figsize=(15,5))
+            axes = fig.add_subplot(111)
         axes.plot(time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
-        axes.plot(valleyslist/self.fs, data[valleyslist], 'o', label = "signal valleys")
+        axes.plot(valleyslist_af[valleyslist_af > N-1]/self.fs-delay, after_filtered[valleyslist_af[valleyslist_af > N-1]], 'o', label = "filtered valleys")
         axes.plot(time[N-1:]-delay, after_filtered[N-1:], label = "filtered signal")
         if len(spikeslist_af) > 0:
             axes.plot(spikeslist_af[spikeslist_af > N-1]/self.fs - delay, after_filtered[spikeslist_af[spikeslist_af > N-1]],'x', label = "filtered spikes")
         return axes
 
-    
-    def psd(self, data, sampling_interval = None, visual=False, xlim=100.,figsize=(15,5), digit=111, *args, **kwargs):
+    def psd(self, data, sampling_interval = None, visual=False, xlim=100.,axes=None, fNQ = None, normalization = True, *args, **kwargs):
         """
         This function is for power spectrum density analysis
         
@@ -278,28 +295,27 @@ class SignalToolkit:
         ----------------------
             Freq axis, PSD of the signal
         """
-
         if sampling_interval is None:
             sampling_interval = self.sampling_interval
+        fs = 1/sampling_interval
+        if fNQ is None:
+            fNQ = int(fs/2)
+        data = np.array(data)
+        if normalization:
+            data = data-np.mean(data)
+        fourier = np.fft.fft(data, n=fNQ)
+        fourier = fourier[0:int(fNQ/2)]
+        faxis  = np.arange(int(fNQ/2)) * (fs/fNQ)
 
-        total = len(data)
-        duration = total * sampling_interval
-        fourierSignal = np.fft.fft(np.array(data) - np.array(data).mean())
-        spectrum = 2 * (sampling_interval) ** 2 / duration * (fourierSignal * fourierSignal.conj())
-        spectrum = spectrum[:int(len(np.array(data)) / 2)]
-        time_all = 1 / duration
-        fNQ = 1/sampling_interval/2 # Nyquist frequency
-        faxis = np.arange(0, fNQ, time_all) # frequency axis
         if visual:
-            fig = plt.figure(figsize=figsize)
-            axes = fig.add_subplot(digit)
-            axes.plot(faxis, spectrum.real, color='r', label = 'PSD Results', *args, **kwargs)
-            axes.legend()
+            if axes is None:
+                fig = plt.figure(figsize=(15,5))
+                axes = fig.add_subplot(111)
+            axes.plot(faxis, np.abs(fourier**2), *args, **kwargs)
             axes.set_xlim([0, xlim])
-            plt.show()
-        return faxis, spectrum.real
+        return faxis, np.abs(fourier)**2
 
-    def freq_count(self,spikeslist, data=None,  visual=False, digit:Optional[int]=111, figsize=(15,5) ) -> float:
+    def freq_count(self,spikeslist, data=None,  visual=False, axes=None) -> float:
         """
         A function designed to do spike counting.
         Parameters:
@@ -311,12 +327,12 @@ class SignalToolkit:
             number of spikes in signal:int
         """
         if visual:
-            fig = plt.figure(figsize=figsize)
-            axes = fig.add_subplot(digit)
+            if axes is None:
+                fig = plt.figure(figsize=(15,5))
+                axes = fig.add_subplot(111)
             axes.plot(data)
             for one in spikeslist:
                 axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
-            plt.show()
             axes.set_title("frequency spikes count")
         return len(spikeslist)
 
@@ -326,7 +342,7 @@ class SignalToolkit:
             valleyslist= np.array(valleyslist)
             return spikeslist[np.where(np.logical_and(spikeslist>=init, spikeslist<=end))]
 
-    def amp_count(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, spikeslist_af:Optional[list] = None, after_filtered=None, N=None, delay=None, figsize=(15,5), digit=111):
+    def amp_count(self, data, spikeslist, valleyslist, mode = "peak2xais", visual=False, spikeslist_af:Optional[list] = None, after_filtered=None, N=None, delay=None, axes = None, **kwargs):
         """
         Parameters:
         ---------------
@@ -361,72 +377,85 @@ class SignalToolkit:
         if mode in ["peak2valley", 'p2v']:
             cycle_spikes_mean = []
             _init = 0
-            for one in valleyslist:
-                cycle_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end=one)
-                if len(cycle_spikes) >0:
-                    peak2val = np.mean(data[cycle_spikes])-np.mean([data[_init], data[one]])
-                    cycle_spikes_mean.append(peak2val)
-                _init = one
-            if visual:
-                fig = plt.figure(figsize=figsize)
-                axes = fig.add_subplot(digit)
-                axes.plot(data)
-                for one in cycle_spikes_mean:
-                    axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
-                plt.show()
-            return np.mean(cycle_spikes_mean)
+            if len(valleyslist) <= 0:
+                return 0
+            else:
+                for one in valleyslist:
+                    cycle_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end=one)
+                    if len(cycle_spikes) >0:
+                        peak2val = np.mean(data[cycle_spikes])-np.mean([data[_init], data[one]])
+                        cycle_spikes_mean.append(peak2val)
+                    _init = one
+                if visual:
+                    if axes is None:
+                        fig = plt.figure(figsize=(15,5))
+                        axes = fig.add_subplot(111)
+                    axes.plot(data)
+                    for one in cycle_spikes_mean:
+                        axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
+                    plt.show()
+                return np.mean(cycle_spikes_mean)
 
         elif mode in ["peak2axis", 'p20']:
             cycle_spikes_mean = []
             _init = 0
-            for one in valleyslist:
-                cycle_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end=one)
-                if len(cycle_spikes) >0:
-                    peak2val = np.mean(data[cycle_spikes])
-                    cycle_spikes_mean.append(peak2val)
-                _init = one
-            if visual:
-                fig = plt.figure(figsize=figsize)
-                axes = fig.add_subplot(digit)
-                axes.plot(data)
-                for one in spikeslist:
-                    axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
-                plt.show()
-            return np.mean(cycle_spikes_mean)
+            if len(valleyslist) <= 0:
+                return 0
+            else:
+                for one in valleyslist:
+                    cycle_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end=one)
+                    if len(cycle_spikes) >0:
+                        peak2val = np.mean(data[cycle_spikes])
+                        cycle_spikes_mean.append(peak2val)
+                    _init = one
+                if visual:
+                    if axes is None:
+                        fig = plt.figure(figsize=(15,5))
+                        axes = fig.add_subplot(111)
+                    axes.plot(data)
+                    for one in spikeslist:
+                        axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
+                    plt.show()
+                return np.mean(cycle_spikes_mean)
         
         elif mode in ["ampProportional", "ap", "AP"]:
             amp_upper_pro = []
             amp_lower_pro = []
             _init = 0
-            for one in valleyslist:
-                raw_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end = one)
-                spikes_af = self.range_peaks(spikeslist=spikeslist_af, valleyslist=valleyslist, init=_init, end = one)
-                if len(raw_spikes) and len(spikes_af) >0:
-                    peak2val = np.mean(data[raw_spikes]-np.mean([data[_init], data[one]]))
-                    peak2val_af = np.mean(data[spikes_af]-np.mean([data[_init], data[one]]))
-                    upper_pro = (peak2val - peak2val_af)/peak2val
-                    lower_pro = peak2val_af / peak2val
-                    amp_upper_pro.append(upper_pro)
-                    amp_lower_pro.append(lower_pro)
-                _init = one
-            if visual:
-                fig = plt.figure(figsize=figsize)
-                axes = fig.add_subplot(digit)
-                axes.plot(data)
-                axes.plot(after_filtered)
-                for one,two in zip(amp_upper_pro,amp_lower_pro):
-                    axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
-                    axes.vlines(two[two>N-1]-delay*self.fs, ymin=0, ymax=after_filtered[two[two>N-1]], colors = 'green')
-                plt.show()
-            return np.mean(amp_upper_pro), np.mean(amp_lower_pro)
+            if len(valleyslist) <= 0:
+                return 0, 0
+            else:
+                for one in valleyslist:
+                    raw_spikes = self.range_peaks(spikeslist=spikeslist, valleyslist=valleyslist, init=_init, end = one)
+                    spikes_af = self.range_peaks(spikeslist=spikeslist_af, valleyslist=valleyslist, init=_init, end = one)
+                    if len(raw_spikes) and len(spikes_af) >0:
+                        peak2val = np.mean(data[raw_spikes]-np.mean([data[_init], data[one]]))
+                        peak2val_af = np.mean(data[spikes_af]-np.mean([data[_init], data[one]]))
+                        upper_pro = (peak2val - peak2val_af)/peak2val
+                        lower_pro = peak2val_af / peak2val
+                        amp_upper_pro.append(upper_pro)
+                        amp_lower_pro.append(lower_pro)
+                    _init = one
+                if visual:
+                    if axes is None:
+                        fig = plt.figure(figsize=(15,5))
+                        axes = fig.add_subplot(111)
+                    axes.plot(data)
+                    axes.plot(after_filtered)
+                    for one,two in zip(amp_upper_pro,amp_lower_pro):
+                        axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
+                        axes.vlines(two[two>N-1]-delay*self.fs, ymin=0, ymax=after_filtered[two[two>N-1]], colors = 'green')
+                    plt.show()
+                return np.mean(amp_upper_pro), np.mean(amp_lower_pro)
 
         elif mode in ["hilbert","h"]:
             analytic = signal.hilbert(self.signal)
             amplitude_envelope = np.abs(analytic)
             if visual:
-                fig = plt.figure(figsize=figsize)
                 time = np.arange(0, len(data)/self.fs, 1/self.fs)
-                axes = fig.add_subplot(digit)
+                if axes is None:
+                    fig = plt.figure(figsize=(15,5))
+                    axes = fig.add_subplot(111)
                 axes.plot(time, data, label = "signal")
                 axes.plot(time, amplitude_envelope, label = "envelop")
                 plt.legend()
@@ -459,6 +488,8 @@ class SignalToolkit:
         -----------------------
             delay list
         """
+        if len(spikeslist1)<=0 or len(spikeslist2) <= 0:
+            return 'N/A'
         def first_spike(spikeslist, valleyslist):
             cycle1spikes = []
             _init=0
@@ -500,7 +531,7 @@ class SignalToolkit:
         else:
             raise ValueError("Invalid mode. Expected one of: %s" % mode)
     
-    def phase_locking(self, data1,data2, visual=False):
+    def phase_locking(self, data1,data2, visual=False, axes = None):
         """
         A function to calculate phase locking value. The mathematical formula is 
         $$PLV_t = \frac{1}{N}\abs{\sum_{n=1}{N}exp(\mathbf j \theta (t, n)}$$
@@ -524,8 +555,9 @@ class SignalToolkit:
         plv = np.exp(np.array([complex(0, diff[i]) for i in range(len(diff))]))
         plv = np.abs(plv)
         if visual:
-            fig = plt.figure(figsize=(15,5))
-            axes = fig.add_subplot(111)
+            if axes is None:
+                fig = plt.figure(figsize=(15,5))
+                axes = fig.add_subplot(111)
             axes.plot(plv)
             plt.show()
         return np.mean(plv)
