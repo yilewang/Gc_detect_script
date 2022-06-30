@@ -92,6 +92,11 @@ class SignalToolkit:
             raise TypeError("The data type is not supported by this reader. Please contact yile.wang@utdallas.edu to add support to other datatypes. Thanks")
         return data
 
+    def time_maker(self, data, fs=None):
+        if fs is None:
+            fs = self.fs
+        timeaxis = np.arange(0, len(data)/fs, 1/fs)
+        return timeaxis
     def fir_bandpass(self, data, cut_off_low, cut_off_high, fs=None, width=2.0, ripple_db=10.0):
         """
         The FIR bandpass filter
