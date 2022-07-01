@@ -12,6 +12,7 @@ import neurokit2 as nk
 from functools import wraps
 import os
 import io
+import seaborn as sns
 
 class SignalToolkit:
     def __init__(self, filename=None, fs=None, caseid=None, group=None) -> None:
@@ -206,6 +207,7 @@ class SignalToolkit:
         """
         roi = self.signal_preprocessing(data[:,channel_num], filter=False, normalization=normalization, truncate=truncate)
         roi_af, N, delay = self.signal_preprocessing(roi, truncate = 0, filter = True, normalization = normalization, low=low, high=high)
+        spikesparas['height']= roi_af
         spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
         spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas_af)
         packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist_af, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
@@ -382,7 +384,7 @@ class SignalToolkit:
         if mode in ["peak2valley", 'p2v']:
             cycle_spikes_mean = []
             _init = 0
-            if len(valleyslist) <= 0:
+            if len(valleyslist) <= 0 or len(spikeslist) <= 0:
                 return 0
             else:
                 for one in valleyslist:
@@ -404,7 +406,7 @@ class SignalToolkit:
         elif mode in ["peak2axis", 'p20']:
             cycle_spikes_mean = []
             _init = 0
-            if len(valleyslist) <= 0:
+            if len(valleyslist) <= 0 or len(spikeslist) <= 0:
                 return 0
             else:
                 for one in valleyslist:
@@ -494,7 +496,7 @@ class SignalToolkit:
             delay list
         """
         if len(spikeslist1)<=0 or len(spikeslist2) <= 0:
-            return 'N/A'
+            return 1.0
         def first_spike(spikeslist, valleyslist):
             cycle1spikes = []
             _init=0
@@ -514,12 +516,8 @@ class SignalToolkit:
             spikeslen = min(len(data1spikes), len(data2spikes))
             delaylist = []
             for one in range(spikeslen):
-                if data1spikes[0] > data2spikes[0]:
-                    diff = data2spikes[one] - data1spikes[one]
-                    delaylist.append(diff)
-                else:
-                    diff = data1spikes[one] - data2spikes[one]
-                    delaylist.append(diff)
+                diff = data2spikes[one] - data1spikes[one]
+                delaylist.append(np.abs(diff))
             return np.mean(delaylist)/self.fs
             
 
@@ -567,3 +565,21 @@ class SignalToolkit:
             plt.show()
         return np.mean(plv)
 
+    @staticmethod
+    def lateral(data1, data2, abs=True):
+        data1 = np.array(data1)
+        data2 = np.array(data2)
+        # if len(data1) != len(data2):
+        #     raise ValueError("the two dataset should have exact same size")
+        if abs:
+            la = np.abs((data1 - data2)/(data1 + data2))
+            return np.mean(la, dtype=np.float64)
+        else:
+            la = (data1 - data2)/(data1 + data2)
+            return np.mean(la, dtype=np.float64)
+
+    @staticmethod
+    def psvplot(x,y, df, colors=None, axes=None):
+        sns.violinplot(x=x, y=y, data=df, palette=colors, inner = None, width=0.7, bw=0.2, ax=axes)
+        sns.stripplot( x=x, y=y, data=df, color='black', label="right", ax = axes)
+        sns.pointplot(x=x, y=y, data=df, estimator=np.mean, color = 'red', ax=axes)
