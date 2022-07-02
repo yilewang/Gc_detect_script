@@ -392,6 +392,8 @@ class SignalToolkit:
                     if len(cycle_spikes) >0:
                         peak2val = np.mean(data[cycle_spikes])-np.mean([data[_init], data[one]])
                         cycle_spikes_mean.append(peak2val)
+                    else:
+                        cycle_spikes_mean.append(0)
                     _init = one
                 if visual:
                     if axes is None:
@@ -414,6 +416,8 @@ class SignalToolkit:
                     if len(cycle_spikes) >0:
                         peak2val = np.mean(data[cycle_spikes])
                         cycle_spikes_mean.append(peak2val)
+                    else:
+                        cycle_spikes_mean.append(0)
                     _init = one
                 if visual:
                     if axes is None:
@@ -442,6 +446,12 @@ class SignalToolkit:
                         lower_pro = peak2val_af / peak2val
                         amp_upper_pro.append(upper_pro)
                         amp_lower_pro.append(lower_pro)
+                    elif len(raw_spikes) <=0 and len(spikes_af) >0:
+                        amp_upper_pro.append(0)
+                        amp_lower_pro.append(1)
+                    elif len(raw_spikes) <=0 and len(spikes_af) <=0:
+                        amp_lower_pro.append(0)
+                        amp_upper_pro.append(0)
                     _init = one
                 if visual:
                     if axes is None:
