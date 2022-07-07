@@ -124,7 +124,7 @@ def stats_calculator(datatable):
     Output
         the permutation resutls for each groups
     """
-    groups = pd.unique(datatable.loc[:,'grp'])
+    groups = pd.unique(datatable.loc[:,'group'])
     groups_num = range(len(groups))
 
     comba = list(itertools.combinations(groups_num, 2))
@@ -140,10 +140,10 @@ def stats_calculator(datatable):
         if isinstance(datatable.iloc[0,a], (np.integer, np.float64)):
             deList = [[] for i in groups_num]
             for x in groups_num:
-                deList[x] = datatable.loc[datatable['grp'].isin([groups[x]]), [col]].values.flatten()
+                deList[x] = datatable.loc[datatable['group'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
-                p_value = PermutationTest(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
+                p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
                 tmp_list = np.append(tmp_list, p_value)
             overall_permu[a, :] = tmp_list
 
@@ -171,7 +171,7 @@ def bootstrap_groups(datatable, iternation:int, col:str):
     container = np.zeros((len(groups), iternation))
     for num in range(len(groups)):
         rmd = datatable.loc[datatable['groups'].isin([groups[num]]), col].values.flatten()
-        container[num] = BootstrapTest(rmd, iternation)[1]
+        container[num] = bootstrap_test(rmd, iternation)[1]
     fig=plt.figure(figsize=(15,5))
     for num in range(len(groups)):
         sns.histplot(x=container[num,:], color=palette[num], alpha=0.7, label=groups[num])
