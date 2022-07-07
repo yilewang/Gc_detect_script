@@ -187,7 +187,7 @@ def bootstrap_groups(datatable, iternation:int, col:str):
 # x = [1,2,3,4,5]
 # y = [6,7]
 # xy = x+y
-# print(PermutationTest(x, y, 10000, False))
+# print(permutation_test(x, y, 10000, False))
 # data_all = pd.read_excel('/mnt/c/Users/Wayne/tvb/amp_pro_final.xlsx', sheet_name='amp_pro_final')
 # stats_calculator(data_all).to_excel('data_amp_pro.xlsx')
 #############################
