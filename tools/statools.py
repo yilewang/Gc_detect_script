@@ -1,11 +1,14 @@
 #!/usr/bin/python
 
+from unicodedata import numeric
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from itertools import combinations
 import itertools
 import pandas as pd
+from scipy.stats import ranksums
+from scipy.stats import mannwhitneyu
 
 """
 This is a python script with statistical tools
@@ -79,7 +82,7 @@ def permutation_test(x,y,iteration, visual = False):
         tmp_y = y
     x = np.array(tmp_x)
     y = np.array(tmp_y)
-    np.hstack((x,y))
+    #np.hstack((x,y))
     orig_mean = abs(np.mean(x) - np.mean(y))
     Z = np.hstack((x, y))
     box = np.array([])
@@ -117,7 +120,7 @@ def add_star(data):
     return tmp_data
 
 
-def stats_calculator(datatable):
+def stats_calculator(datatable, mode = "permutation"):
     """
     Args:
         datatable, including grouping variable
@@ -143,7 +146,15 @@ def stats_calculator(datatable):
                 deList[x] = datatable.loc[datatable['group'].isin([groups[x]]), [col]].values.flatten()
             tmp_list = np.array([])
             for y in comba:
-                p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
+                if mode in ["permutation", "P"]:
+                    p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
+                elif mode in ["wilcoxon", "W"]:
+                    _, p_value = ranksums(deList[y[0]], deList[y[1]])
+                elif mode in ["mannwhitneyu", "M"]:
+                    print(deList[y[0]], deList[y[1]])
+                    _, p_value = mannwhitneyu(deList[y[0]], deList[y[1]], method="exact")
+                else:
+                    raise TypeError("Not supported mode")
                 tmp_list = np.append(tmp_list, p_value)
             overall_permu[a, :] = tmp_list
 

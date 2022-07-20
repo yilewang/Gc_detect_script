@@ -98,6 +98,13 @@ class SignalToolkit:
             fs = self.fs
         timeaxis = np.arange(0, len(data)/fs, 1/fs)
         return timeaxis
+
+    @staticmethod
+    def hamming_filter(data, Wn=[2,10], fNQ=81920/2, n=2048):
+        a = signal.firwin(n, Wn, nyq=fNQ, pass_zero=False, window='hamming')
+        filtered_data = signal.filtfilt(a, 1, data);   # ... and apply it to the data
+        return filtered_data
+
     def fir_bandpass(self, data, cut_off_low, cut_off_high, fs=None, width=2.0, ripple_db=10.0):
         """
         The FIR bandpass filter
@@ -581,6 +588,9 @@ class SignalToolkit:
         data2 = np.array(data2)
         # if len(data1) != len(data2):
         #     raise ValueError("the two dataset should have exact same size")
+        if data1+data2 == 0:
+            return 0.5
+
         if abs:
             la = np.abs((data1 - data2)/(data1 + data2))
             return np.mean(la, dtype=np.float64)
