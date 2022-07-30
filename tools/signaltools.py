@@ -100,7 +100,7 @@ class SignalToolkit:
         return timeaxis
 
     @staticmethod
-    def hamming_filter(data, Wn=[2,10], fNQ=81920/2, n=2048):
+    def hamming_filter(data, Wn, fNQ=81920/2, n=2048):
         a = signal.firwin(n, Wn, nyq=fNQ, pass_zero=False, window='hamming')
         filtered_data = signal.filtfilt(a, 1, data);   # ... and apply it to the data
         return filtered_data
@@ -173,12 +173,12 @@ class SignalToolkit:
             raise ValueError("truncate number must be over 0")
         self.time = np.arange(0, len(data)/self.fs, 1/self.fs)
         if filter and normalization:
-            after_filtered, N, delay = self.fir_bandpass(data, low, high)
+            after_filtered= self.hamming_filter(data, [low, high], self.fs/2)
             after_filtered = after_filtered - np.mean(after_filtered)
-            return after_filtered, N, delay
+            return after_filtered
         elif filter and not normalization:
-            after_filtered, N, delay = self.fir_bandpass(data, low, high)
-            return after_filtered, N, delay
+            after_filtered= self.hamming_filter(data, [low, high], self.fs/2)
+            return after_filtered
         elif normalization and not filter:
             data = data - np.mean(data)
             return data
@@ -208,16 +208,14 @@ class SignalToolkit:
                 "spikeslist_af":spikeslist_af, 
                 "valleyslist":valleyslist, 
                 "valleyslist_af":vallyeslist_af,
-                "N":N, 
-                "delay":delay, 
                 "label":label}
         """
         roi = self.signal_preprocessing(data[:,channel_num], filter=False, normalization=normalization, truncate=truncate)
-        roi_af, N, delay = self.signal_preprocessing(roi, truncate = 0, filter = True, normalization = normalization, low=low, high=high)
+        roi_af= self.signal_preprocessing(roi, truncate = 0, filter = True, normalization = normalization, low=low, high=high)
         spikesparas['height']= roi_af
         spikeslist, valleyslist = self.peaks_valleys(roi, spikesparas, valleysparas)
         spikeslist_af, valleyslist_af = self.peaks_valleys(roi_af, spikesparas_af, valleysparas_af)
-        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist_af, "valleyslist_af":valleyslist_af, "N":N, "delay":delay, "label":label}
+        packdict = {"data":roi, "after_filtered":roi_af, "spikeslist":spikeslist, "spikeslist_af":spikeslist_af, "valleyslist":valleyslist_af, "valleyslist_af":valleyslist_af, "label":label}
         return packdict
             
 
@@ -285,10 +283,10 @@ class SignalToolkit:
             axes = fig.add_subplot(111)
         axes.plot(time, data, label = "signal")
         axes.plot(spikeslist/self.fs, data[spikeslist], '+', label = "signal spikes")
-        axes.plot(valleyslist_af[valleyslist_af > N-1]/self.fs-delay, after_filtered[valleyslist_af[valleyslist_af > N-1]], 'o', label = "filtered valleys")
-        axes.plot(time[N-1:]-delay, after_filtered[N-1:], label = "filtered signal")
+        axes.plot(valleyslist_af/self.fs, after_filtered[valleyslist_af], 'o', label = "filtered valleys")
+        axes.plot(time, after_filtered, label = "filtered signal")
         if len(spikeslist_af) > 0:
-            axes.plot(spikeslist_af[spikeslist_af > N-1]/self.fs - delay, after_filtered[spikeslist_af[spikeslist_af > N-1]],'x', label = "filtered spikes")
+            axes.plot(spikeslist_af/self.fs - delay, after_filtered[spikeslist_af],'x', label = "filtered spikes")
         return axes
 
     def psd(self, data, sampling_interval = None, visual=False, xlim=100.,axes=None, fNQ = None, normalization = True, *args, **kwargs):
@@ -468,7 +466,7 @@ class SignalToolkit:
                     axes.plot(after_filtered)
                     for one,two in zip(amp_upper_pro,amp_lower_pro):
                         axes.vlines(one, ymin=0, ymax=data[one], colors = 'purple')
-                        axes.vlines(two[two>N-1]-delay*self.fs, ymin=0, ymax=after_filtered[two[two>N-1]], colors = 'green')
+                        axes.vlines(two, ymin=0, ymax=after_filtered[two], colors = 'green')
                     plt.show()
                 return np.mean(amp_upper_pro), np.mean(amp_lower_pro)
 
@@ -568,19 +566,23 @@ class SignalToolkit:
 
         h1=signal.hilbert(data1)
         h2=signal.hilbert(data2)
+        phase_y1=np.unwrap(np.angle(h1))
+        phase_y2=np.unwrap(np.angle(h2))
         # pdt=(np.inner(sig1_hill,np.conj(sig2_hill))/(np.sqrt(np.inner(sig1_hill,
         #            np.conj(sig1_hill))*np.inner(sig2_hill,np.conj(sig2_hill)))))
         # phase = np.angle(pdt)
-        diff = h1 - h2
-        plv = np.exp(np.array([complex(0, diff[i]) for i in range(len(diff))]))
-        plv = np.abs(plv)
-        if visual:
-            if axes is None:
-                fig = plt.figure(figsize=(15,5))
-                axes = fig.add_subplot(111)
-            axes.plot(plv)
-            plt.show()
-        return np.mean(plv)
+        complex_phase_diff = np.exp(np.complex(0,1)*(phase_y1 - phase_y2))
+        plv = np.abs(np.sum(complex_phase_diff))/len(phase_y1)
+        return plv
+        # plv = sum(np.exp(np.array([complex(0, diff[i]) for i in range(len(diff))])))
+        # plv = np.abs(plv)
+        # if visual:
+        #     if axes is None:
+        #         fig = plt.figure(figsize=(15,5))
+        #         axes = fig.add_subplot(111)
+        #     axes.plot(plv)
+        #     plt.show()
+        # return plv
 
     @staticmethod
     def lateral(data1, data2, abs=True):
