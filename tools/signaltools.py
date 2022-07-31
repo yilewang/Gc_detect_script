@@ -607,7 +607,7 @@ class SignalToolkit:
             return 0.5
 
         if abs:
-            la = np.abs((data1 - data2)/(data1 + data2))
+            la = np.abs((data1 - data2))/(data1 + data2)
             return np.mean(la, dtype=np.float64)
         else:
             la = (data1 - data2)/(data1 + data2)
@@ -697,26 +697,25 @@ class SignalToolkit:
         return MI
         
     @staticmethod
-    def PAC_comodulogram(data, low_paras, high_paras, fs, visual=False):
+    def PAC_comodulogram(data, low_paras, high_paras, fs, axes = None, **plot_keyargs):
         data = np.array(data)
         phase_x = np.arange(*low_paras)
         amplitude_y = np.arange(*high_paras)
         como_df = pd.DataFrame(index=phase_x, columns=amplitude_y)
         for xi, i in enumerate(phase_x):
             for yi, j in enumerate(amplitude_y):
-                mi = SignalToolkit.PAC(data, [i, phase_x[xi]+low_paras[2]], [j, amplitude_y[yi]+high_paras[2]], fs=fs, visual = visual)
+                mi = SignalToolkit.PAC(data, [i, phase_x[xi]+low_paras[2]], [j, amplitude_y[yi]+high_paras[2]], fs=fs, visual = False)
                 como_df.iloc[xi,yi] = mi
                 como_df[como_df.columns[yi]] = como_df[como_df.columns[yi]].astype(float, errors = 'raise')
         como_df.columns += high_paras[2]/2
         como_df.index += low_paras[2]/2
-        if visual:
+        if axes is None:
             fig = plt.figure()
             axes = fig.add_subplot(111)
-            sns.heatmap(como_df.transpose(), ax = axes )
-            axes.invert_yaxis()
-            #_developing
-            # old_ticks = axes.get_xticks()
-            # new_ticks = np.linspace(np.min(old_ticks), np.max(old_ticks), len(phase_x))
-            # axes.set_xticks(new_ticks)
-            # axes.set_xticklabels()
-            plt.show()
+        sns.heatmap(como_df.transpose(), ax = axes, cmap="coolwarm", **plot_keyargs)
+        axes.invert_yaxis()
+        #_developing
+        # old_ticks = axes.get_xticks()
+        # new_ticks = np.linspace(np.min(old_ticks), np.max(old_ticks), len(phase_x))
+        # axes.set_xticks(new_ticks)
+        # axes.set_xticklabels()
