@@ -104,7 +104,7 @@ class SignalToolkit:
         a = signal.firwin(n, Wn, nyq=fNQ, pass_zero=False, window='hamming')
         filtered_data = signal.filtfilt(a, 1, data);   # ... and apply it to the data
         return filtered_data
-        
+
     @staticmethod
     def sos_filter(data, win, fs, order=5):
         def butter_bandpass(lowcut, highcut, fs, order=5):
@@ -618,3 +618,105 @@ class SignalToolkit:
         sns.violinplot(x=x, y=y, data=df, palette=colors, inner = None, width=0.7, bw=0.2, ax=axes)
         sns.stripplot( x=x, y=y, data=df, color='black', label="right", ax = axes)
         sns.pointplot(x=x, y=y, data=df, estimator=np.mean, color = 'red', ax=axes)
+    
+
+    # cross frequency coupling tools: phase amplitude coupling, based on tort, 2010 method
+    @staticmethod
+    def PAC(data, low_win, high_win, fs=81920, n_bins=36, visual=False):
+        """
+        Parameters:
+        ---------------
+            data:list or np.ndarray
+                signal
+            low_win:list
+                start frequency, stop frequency
+            high_win:list
+                start frequency, stop frequency
+        Returns:
+        --------------
+            Modulation Index (MI)
+        """
+        # unify data format
+        data = np.array(data)
+        # filtering data into high frequency band and low frequency band
+        low_freq = SignalToolkit.sos_filter(data, low_win, fs=fs)
+        high_freq = SignalToolkit.sos_filter(data, high_win, fs=fs)
+        # hilbert transform
+        # step 1, get the amplitude envelop of high freq
+        h1=signal.hilbert(high_freq)
+        amplitude_envelope = np.abs(h1)
+        # step 2, get the phase information of low freq
+        l1 = signal.hilbert(low_freq)
+        phase_y1=np.degrees(np.angle(l1))
+        # step 3 bin the phase
+        binsize = 360/ n_bins
+        phase_bins = np.arange(-180,180,binsize)
+        amp_mean = np.zeros(len(phase_bins)) 
+        for k in range(len(phase_bins)):
+            phase_range = np.logical_and(phase_y1 >= phase_bins[k],
+                                        phase_y1 < (phase_bins[k] + binsize))
+            tmp_amp = amplitude_envelope[phase_range]
+            amp_mean[k] = np.mean(tmp_amp)   
+        # step 4, entropy method H
+        p_j = amp_mean / np.sum(amp_mean)
+        # cap_H = -np.sum(p_j * np.log(p_j))
+        # # step 5, calculate the MI
+        # MI = (np.log(len(phase_bins))-cap_H) / np.log(len(phase_bins))
+        # kl_pu = np.log(len(phase_bins)) + np.sum(p_j * np.log(p_j))
+        # MI = kl_pu/np.log(len(phase_bins))
+        # print(f"Modulation Index = {MI}")
+        if np.any(p_j == 0):
+            p_j[p_j == 0] = np.finfo(float).eps
+
+        H = -np.sum(p_j * np.log10(p_j))
+        Hmax = np.log10(n_bins)
+        KL = Hmax - H
+        MI = KL / Hmax
+        if visual:
+            fig = plt.figure(figsize=(7,7))
+            # graph 1
+            axes1 = fig.add_subplot(221)
+            axes1.set_title("distribution of the mean amplitude\n in each phase bin")
+            axes1.bar(phase_bins, amp_mean)
+            # graph 2
+            axes2 = fig.add_subplot(222)
+            axes2.set_title("raw plot with low and high \nfrequency bands signal")
+            axes2.plot(data)
+            axes2.plot(low_freq)
+            axes2.plot(high_freq)
+            # graph 3
+            axes3 = fig.add_subplot(223)
+            axes3.set_title("amplitude & phase")
+            axes3.plot(phase_y1, amplitude_envelope)
+            # graph 4
+            axes4 = fig.add_subplot(224)
+            axes4.set_title("phase of low frequency")
+            axes4.plot(low_freq)
+            axes4.plot(phase_y1)
+            plt.show()
+        return MI
+        
+    @staticmethod
+    def PAC_comodulogram(data, low_paras, high_paras, fs, visual=False):
+        data = np.array(data)
+        phase_x = np.arange(*low_paras)
+        amplitude_y = np.arange(*high_paras)
+        como_df = pd.DataFrame(index=phase_x, columns=amplitude_y)
+        for xi, i in enumerate(phase_x):
+            for yi, j in enumerate(amplitude_y):
+                mi = SignalToolkit.PAC(data, [i, phase_x[xi]+low_paras[2]], [j, amplitude_y[yi]+high_paras[2]], fs=fs, visual = visual)
+                como_df.iloc[xi,yi] = mi
+                como_df[como_df.columns[yi]] = como_df[como_df.columns[yi]].astype(float, errors = 'raise')
+        como_df.columns += high_paras[2]/2
+        como_df.index += low_paras[2]/2
+        if visual:
+            fig = plt.figure()
+            axes = fig.add_subplot(111)
+            sns.heatmap(como_df.transpose(), ax = axes )
+            axes.invert_yaxis()
+            #_developing
+            # old_ticks = axes.get_xticks()
+            # new_ticks = np.linspace(np.min(old_ticks), np.max(old_ticks), len(phase_x))
+            # axes.set_xticks(new_ticks)
+            # axes.set_xticklabels()
+            plt.show()
