@@ -104,6 +104,19 @@ class SignalToolkit:
         a = signal.firwin(n, Wn, nyq=fNQ, pass_zero=False, window='hamming')
         filtered_data = signal.filtfilt(a, 1, data);   # ... and apply it to the data
         return filtered_data
+        
+    @staticmethod
+    def sos_filter(data, win, fs, order=5):
+        def butter_bandpass(lowcut, highcut, fs, order=5):
+            nyq = 0.5 * fs
+            low = lowcut / nyq
+            high = highcut / nyq
+            sos = signal.butter(order, [low, high], analog=False, btype='band', output='sos')
+            return sos
+        
+        sos = butter_bandpass(win[0],win[1], fs,order=order)
+        y = signal.sosfiltfilt(sos, data)
+        return y
 
     def fir_bandpass(self, data, cut_off_low, cut_off_high, fs=None, width=2.0, ripple_db=10.0):
         """
