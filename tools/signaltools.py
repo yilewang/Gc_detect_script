@@ -13,6 +13,9 @@ from functools import wraps
 import os
 import io
 import seaborn as sns
+import pactools
+
+
 
 class SignalToolkit:
     def __init__(self, filename=None, fs=None, caseid=None, group=None) -> None:
@@ -576,7 +579,6 @@ class SignalToolkit:
         ----------------------------
             phase locking value
         """
-
         h1=signal.hilbert(data1)
         h2=signal.hilbert(data2)
         phase_y1=np.unwrap(np.angle(h1))
@@ -712,10 +714,22 @@ class SignalToolkit:
         if axes is None:
             fig = plt.figure()
             axes = fig.add_subplot(111)
-        sns.heatmap(como_df.transpose(), ax = axes, cmap="coolwarm", **plot_keyargs)
+        sns.heatmap(como_df.transpose(), ax = axes, cmap="viridis", **plot_keyargs)
         axes.invert_yaxis()
         #_developing
         # old_ticks = axes.get_xticks()
         # new_ticks = np.linspace(np.min(old_ticks), np.max(old_ticks), len(phase_x))
         # axes.set_xticks(new_ticks)
         # axes.set_xticklabels()
+
+
+    def pcatools_comodulogram(data, fs, low_fq_range, low_fq_width, method = 'tort', axes = None):
+        if axes is None:
+            fig = plt.figure()
+            axes = fig.add_subplot(111)
+        # axs = axs.ravel()
+        estimator = pactools.Comodulogram(fs=fs, low_fq_range=low_fq_range,
+                                low_fq_width=low_fq_width, method=method,
+                                progress_bar=False)
+        estimator.fit(data)
+        estimator.plot(titles=[pactools.REFERENCES[method]], axs=[axes])
