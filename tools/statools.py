@@ -85,12 +85,15 @@ def permutation_test(x,y,iteration, visual = False):
     #np.hstack((x,y))
     orig_mean = abs(np.mean(x) - np.mean(y))
     Z = np.hstack((x, y))
+    Z_fake = range(len(Z))
     box = np.array([])
     i = 0
     while i < iteration:
-        idx_x = np.random.choice(Z, size= x.shape[0], replace=True)
+        idx_x = np.random.choice(Z_fake, size= x.shape[0], replace=False)
         idx_y = np.asarray([ele for ele in Z if ele not in idx_x])
-        p_mean = np.mean(idx_x) - np.mean(idx_y)
+        real_x = Z[idx_x]
+        real_y = Z[idx_y]
+        p_mean = np.mean(real_x) - np.mean(real_y)
         box = np.append(box, p_mean)
         i+=1
     permu_mean = np.mean(box)
@@ -107,6 +110,65 @@ def permutation_test(x,y,iteration, visual = False):
         plt.legend()
         plt.show()
     return p_value
+
+# t-max method for permutation test
+def null_dist_max(my_dict, iternation=10000, mode="greater"):
+    it = 0
+    dist_null = []
+    keys = list(my_dict.keys())
+    var_num = len(my_dict)
+    total_number_var = []
+    # create pool
+    pool_real = []
+    for i in range(var_num):
+        tmp = len(my_dict[list(my_dict.keys())[i]])
+        total_number_var.append(tmp)
+        pool_real = np.hstack((pool_real,my_dict[list(my_dict.keys())[i]]))
+    
+
+    # combination set
+    comba = list(itertools.combinations(range(var_num), 2))
+    # give labels to comba
+    comba_with_name = []
+    for x in comba:
+        tmp_one = (keys[x[0]], keys[x[1]])
+        comba_with_name.append(tmp_one)
+
+    # iternation process
+    while it < iternation:
+        fake_dict = {}
+        pool_fake = [*range(len(pool_real))]
+        for i in range(var_num):
+            fake_dict[keys[i]] = np.random.choice(pool_fake, size= total_number_var[i], replace=False)
+            pool_fake = np.asarray([ele for ele in pool_fake if ele not in fake_dict[keys[i]]])
+
+        shuffle_dict = {}
+        for i in range(var_num):
+            shuffle_dict[keys[i]] = pool_real[fake_dict[keys[i]]]
+        mean_across_var = []
+        for i in comba_with_name:
+            mean_diff = np.mean(shuffle_dict[i[0]]) - np.mean(shuffle_dict[i[1]])
+            mean_across_var.append(mean_diff)
+        p_max = max(mean_across_var)
+        dist_null.append(p_max)
+        it += 1
+    
+    # compute the original mean
+    output_df = pd.DataFrame()
+    for i in comba_with_name:
+        mean_diff = np.mean(my_dict[i[0]]) - np.mean(my_dict[i[1]])
+        
+        if mode in ["greater"]:
+            p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iternation + 1)
+            a_dict = {"From":i[0], "To": i[1], "p_value": p_v}
+        elif mode in ["less"]:
+            p_v = (np.array(dist_null)[dist_null < mean_diff].shape[0] + 1) / (iternation + 1)
+            a_dict = {"From":i[0], "To": i[1], "p_value": p_v}
+        else:
+            raise ValueError(f"please enter valid mode names, i.e., greater, less ")
+        output_df = pd.concat([output_df, pd.DataFrame.from_dict([a_dict])], ignore_index=True)
+    return output_df
+
 
 def add_star(data):
     if data <= 0.001:
