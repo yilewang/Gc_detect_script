@@ -206,19 +206,28 @@ def stats_calculator(datatable, mode = "permutation"):
             deList = [[] for i in groups_num]
             for x in groups_num:
                 deList[x] = datatable.loc[datatable['group'].isin([groups[x]]), [col]].values.flatten()
-            tmp_list = np.array([])
-            for y in comba:
-                if mode in ["permutation", "P"]:
-                    p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
-                elif mode in ["wilcoxon", "W"]:
-                    _, p_value = ranksums(deList[y[0]], deList[y[1]])
-                elif mode in ["mannwhitneyu", "M"]:
-                    print(deList[y[0]], deList[y[1]])
-                    _, p_value = mannwhitneyu(deList[y[0]], deList[y[1]], method="exact")
-                else:
-                    raise TypeError("Not supported mode")
-                tmp_list = np.append(tmp_list, p_value)
-            overall_permu[a, :] = tmp_list
+            if mode in ["max-T", "max"]:
+                dict_group = {}
+                for x in groups_num:
+                    dict_group[groups[x]] = deList[x]
+                df = null_dist_max(dict_group)
+                overall_permu[a, :] = df['p_value'].to_numpy()
+
+            else:
+                tmp_list = np.array([])
+                for y in comba:
+                    if mode in ["permutation", "P"]:
+                        p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
+
+                    elif mode in ["wilcoxon", "W"]:
+                        _, p_value = ranksums(deList[y[0]], deList[y[1]])
+                    elif mode in ["mannwhitneyu", "M"]:
+                        print(deList[y[0]], deList[y[1]])
+                        _, p_value = mannwhitneyu(deList[y[0]], deList[y[1]], method="exact")
+                    else:
+                        raise TypeError("Not supported mode")
+                    tmp_list = np.append(tmp_list, p_value)
+                overall_permu[a, :] = tmp_list
 
         else:
             continue
