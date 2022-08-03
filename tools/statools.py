@@ -197,10 +197,10 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
         if axes is None:
             fig = plt.figure(figsize=(7,7),dpi=300)
             axes = fig.add_subplot(111)
-        sns.histplot(data=dist_null, bins='auto')
+        sns.histplot(data=dist_null, bins='auto', ax=axes)
         #plt.axvline(x=np.round(permu_mean,3), label='Permutation Mean at {}'.format(np.round(permu_mean,3)),c='g')
         for i in range(len(comba)):
-            plt.axvline(x=output_df["origin_mean"][i], linestyle = 'dashed', c = np.random.rand(3,), label = f'{output_df["From"][i]} to {output_df["To"][i]}')
+            axes.axvline(x=output_df["origin_mean"][i], linestyle = 'dashed', c = np.random.rand(3,), label = f'{output_df["From"][i]} to {output_df["To"][i]}')
             print(f'statistic between {output_df["From"][i]} and {output_df["To"][i]} at {np.round(output_df["origin_mean"][i],3)}, with p-value {np.round(output_df["p_value"][i],3)}')
         plt.legend()
         plt.show()
