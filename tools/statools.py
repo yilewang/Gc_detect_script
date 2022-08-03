@@ -90,7 +90,7 @@ def permutation_test(x,y,iteration, visual = False):
     i = 0
     while i < iteration:
         idx_x = np.random.choice(Z_fake, size= x.shape[0], replace=False)
-        idx_y = np.asarray([ele for ele in Z if ele not in idx_x])
+        idx_y = np.asarray([ele for ele in Z_fake if ele not in idx_x])
         real_x = Z[idx_x]
         real_y = Z[idx_y]
         p_mean = np.mean(real_x) - np.mean(real_y)
@@ -112,7 +112,27 @@ def permutation_test(x,y,iteration, visual = False):
     return p_value
 
 # t-max method for permutation test
-def null_dist_max(my_dict, iternation=10000, mode="greater"):
+def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes = None):
+    """
+    function to create maximum null distribution
+    Paramters:
+    -----------------
+        my_dict: dict
+            A dict data with variables. For instance, {"A":list, "B":list, "C":list}
+        iteration: int
+            how many times to shuffle
+        mode: str
+            to decide the direction of the comparison
+        visual: boolen
+            create plot or not
+        axes:
+            used for creating multiple plots
+    Returns:
+    ------------------
+        output_df:dataframe
+            the p-value and original mean for all the possible comparisons.
+    
+    """
     it = 0
     dist_null = []
     keys = list(my_dict.keys())
@@ -135,7 +155,7 @@ def null_dist_max(my_dict, iternation=10000, mode="greater"):
         comba_with_name.append(tmp_one)
 
     # iternation process
-    while it < iternation:
+    while it < iteration:
         fake_dict = {}
         pool_fake = [*range(len(pool_real))]
         for i in range(var_num):
@@ -157,16 +177,27 @@ def null_dist_max(my_dict, iternation=10000, mode="greater"):
     output_df = pd.DataFrame()
     for i in comba_with_name:
         mean_diff = np.mean(my_dict[i[0]]) - np.mean(my_dict[i[1]])
-        
         if mode in ["greater"]:
             p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iternation + 1)
-            a_dict = {"From":i[0], "To": i[1], "p_value": p_v}
+            a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
         elif mode in ["less"]:
             p_v = (np.array(dist_null)[dist_null < mean_diff].shape[0] + 1) / (iternation + 1)
-            a_dict = {"From":i[0], "To": i[1], "p_value": p_v}
+            a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
         else:
             raise ValueError(f"please enter valid mode names, i.e., greater, less ")
         output_df = pd.concat([output_df, pd.DataFrame.from_dict([a_dict])], ignore_index=True)
+    if visual:
+        if axes is None:
+            fig = plt.figure(figsize=(15,15))
+            axes = fig.add_subplot(111)
+        sns.histplot(data=dist_null, bins='auto')
+        #plt.axvline(x=np.round(permu_mean,3), label='Permutation Mean at {}'.format(np.round(permu_mean,3)),c='g')
+        for i in range(len(comba)):
+            plt.axvline(x=output_df["origin_mean"][i], linestyle = 'dashed', c = np.random.rand(3,), label = f'{output_df["From"][i]} to {output_df["To"][i]}')
+            print(f'statistic between {output_df["From"][i]} and {output_df["To"][i]} at {np.round(output_df["origin_mean"][i],3)}, with p-value {np.round(output_df["p_value"][i],3)}')
+        plt.legend()
+        plt.show()
+
     return output_df
 
 
