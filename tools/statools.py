@@ -112,6 +112,12 @@ def permutation_test(x,y,iteration, visual = False):
     return p_value
 
 # t-max method for permutation test
+import itertools
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+# t-max method for permutation test
 def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes = None):
     """
     function to create maximum null distribution
@@ -122,7 +128,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
         iteration: int
             how many times to shuffle
         mode: str
-            to decide the direction of the comparison
+            alternative of the comparison
         visual: boolen
             create plot or not
         axes:
@@ -189,7 +195,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
         output_df = pd.concat([output_df, pd.DataFrame.from_dict([a_dict])], ignore_index=True)
     if visual:
         if axes is None:
-            fig = plt.figure(figsize=(15,15))
+            fig = plt.figure(figsize=(7,7),dpi=300)
             axes = fig.add_subplot(111)
         sns.histplot(data=dist_null, bins='auto')
         #plt.axvline(x=np.round(permu_mean,3), label='Permutation Mean at {}'.format(np.round(permu_mean,3)),c='g')
