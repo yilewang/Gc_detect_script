@@ -138,6 +138,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
     keys = list(my_dict.keys())
     var_num = len(my_dict)
     total_number_var = []
+
     # create pool
     pool_real = []
     for i in range(var_num):
@@ -145,7 +146,6 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
         total_number_var.append(tmp)
         pool_real = np.hstack((pool_real,my_dict[list(my_dict.keys())[i]]))
     
-
     # combination set
     comba = list(itertools.combinations(range(var_num), 2))
     # give labels to comba
@@ -154,7 +154,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
         tmp_one = (keys[x[0]], keys[x[1]])
         comba_with_name.append(tmp_one)
 
-    # iternation process
+    # iterative process
     while it < iteration:
         fake_dict = {}
         pool_fake = [*range(len(pool_real))]
@@ -165,6 +165,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
         shuffle_dict = {}
         for i in range(var_num):
             shuffle_dict[keys[i]] = pool_real[fake_dict[keys[i]]]
+
         mean_across_var = []
         for i in comba_with_name:
             mean_diff = np.mean(shuffle_dict[i[0]]) - np.mean(shuffle_dict[i[1]])
@@ -178,10 +179,10 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
     for i in comba_with_name:
         mean_diff = np.mean(my_dict[i[0]]) - np.mean(my_dict[i[1]])
         if mode in ["greater"]:
-            p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iternation + 1)
+            p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iteration + 1)
             a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
         elif mode in ["less"]:
-            p_v = (np.array(dist_null)[dist_null < mean_diff].shape[0] + 1) / (iternation + 1)
+            p_v = (np.array(dist_null)[dist_null < mean_diff].shape[0] + 1) / (iteration + 1)
             a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
         else:
             raise ValueError(f"please enter valid mode names, i.e., greater, less ")
