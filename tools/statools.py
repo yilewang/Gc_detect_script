@@ -93,10 +93,10 @@ def permutation_test(x,y,iteration, visual = False):
         idx_y = np.asarray([ele for ele in Z_fake if ele not in idx_x])
         real_x = Z[idx_x]
         real_y = Z[idx_y]
-        p_mean = np.mean(real_x) - np.mean(real_y)
+        p_mean = np.abs(np.mean(real_x) - np.mean(real_y))
         box = np.append(box, p_mean)
         i+=1
-    permu_mean = np.mean(box)
+    permu_mean = np.abs(np.mean(box))
     p_value = (box[box > orig_mean].shape[0] + 1) / (iteration + 1) # correction
 
     
@@ -111,12 +111,6 @@ def permutation_test(x,y,iteration, visual = False):
         plt.show()
     return p_value
 
-# t-max method for permutation test
-import itertools
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 # t-max method for permutation test
 def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes = None):
     """
@@ -174,7 +168,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
 
         mean_across_var = []
         for i in comba_with_name:
-            mean_diff = np.mean(shuffle_dict[i[0]]) - np.mean(shuffle_dict[i[1]])
+            mean_diff = np.abs(np.mean(shuffle_dict[i[0]]) - np.mean(shuffle_dict[i[1]]))
             mean_across_var.append(mean_diff)
         p_max = max(mean_across_var)
         dist_null.append(p_max)
@@ -183,7 +177,7 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
     # compute the original mean
     output_df = pd.DataFrame()
     for i in comba_with_name:
-        mean_diff = np.mean(my_dict[i[0]]) - np.mean(my_dict[i[1]])
+        mean_diff = np.abs(np.mean(my_dict[i[0]]) - np.mean(my_dict[i[1]]))
         if mode in ["greater"]:
             p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iteration + 1)
             a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
@@ -220,7 +214,7 @@ def add_star(data):
     return tmp_data
 
 
-def stats_calculator(datatable, mode = "permutation"):
+def stats_calculator(datatable, mode = "permutation", n=9):
     """
     Args:
         datatable, including grouping variable
@@ -264,7 +258,7 @@ def stats_calculator(datatable, mode = "permutation"):
                         _, p_value = mannwhitneyu(deList[y[0]], deList[y[1]], method="exact")
                     else:
                         raise TypeError("Not supported mode")
-                    tmp_list = np.append(tmp_list, p_value)
+                    tmp_list = np.append(tmp_list, np.round(p_value,n))
                 overall_permu[a, :] = tmp_list
 
         else:

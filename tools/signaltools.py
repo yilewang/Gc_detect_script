@@ -586,7 +586,7 @@ class SignalToolkit:
         # pdt=(np.inner(sig1_hill,np.conj(sig2_hill))/(np.sqrt(np.inner(sig1_hill,
         #            np.conj(sig1_hill))*np.inner(sig2_hill,np.conj(sig2_hill)))))
         # phase = np.angle(pdt)
-        complex_phase_diff = np.exp(np.complex(0,1)*(phase_y1 - phase_y2))
+        complex_phase_diff = np.exp(complex(0,1)*(phase_y1 - phase_y2))
         plv = np.abs(np.sum(complex_phase_diff))/len(phase_y1)
         return plv
         # plv = sum(np.exp(np.array([complex(0, diff[i]) for i in range(len(diff))])))
