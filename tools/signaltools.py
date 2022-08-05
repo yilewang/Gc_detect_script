@@ -13,7 +13,6 @@ from functools import wraps
 import os
 import io
 import seaborn as sns
-import pactools
 
 
 
@@ -699,7 +698,7 @@ class SignalToolkit:
         return MI
         
     @staticmethod
-    def PAC_comodulogram(data, low_paras, high_paras, fs, axes = None, **plot_keyargs):
+    def PAC_comodulogram(data, low_paras, high_paras, fs, axes = None, visual =True, **plot_keyargs):
         data = np.array(data)
         phase_x = np.arange(*low_paras)
         amplitude_y = np.arange(*high_paras)
@@ -711,25 +710,15 @@ class SignalToolkit:
                 como_df[como_df.columns[yi]] = como_df[como_df.columns[yi]].astype(float, errors = 'raise')
         como_df.columns += high_paras[2]/2
         como_df.index += low_paras[2]/2
-        if axes is None:
-            fig = plt.figure()
-            axes = fig.add_subplot(111)
-        sns.heatmap(como_df.transpose(), ax = axes, cmap="viridis", **plot_keyargs)
-        axes.invert_yaxis()
+        if visual:
+            if axes is None:
+                fig = plt.figure()
+                axes = fig.add_subplot(111)
+            sns.heatmap(como_df.transpose(), ax = axes, cmap="viridis", **plot_keyargs)
+            axes.invert_yaxis()
+        return como_df
         #_developing
         # old_ticks = axes.get_xticks()
         # new_ticks = np.linspace(np.min(old_ticks), np.max(old_ticks), len(phase_x))
         # axes.set_xticks(new_ticks)
         # axes.set_xticklabels()
-
-
-    def pcatools_comodulogram(data, fs, low_fq_range, low_fq_width, method = 'tort', axes = None):
-        if axes is None:
-            fig = plt.figure()
-            axes = fig.add_subplot(111)
-        # axs = axs.ravel()
-        estimator = pactools.Comodulogram(fs=fs, low_fq_range=low_fq_range,
-                                low_fq_width=low_fq_width, method=method,
-                                progress_bar=False)
-        estimator.fit(data)
-        estimator.plot(titles=[pactools.REFERENCES[method]], axs=[axes])
