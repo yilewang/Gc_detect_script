@@ -112,7 +112,7 @@ def permutation_test(x,y,iteration, visual = False):
     return p_value
 
 # t-max method for permutation test
-def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes = None):
+def null_dist_max(my_dict, iteration=10000, visual = False, axes = None):
     """
     function to create maximum null distribution
     Paramters:
@@ -121,8 +121,6 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
             A dict data with variables. For instance, {"A":list, "B":list, "C":list}
         iteration: int
             how many times to shuffle
-        mode: str
-            alternative of the comparison
         visual: boolen
             create plot or not
         axes:
@@ -178,14 +176,8 @@ def null_dist_max(my_dict, iteration=10000, mode="greater", visual = False, axes
     output_df = pd.DataFrame()
     for i in comba_with_name:
         mean_diff = np.abs(np.mean(my_dict[i[0]]) - np.mean(my_dict[i[1]]))
-        if mode in ["greater"]:
-            p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iteration + 1)
-            a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
-        elif mode in ["less"]:
-            p_v = (np.array(dist_null)[dist_null < mean_diff].shape[0] + 1) / (iteration + 1)
-            a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
-        else:
-            raise ValueError(f"please enter valid mode names, i.e., greater, less ")
+        p_v = (np.array(dist_null)[dist_null > mean_diff].shape[0] + 1) / (iteration + 1)
+        a_dict = {"From":i[0], "To": i[1], "p_value": p_v, "origin_mean": mean_diff}
         output_df = pd.concat([output_df, pd.DataFrame.from_dict([a_dict])], ignore_index=True)
     if visual:
         if axes is None:
