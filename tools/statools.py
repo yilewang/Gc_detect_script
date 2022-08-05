@@ -96,7 +96,7 @@ def permutation_test(x,y,iteration, visual = False):
         p_mean = np.abs(np.mean(real_x) - np.mean(real_y))
         box = np.append(box, p_mean)
         i+=1
-    permu_mean = np.abs(np.mean(box))
+    permu_mean = np.mean(box)
     p_value = (box[box > orig_mean].shape[0] + 1) / (iteration + 1) # correction
 
     
