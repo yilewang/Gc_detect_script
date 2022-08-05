@@ -1,6 +1,6 @@
 ## tvbtools: A Signal Processing Toolbox for neural data analysis
 
-tvbtools is a comprehensive toolbox for signal analysis. The main functions of the tvbtools include but not limited to:
+`tvbtools` is a comprehensive toolbox for signal analysis. The main functions of the `tvbtools` include but not limited to:
 
 ### Signaltoolbox module:
 
@@ -23,3 +23,14 @@ tvbtools is a comprehensive toolbox for signal analysis. The main functions of t
 
 ### Other functionalities
 This toolbox also provides TheVirtualBrain simulation template, meta-connectivity (dFC) calculation template and graph theory metrics calculate demo.
+
+### Links
+Other repo related to `tvbtools`
+
+`tvbdemos`: Demos of my workflow [here](https://github.com/yilewang/tvbdemos)
+
+`brain-dynamics-toolbox`: graph theory and biophysics models [here](https://github.com/yilewang/brain-dynamics-toolbox)
+
+`network-science-toolbox`: a useful toolbox for meta-connectivity calculation: [here](https://github.com/unbekanntt/Network-science-Toolbox)
+
+`tvb-ukbb`: fMRI preprocessing pipeline based on `UKBIOBANK` pipeline [here](https://github.com/McIntosh-Lab/tvb-ukbb)
