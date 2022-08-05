@@ -8,7 +8,7 @@
 1. Data reader. support txt, csv, xlsx, mat, HDF5 and more.
 2. Filtering. SOS filter and FIR filter.
 3. Spikes count function.
-4. Power spectrum density.
+4. Power spectral density.
 5. Multiple amplitude extraction stractegies.
 6. Time lagging calculation.
 7. Phase locking value calculation.
