@@ -11,7 +11,7 @@ Author: Yile Wang
 Date: 08/17/2021
 """
 
-def contrast_analysis(datatable, contrast):
+def contrast_analysis(datatable, contrast, group_variable = "group"):
     """ 
     Arg: 
         Pandas DataFrame with all the features and groups info
@@ -25,7 +25,7 @@ def contrast_analysis(datatable, contrast):
 
     # the number of cases for each group
     num_group = len(contrast)
-    num_cases = datatable.groupby(['groups']).count().iloc[:,0].to_numpy()
+    num_cases = datatable.groupby([group_variable]).count().iloc[:,0].to_numpy()
 
     F_table = pd.DataFrame(columns=['features','F_value', 'P_value'])
     mean_array = np.zeros(num_group)
@@ -34,12 +34,12 @@ def contrast_analysis(datatable, contrast):
     for col in datatable.columns[3:]:
 
         # mean calculation
-        mean_array = datatable.groupby(['groups']).mean().loc[:,col].to_numpy()
+        mean_array = datatable.groupby([group_variable]).mean().loc[:,col].to_numpy()
         meanNcontrast = np.dot(mean_array, contrast)
         contrast2 = np.square(contrast)
 
         # variance calculation
-        var_array = datatable.groupby(['groups']).var().loc[:,col].to_numpy()
+        var_array = datatable.groupby([group_variable]).var().loc[:,col].to_numpy()
         denominator = sum(num_cases) - num_group
         # degree of freedom of the each case
         num_cases_df = num_cases -1
@@ -52,21 +52,18 @@ def contrast_analysis(datatable, contrast):
         # compute the MS contrast
         MS_contrast = (meanNcontrast**2) / tmp_ms_contrast
         F_value = MS_contrast/MSE
-        F_critical_05 = scipy.stats.f.ppf(q=1-0.05, dfn=1, dfd=denominator)
-        F_critical_01 = scipy.stats.f.ppf(q=1-0.01, dfn=1, dfd=denominator)
-        F_critical_001 = scipy.stats.f.ppf(q=1-0.001, dfn=1, dfd=denominator)
 
+        # alpha = 0.05
+        F_critical = scipy.stats.f.ppf(q=1-0.05, dfn=1, dfd=denominator)
 
         # for posterior contrast, using scheffe test
-        scheffe = F_critical_05 * (num_group-1)
+        scheffe = F_critical * (num_group-1)
         if F_value >= scheffe:
             p = 0.05
         else:
             p = 'NA'
 
-        # print the results
-        # print(f"The {col} contrast has F_value {F_value}, and the F_critical Scheffe's Test is {scheffe}")
-
+        print(f"The {col} contrast has F_value {F_value}, and the F_critical Scheffe's Test is {scheffe}")
         F_table = F_table.append({'features':col,'F_value':F_value, 'P_value':p}, ignore_index=True)
     return F_table
     
