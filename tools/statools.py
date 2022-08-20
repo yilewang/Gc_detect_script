@@ -16,7 +16,7 @@ Author: Yile Wang
 Date: 06/10/2022
 """
 
-def bootstrap_test(x,iteration, visual = False):
+def bootstrap_test(x,iteration, visual = False, axes = None, **kwargs):
     """
     A script for bootstrap analysis
     Parameters:
@@ -46,18 +46,20 @@ def bootstrap_test(x,iteration, visual = False):
     CI = (low_CI, high_CI)
     
     #p_value = (box[box > np.mean(x)].shape[0] + 1) / (iteration + 1) # correction
-    print(f"The CI of the Bootstrap Test is: {CI}")
+    #print(f"The CI of the Bootstrap Test is: {CI}")
     
     # visual
     if visual == True:
-        plt.figure(figsize=(9,8))
-        sns.histplot(data=box, bins='auto')
-        plt.axvline(x=np.round(CI[0],3), label='2.5% CI at {}'.format(np.round(CI[0],3)),c='g', linestyle = 'dashed')
-        plt.axvline(x=np.round(CI[1],3), label='97.5% CI at {}'.format(np.round(CI[1],3)), c='g', linestyle = 'dashed')
-        plt.axvline(x = np.mean(x), c='r', label = 'original mean at {}'.format(np.mean(x)))
-        plt.axvline(x = np.round(bt_mean, 3), c='r', label = 'bootstrap mean at {}'.format(np.round(bt_mean, 3)), linestyle='dashed')
-        plt.legend()
-        plt.show()
+        if axes is None:
+            fig = plt.figure(figsize=(9,8))
+            axes = fig.add_subplot(111)
+        else:
+            sns.kdeplot(box, ax=axes, linewidth=2, multiple="stack", **kwargs)
+            
+            #axes.axvline(x=np.round(CI[0],3), ymax=box[np.where(CI[0])], label='2.5% CI at {}'.format(np.round(CI[0],3)), linestyle = 'dashed', **kwargs)
+            #axes.axvline(x=np.round(CI[1],3),ymax=box[np.where(CI[1])], label='97.5% CI at {}'.format(np.round(CI[1],3)), linestyle = 'dashed', **kwargs)
+            #axes.axvline(x = np.mean(x), c='r', label = 'original mean at {}'.format(np.mean(x)))
+            #axes.axvline(x = np.round(bt_mean, 3), c='r', label = 'bootstrap mean at {}'.format(np.round(bt_mean, 3)), linestyle='dashed')
     return CI, box
 
 
