@@ -51,17 +51,38 @@
 
 # plt.show()
 
-import pandas as pd
-import shutil
+# import pandas as pd
+# import shutil
+# import numpy as np
+# path = '/mnt/c/Users/Wayne/tvb/stat_data/Gc_Go.xlsx'
+# coData = pd.read_excel(path)
+
+# def read_data(grp, caseid):
+#     gm = np.round(coData.loc[coData['caseid'] == caseid, 'Gc'].item(), 3)
+#     filename = '/mnt/d/data/LFP/'+str(grp)+'/'+str(caseid)+'/'+str(caseid)+'_'+str(gm)+'.csv'
+#     destin = '/home/yat-lok/workspace/data4project/lateralization/LFP_critical/' + str(grp)+'/'+str(caseid)+'_'+str(gm)+'.csv'
+#     shutil.copyfile(filename, destin)
+
+# for grp, caseid in zip(coData.groups, coData.caseid):
+#     read_data(grp, caseid)
+
+def fdr(p_vals, n):
+
+    from scipy.stats import rankdata
+    ranked_p_values = rankdata(p_vals)
+    fdr = p_vals * n / ranked_p_values
+    fdr[fdr > 1] = 1
+
+    return fdr
+
 import numpy as np
-path = '/mnt/c/Users/Wayne/tvb/stat_data/Gc_Go.xlsx'
-coData = pd.read_excel(path)
 
-def read_data(grp, caseid):
-    gm = np.round(coData.loc[coData['caseid'] == caseid, 'Gc'].item(), 3)
-    filename = '/mnt/d/data/LFP/'+str(grp)+'/'+str(caseid)+'/'+str(caseid)+'_'+str(gm)+'.csv'
-    destin = '/home/yat-lok/workspace/data4project/lateralization/LFP_critical/' + str(grp)+'/'+str(caseid)+'_'+str(gm)+'.csv'
-    shutil.copyfile(filename, destin)
+def p_adjust_bh(p, n):
+    """Benjamini-Hochberg p-value correction for multiple hypothesis testing."""
+    p = np.asfarray(p)
+    by_descend = p.argsort()[::-1]
+    by_orig = by_descend.argsort()
+    steps = float(n) / np.arange(len(p), 0, -1)
+    q = np.minimum(1, np.minimum.accumulate(steps * p[by_descend]))
+    return q[by_orig]
 
-for grp, caseid in zip(coData.groups, coData.caseid):
-    read_data(grp, caseid)
