@@ -10,6 +10,7 @@ import pandas as pd
 from scipy.stats import ranksums
 from scipy.stats import mannwhitneyu
 import scipy
+from statsmodels.stats.multitest import fdrcorrection
 """
 This is a python script with statistical tools
 Author: Yile Wang
@@ -207,6 +208,14 @@ def add_star(data):
         tmp_data = data
     return tmp_data
 
+def p_adjust_bh(p):
+    """Benjamini-Hochberg p-value correction for multiple hypothesis testing. From Eric Talevich, stackoverflow"""
+    p = np.asfarray(p)
+    by_descend = p.argsort()[::-1]
+    by_orig = by_descend.argsort()
+    steps = float(len(p)) / np.arange(len(p), 0, -1)
+    q = np.minimum(1, np.minimum.accumulate(steps * p[by_descend]))
+    return q[by_orig]
 
 def stats_calculator(datatable, mode = "permutation", n=9):
     """
@@ -254,7 +263,6 @@ def stats_calculator(datatable, mode = "permutation", n=9):
                         raise TypeError("Not supported mode")
                     tmp_list = np.append(tmp_list, np.round(p_value,n))
                 overall_permu[a, :] = tmp_list
-
         else:
             continue
     dataframe = pd.DataFrame(overall_permu, index=datatable.columns, columns=comba_with_name)
