@@ -65,7 +65,7 @@ def bootstrap_test(x,iteration, visual = False, axes = None, **kwargs):
 
 
 
-def permutation_test(x,y,iteration, visual = False):
+def permutation_test(x,y,iteration, visual = False, tails = "greater"):
     """
     Args:   
         x: data list1 1-d array
@@ -76,30 +76,41 @@ def permutation_test(x,y,iteration, visual = False):
         p-value of the permutation test
 
     """
-    # transfer data to array format
-    if len(y) > len(x):
-        tmp_x = y
-        tmp_y = x
-    else:
-        tmp_x = x
-        tmp_y = y
-    x = np.array(tmp_x)
-    y = np.array(tmp_y)
+    # # transfer data to array format
+    # # if len(y) > len(x):
+    # #     tmp_x = y
+    # #     tmp_y = x
+    # # else:
+    #     tmp_x = x
+    #     tmp_y = y
+    x = np.array(x)
+    y = np.array(y)
     #np.hstack((x,y))
-    orig_mean = abs(np.mean(x) - np.mean(y))
+    
     Z = np.hstack((x, y))
     Z_fake = range(len(Z))
     box = np.array([])
     i = 0
+
     while i < iteration:
         idx_x = np.random.choice(Z_fake, size= x.shape[0], replace=False)
         idx_y = np.asarray([ele for ele in Z_fake if ele not in idx_x])
         real_x = Z[idx_x]
         real_y = Z[idx_y]
-        p_mean = np.abs(np.mean(real_x) - np.mean(real_y))
+        if tails in ["twosides"]:
+            p_mean = np.abs(np.mean(real_x) - np.mean(real_y))
+        elif tails in ["greater", "less"]:
+            p_mean = np.mean(real_x) - np.mean(real_y)
         box = np.append(box, p_mean)
         i+=1
     permu_mean = np.mean(box)
+
+    if tails in ["twosides"]:
+        orig_mean = np.abs(np.mean(x) - np.mean(y))
+    elif tails in ["greater"]:
+        orig_mean = np.mean(x) - np.mean(y)
+    elif tails in ["less"]:
+        orig_mean = np.mean(y) - np.mean(x)
     p_value = (box[box > orig_mean].shape[0] + 1) / (iteration + 1) # correction
 
     
@@ -208,16 +219,77 @@ def add_star(data):
         tmp_data = data
     return tmp_data
 
-def p_adjust_bh(p):
-    """Benjamini-Hochberg p-value correction for multiple hypothesis testing. From Eric Talevich, stackoverflow"""
-    p = np.asfarray(p)
-    by_descend = p.argsort()[::-1]
-    by_orig = by_descend.argsort()
-    steps = float(len(p)) / np.arange(len(p), 0, -1)
-    q = np.minimum(1, np.minimum.accumulate(steps * p[by_descend]))
-    return q[by_orig]
 
-def stats_calculator(datatable, mode = "permutation", n=9):
+def stats_calculator_three(datatable,var="participation_coef", third_var = "cluster", mode = "permutation", n=9,correction = "FDR", threshold = 0.05, tails="greater"):
+    """
+    Args:
+        datatable, including grouping variable
+    Output
+        the permutation resutls for each groups
+    """
+    
+    groups = pd.unique(datatable.loc[:,'group'])
+    groups_num = range(len(groups))
+
+    comba = list(itertools.combinations(groups_num, 2))
+
+    # give labels to comba
+    comba_with_name = []
+    for a, x in enumerate(comba):
+        tmp_one = (groups[x[0]], groups[x[1]])
+        comba_with_name.append(tmp_one)
+
+    dkind = np.unique(datatable[third_var])
+    overall_permu =np.zeros((len(dkind), len(comba)))
+    for a,col in enumerate(dkind):
+        if isinstance(datatable.loc[0,var], (np.integer, np.float64)):
+            deList = [[] for i in groups_num]
+            for x in groups_num:
+                tmp_df = datatable[datatable[third_var].str.contains(str(col))]
+                tmp_col = tmp_df[datatable["group"].str.contains(str(groups[x]))]
+                deList[x] = tmp_col.loc[:,var].values.flatten()
+            if mode in ["max-T", "max"]:
+                dict_group = {}
+                for x in groups_num:
+                    dict_group[groups[x]] = deList[x]
+                df = null_dist_max(dict_group)
+                overall_permu[a, :] = df['p_value'].to_numpy()
+            else:
+                tmp_list = np.array([])
+                for y in comba:
+                    if mode in ["permutation", "P"]:
+                        p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, tails = tails, visual = False)
+                    elif mode in ["wilcoxon", "W"]:
+                        _, p_value = ranksums(deList[y[0]], deList[y[1]])
+                    elif mode in ["mannwhitneyu", "M"]:
+                        _, p_value = mannwhitneyu(deList[y[0]], deList[y[1]], method="exact")
+                    else:
+                        raise TypeError("Not supported mode")
+                    tmp_list = np.append(tmp_list, np.round(p_value,n))
+                if correction in ["FDR", "fdr"]:
+                    _, tmp_list = fdrcorrection(tmp_list, alpha=threshold)
+                overall_permu[a, :] = tmp_list
+        else:
+            continue
+    dataframe = pd.DataFrame(overall_permu, index=dkind, columns=comba_with_name)
+    # drop the 0 value columns in original datatable
+    for col in dkind:
+        if np.all(dataframe.loc[col, :].values):
+            continue
+        else:
+            dataframe.drop([col], axis=0, inplace = True)
+    
+    # add asterisk sign
+    for i in range(np.shape(dataframe)[0]):
+        for k in range(np.shape(dataframe)[1]):
+            dataframe.iloc[i,k] = add_star(dataframe.iloc[i,k])
+    return dataframe
+
+
+
+
+
+def stats_calculator(datatable, mode = "permutation", n=9, correction = "FDR", threshold = 0.05, tails="greater"):
     """
     Args:
         datatable, including grouping variable
@@ -247,21 +319,20 @@ def stats_calculator(datatable, mode = "permutation", n=9):
                     dict_group[groups[x]] = deList[x]
                 df = null_dist_max(dict_group)
                 overall_permu[a, :] = df['p_value'].to_numpy()
-
             else:
                 tmp_list = np.array([])
                 for y in comba:
                     if mode in ["permutation", "P"]:
-                        p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, visual = False)
-
+                        p_value = permutation_test(deList[y[0]], deList[y[1]], iteration = 10000, tails = tails, visual = False)
                     elif mode in ["wilcoxon", "W"]:
                         _, p_value = ranksums(deList[y[0]], deList[y[1]])
                     elif mode in ["mannwhitneyu", "M"]:
-                        print(deList[y[0]], deList[y[1]])
                         _, p_value = mannwhitneyu(deList[y[0]], deList[y[1]], method="exact")
                     else:
                         raise TypeError("Not supported mode")
                     tmp_list = np.append(tmp_list, np.round(p_value,n))
+                if correction in ["FDR", "fdr"]:
+                    _, tmp_list = fdrcorrection(tmp_list, alpha=threshold)
                 overall_permu[a, :] = tmp_list
         else:
             continue
