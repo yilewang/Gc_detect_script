@@ -293,6 +293,7 @@ def stats_calculator(datatable, mode = "permutation", n=9, correction = "FDR", t
     """
     Args:
         datatable, including grouping variable
+        n is the round digit parameters
     Output
         the permutation resutls for each groups
     """
