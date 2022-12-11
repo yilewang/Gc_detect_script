@@ -14,8 +14,6 @@ import os
 import io
 import seaborn as sns
 
-
-
 class SignalToolkit:
     def __init__(self, filename=None, fs=None, caseid=None, group=None) -> None:
         """
