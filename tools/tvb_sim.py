@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 
-def tvb_simulation(file, gc):
+def tvb_simulation(gc):
 
     # file path of tvb connectome zip file
     # conduction velocity
@@ -37,7 +37,7 @@ def tvb_simulation(file, gc):
     return df
 
 
-file = "/Users/yat-lok/Desktop/0306A.zip"
-sim = tvb_simulation(file, 0.015)
+# file = "/Users/yat-lok/Desktop/0306A.zip"
+sim = tvb_simulation(0.015)
 plt.plot(sim)
 plt.show()
