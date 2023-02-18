@@ -289,7 +289,7 @@ def stats_calculator_three(datatable,var="participation_coef", third_var = "clus
 
 
 
-def stats_calculator(datatable, mode = "permutation", n=9, correction = "FDR", threshold = 0.05, tails="greater"):
+def stats_calculator(datatable, mode = "permutation", n=9, correction = "FDR", threshold = 0.05, tails="greater", asterisk=True):
     """
     Args:
         datatable, including grouping variable
@@ -346,10 +346,13 @@ def stats_calculator(datatable, mode = "permutation", n=9, correction = "FDR", t
             dataframe.drop([col], axis=0, inplace = True)
     
     # add asterisk sign
-    for i in range(np.shape(dataframe)[0]):
-        for k in range(np.shape(dataframe)[1]):
-            dataframe.iloc[i,k] = add_star(dataframe.iloc[i,k])
-    return dataframe
+    if asterisk:
+        for i in range(np.shape(dataframe)[0]):
+            for k in range(np.shape(dataframe)[1]):
+                dataframe.iloc[i,k] = add_star(dataframe.iloc[i,k])
+        return dataframe
+    else:
+        return dataframe
 
 def bootstrap_groups(datatable, iternation:int, col:str):
     
