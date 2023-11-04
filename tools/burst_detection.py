@@ -28,7 +28,7 @@ class BurstDetection:
     def __init__(self, data, fs, thresh_min=-2, thresh_prominence=1, down_fs = None, gamma_band = None, theta_band = None):
         self.data = data
         self.fs = fs
-        self.thresh = thresh_min
+        self.thresh_min = thresh_min
         self.thresh_prominence = thresh_prominence
         self.thresh_min_width = 0.5 * (self.fs/1000)
         self.distance_min = 1 * (self.fs/1000)
@@ -50,16 +50,16 @@ class BurstDetection:
         filtered_signal = signal.sosfiltfilt(sos, data)
         return filtered_signal
     
-    def generate_spikes_analyses(data, fs, thresh_min, thresh_prominence, thresh_min_width, distance_min, vis=False):
+    def generate_spikes_analyses(self, vis=False):
         # Assign the variables here to simplify the code
-        time = np.arange(0, len(data)) / fs  # Time in seconds
-        peaks_signal = data  # Or signal_filtered
+        time = np.arange(0, len(self.data)) / self.fs  # Time in seconds
+        peaks_signal = self.data  # Or signal_filtered
         
         # Set parameters for the Find peaks function (set to None if not needed)
-        thresh_min = thresh_min                     # Min threshold to detect spikes
-        thresh_prominence = thresh_prominence              # Min spike amplitude  
-        thresh_min_width = thresh_min_width  # Min required width in ms
-        distance_min = distance_min        # Min horizontal distance between peaks
+        thresh_min = self.thresh_min                     # Min threshold to detect spikes
+        thresh_prominence = self.thresh_prominence              # Min spike amplitude  
+        thresh_min_width = self.thresh_min_width  # Min required width in ms
+        distance_min = self.distance_min        # Min horizontal distance between peaks
         # pretrigger_window = (1.5 * fs)/1000
         # posttrigger_window = (2 * fs)/1000
         
@@ -82,12 +82,12 @@ class BurstDetection:
         
         spikes_table.spike = np.arange(1, len(peaks) + 1)
         spikes_table.spike_index = peaks
-        spikes_table.spike_time = peaks / fs  # Divided by fs to get s
-        spikes_table.isi_s = np.diff(peaks, axis=0, prepend=peaks[0]) / fs
+        spikes_table.spike_time = peaks / self.fs  # Divided by fs to get s
+        spikes_table.isi_s = np.diff(peaks, axis=0, prepend=peaks[0]) / self.fs
         spikes_table.inst_freq = 1 / spikes_table.isi_s
-        spikes_table.width = peaks_dict['widths']/(fs/1000) # Width (ms) at half-height
-        spikes_table.rise_half_ms = (peaks - peaks_dict['left_ips'])/(fs/1000) 
-        spikes_table.decay_half_ms = (peaks_dict['right_ips'] - peaks)/(fs/1000)
+        spikes_table.width = peaks_dict['widths']/(self.fs/1000) # Width (ms) at half-height
+        spikes_table.rise_half_ms = (peaks - peaks_dict['left_ips'])/(self.fs/1000) 
+        spikes_table.decay_half_ms = (peaks_dict['right_ips'] - peaks)/(self.fs/1000)
         spikes_table.spike_peak = peaks_dict['peak_heights']  # height parameter is needed
         spikes_table.spike_amplitude = peaks_dict['prominences']  # prominence parameter is needed
             
@@ -97,7 +97,7 @@ class BurstDetection:
             ax.plot(time, peaks_signal)
             
             # Red dot on each detected spike
-            ax.plot(peaks/fs, peaks_signal[peaks], "r.")
+            ax.plot(peaks/self.fs, peaks_signal[peaks], "r.")
             
             # Add a number to each detected peak
             # for i, txt in enumerate(spikes_table.spike):  
@@ -114,7 +114,7 @@ class BurstDetection:
             pass
         return spikes_table
     
-    def bursts_detection(df, spike_times, spike_amplitudes, spike_peaks,
+    def bursts_detection(self, df, spike_times, spike_amplitudes, spike_peaks,
                     n_spikes, 
                     max_isi, 
                     # min_duration,  # Optional
@@ -185,7 +185,7 @@ class BurstDetection:
                     'avg_spike_peaks', 'spikes_frequency']]
 
 
-    def generate_bursts_analyses(self, bursts, spikes_table, time, peaks_signal):
+    def generate_bursts_analyses(self, bursts_table, spikes_table, time, peaks_signal):
         # Plotting: create figure and axis
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
         
@@ -196,7 +196,7 @@ class BurstDetection:
         
 
         # Plot the detected bursts 
-        for i, burst in bursts.iterrows():
+        for i, burst in bursts_table.iterrows():
             burst_start = burst['burst_start']
             burst_end = burst['burst_end']
             burst_number = int(burst['burst_number'])
@@ -230,9 +230,9 @@ class BurstDetection:
         ax2.scatter(spikes_table['spike_time'], spikes_table['spike_peak'], color="magenta", s=10)
         
         # Burst time window + 0.1 s before and after
-        burst_start = bursts.loc[bursts['burst_number'] == burst_number, 'burst_start'].values[0]
-        burst_end = bursts.loc[bursts['burst_number'] == burst_number, 'burst_end'].values[0]
-        burst_line_y = bursts.loc[bursts['burst_number'] == burst_number, 'avg_spike_peaks'].values[0] + 5
+        burst_start = bursts_table.loc[bursts_table['burst_number'] == burst_number, 'burst_start'].values[0]
+        burst_end = bursts_table.loc[bursts_table['burst_number'] == burst_number, 'burst_end'].values[0]
+        burst_line_y = bursts_table.loc[bursts_table['burst_number'] == burst_number, 'avg_spike_peaks'].values[0] + 5
         ax2.plot([burst_start, burst_end], [burst_line_y, burst_line_y], 'black')
         ax2.set_xlim(burst_start - 0.1, burst_end + 0.1) 
         
@@ -246,15 +246,15 @@ class BurstDetection:
         plt.show()
 
 
-    def generate_bursts_stats(caseid, bursts, spikes_table):
+    def generate_bursts_stats(self, caseid, bursts_table, spikes_table):
         # Experiment ID
         experiment_id = caseid
         
         # Summary statistics
-        burst_number = len(bursts)
-        spikes_in_bursts = np.sum(bursts.spikes_in_bursts)
+        burst_number = len(bursts_table)
+        spikes_in_bursts = np.sum(bursts_table.spikes_in_bursts)
         spikes_bursts_pct = (spikes_in_bursts / len(spikes_table.spike)) * 100
-        mean_burst_duration = np.mean(bursts.burst_length)
+        mean_burst_duration = np.mean(bursts_table.burst_length)
         
         # Create a DataFrame 
         bursts_stats = pd.DataFrame({
@@ -269,7 +269,7 @@ class BurstDetection:
     
 
 
-    def generate_ISI_analyses(spikes_table, vis=True):
+    def generate_ISI_analyses(self, spikes_table, vis=True):
         """
         Better for longer signal.
         """
