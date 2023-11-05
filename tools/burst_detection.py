@@ -73,24 +73,25 @@ class BurstDetection:
                 wlen=None,       # Window length to calculate prominence
                 rel_height=0.5,  # Relative height at which the peak width is measured
                 plateau_size=None)
-        
         # Create table with results
         spikes_table = pd.DataFrame(columns = ['spike', 'spike_index', 'spike_time',
                                             'inst_freq', 'isi_s',
                                             'width', 'rise_half_ms', 'decay_half_ms',
                                             'spike_peak', 'spike_amplitude'])
-        
-        spikes_table.spike = np.arange(1, len(peaks) + 1)
-        spikes_table.spike_index = peaks
-        spikes_table.spike_time = peaks / self.fs  # Divided by fs to get s
-        spikes_table.isi_s = np.diff(peaks, axis=0, prepend=peaks[0]) / self.fs
-        spikes_table.inst_freq = 1 / spikes_table.isi_s
-        spikes_table.width = peaks_dict['widths']/(self.fs/1000) # Width (ms) at half-height
-        spikes_table.rise_half_ms = (peaks - peaks_dict['left_ips'])/(self.fs/1000) 
-        spikes_table.decay_half_ms = (peaks_dict['right_ips'] - peaks)/(self.fs/1000)
-        spikes_table.spike_peak = peaks_dict['peak_heights']  # height parameter is needed
-        spikes_table.spike_amplitude = peaks_dict['prominences']  # prominence parameter is needed
-            
+        if len(peaks) == 0:
+            print("No spikes detected")
+            return spikes_table
+        else:
+            spikes_table.spike = np.arange(1, len(peaks) + 1)
+            spikes_table.spike_index = peaks
+            spikes_table.spike_time = peaks / self.fs  # Divided by fs to get s
+            spikes_table.isi_s = np.diff(peaks, axis=0, prepend=peaks[0]) / self.fs
+            spikes_table.inst_freq = 1 / spikes_table.isi_s
+            spikes_table.width = peaks_dict['widths']/(self.fs/1000) # Width (ms) at half-height
+            spikes_table.rise_half_ms = (peaks - peaks_dict['left_ips'])/(self.fs/1000) 
+            spikes_table.decay_half_ms = (peaks_dict['right_ips'] - peaks)/(self.fs/1000)
+            spikes_table.spike_peak = peaks_dict['peak_heights']  # height parameter is needed
+            spikes_table.spike_amplitude = peaks_dict['prominences']  # prominence parameter is needed
         if vis:
             # Plot the detected spikes in the trace
             fig, ax = plt.subplots(figsize=(10, 4))
@@ -253,8 +254,14 @@ class BurstDetection:
         # Summary statistics
         burst_number = len(bursts_table)
         spikes_in_bursts = np.sum(bursts_table.spikes_in_bursts)
-        spikes_bursts_pct = (spikes_in_bursts / len(spikes_table.spike)) * 100
-        mean_burst_duration = np.mean(bursts_table.burst_length)
+        if len(spikes_table.spike) == 0:
+            spikes_bursts_pct = 0
+        else:
+            spikes_bursts_pct = (spikes_in_bursts / len(spikes_table.spike)) * 100
+        if len(bursts_table.burst_length) == 0:
+            mean_burst_duration = 0
+        else:    
+            mean_burst_duration = np.mean(bursts_table.burst_length)
         
         # Create a DataFrame 
         bursts_stats = pd.DataFrame({
@@ -269,7 +276,7 @@ class BurstDetection:
     
 
 
-    def generate_ISI_analyses(self, spikes_table, vis=True):
+    def generate_ISI_analyses(self, spikes_table, bin_size = 1, vis=False):
         """
         Better for longer signal.
         """
@@ -280,40 +287,57 @@ class BurstDetection:
         hist_stats = pd.DataFrame()
         
         # Bin size
-        bin_size = 10  # in miliseconds
+        bin_size = bin_size  # in miliseconds
         
         # Histogram
         isi_range = np.ptp(hist_data)
-        bins = int((isi_range * 1000 / bin_size) + 0.5)  # Round to the nearest integer
-        hist = np.histogram(hist_data, bins=bins)
-        hist_counts = hist[0]
-        hist_bins = hist[1]
-        
-        # Cumulative moving average
-        cum = np.cumsum(hist_counts)  # Cumulative sum
-        cma = cum / np.arange(1, len(cum) + 1)
-        
-        # Calculate peaks and valleys of the cma
-        cma_peaks_indexes = scipy.signal.argrelextrema(cma, np.greater)
-        cma_valleys_indexes = scipy.signal.argrelextrema(cma, np.less)
-        
-        # Select the peak you're interested in
-        peak_index = cma_peaks_indexes[0][0]  # Change second number to select the peak
-        alpha = cma[peak_index] * 0.5  # Half-peak, adapt the value to your threshold criterion
-        
-        # Calculate cma_threshold_index relative to the selected cma_peak
-        cma_threshold = (np.argmin(cma[peak_index:] >= alpha) + peak_index) * bin_size/1000
-        
-        # Dataframe with histogram statistics
-        length = len(hist_stats)
-        hist_stats.loc[length, 'mean_isi'] = np.mean(hist_data)
-        hist_stats.loc[length, 'median_isi'] = np.median(hist_data)
-        hist_stats.loc[length, 'kurtosis'] = kurtosis(hist_counts)
-        hist_stats.loc[length, 'skewness'] = skew(hist_counts, bias=True)
-        hist_stats.loc[length, 'cma_threshold'] = cma_threshold
-        hist_stats.loc[length, 'cma_valley_time'] = cma_valleys_indexes[0][1] * bin_size/1000  # Change peak index as needed
-        hist_stats.loc[length, 'cma_peak_time'] = cma_peaks_indexes[0][0] * bin_size/1000  # Change peak index as needed
-        
+        if np.isnan(isi_range) or isi_range == 0:
+            print("No spikes detected")
+            hist_stats['mean_isi'] = [0.0]
+            hist_stats['median_isi'] = [0.0]
+            hist_stats['kurtosis'] = [0.0]
+            hist_stats['skewness'] = [0.0]
+            hist_stats['cma_threshold'] = [0.0]
+            hist_stats[ 'cma_valley_time'] = [0.0]
+            hist_stats['cma_peak_time'] = [0.0]
+        else:
+            bins = int((isi_range * 1000 / bin_size) + 0.5)  # Round to the nearest integer
+            hist = np.histogram(hist_data, bins=bins)
+            hist_counts = hist[0]
+            hist_bins = hist[1]
+            
+            # Cumulative moving average
+            cum = np.cumsum(hist_counts)  # Cumulative sum
+            cma = cum / np.arange(1, len(cum) + 1)
+            
+            # Calculate peaks and valleys of the cma
+            cma_peaks_indexes = scipy.signal.argrelextrema(cma, np.greater)
+            cma_valleys_indexes = scipy.signal.argrelextrema(cma, np.less)
+            
+            # Select the peak you're interested in
+            try:
+                peak_index = cma_peaks_indexes[0][0]  # Change second number to select the peak
+                alpha = cma[peak_index] * 0.5  # Half-peak, adapt the value to your threshold criterion
+            
+                # Calculate cma_threshold_index relative to the selected cma_peak
+                cma_threshold = (np.argmin(cma[peak_index:] >= alpha) + peak_index) * bin_size/1000
+                cma_peak_time = cma_peaks_indexes[0][0] * bin_size/1000  # Change peak index as needed
+                cma_valley_time = cma_valleys_indexes[0][1] * bin_size/1000  # Change peak index as needed
+            except:
+                cma_threshold = 0.0
+                cma_peak_time = 0.0
+                cma_valley_time = 0.0
+
+            # Dataframe with histogram statistics
+            length = len(hist_stats)
+            hist_stats.loc[length, 'mean_isi'] = np.mean(hist_data)
+            hist_stats.loc[length, 'median_isi'] = np.median(hist_data)
+            hist_stats.loc[length, 'kurtosis'] = kurtosis(hist_counts)
+            hist_stats.loc[length, 'skewness'] = skew(hist_counts, bias=True)
+            hist_stats.loc[length, 'cma_threshold'] = cma_threshold
+            hist_stats.loc[length, 'cma_valley_time'] = cma_valley_time
+            hist_stats.loc[length, 'cma_peak_time'] = cma_peak_time  # Change peak index as needed
+            
         if vis:
             # Plot ISI histogram
             fig, ax = plt.subplots(figsize=(8, 4))
