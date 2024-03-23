@@ -72,6 +72,7 @@ def permutation_test(x,y,iteration, visual = False, tails = "greater"):
         y: data list2 1-d array
         iteration: iteration number for the test
         visual (boolean): the default value is False. If it is True, the permutation histgram will be generated
+        tails can be greater, less or two. 
     Returns:
         p-value of the permutation test
 
@@ -97,7 +98,7 @@ def permutation_test(x,y,iteration, visual = False, tails = "greater"):
         idx_y = np.asarray([ele for ele in Z_fake if ele not in idx_x])
         real_x = Z[idx_x]
         real_y = Z[idx_y]
-        if tails in ["twosides"]:
+        if tails in ["two"]:
             p_mean = np.abs(np.mean(real_x) - np.mean(real_y))
         elif tails in ["greater", "less"]:
             p_mean = np.mean(real_x) - np.mean(real_y)
@@ -105,7 +106,7 @@ def permutation_test(x,y,iteration, visual = False, tails = "greater"):
         i+=1
     permu_mean = np.mean(box)
 
-    if tails in ["twosides"]:
+    if tails in ["two"]:
         orig_mean = np.abs(np.mean(x) - np.mean(y))
     elif tails in ["greater"]:
         orig_mean = np.mean(x) - np.mean(y)
