@@ -484,7 +484,7 @@ class SignalToolkit:
                 return np.mean(amp_upper_pro), np.mean(amp_lower_pro)
 
         elif mode in ["hilbert","h"]:
-            analytic = signal.hilbert(self.signal)
+            analytic = signal.hilbert(data)
             amplitude_envelope = np.abs(analytic)
             if visual:
                 time = np.arange(0, len(data)/self.fs, 1/self.fs)
