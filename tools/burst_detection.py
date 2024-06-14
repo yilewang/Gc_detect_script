@@ -54,6 +54,7 @@ def generate_spikes_analyses(data, fs, thresh_min = -2, thresh_prominence=0.5, v
     # Assign the variables here to simplify the code
     time = np.arange(0, len(data)) / fs  # Time in seconds
     peaks_signal = data  # Or signal_filtered
+
     
     # Set parameters for the Find peaks function (set to None if not needed)
     thresh_min = thresh_min                     # Min threshold to detect spikes
@@ -62,6 +63,7 @@ def generate_spikes_analyses(data, fs, thresh_min = -2, thresh_prominence=0.5, v
     distance_min = 1 * (fs/1000)        # Min horizontal distance between peaks
     # pretrigger_window = (1.5 * fs)/1000
     # posttrigger_window = (2 * fs)/1000
+
     
     # Find peaks function
     peaks, peaks_dict = find_peaks(peaks_signal, 
@@ -79,7 +81,7 @@ def generate_spikes_analyses(data, fs, thresh_min = -2, thresh_prominence=0.5, v
                                         'width', 'rise_half_ms', 'decay_half_ms',
                                         'spike_peak', 'spike_amplitude'])
     if len(peaks) == 0:
-        print("No spikes detected")
+        # print("No spikes detected")
         return spikes_table
     else:
         spikes_table.spike = np.arange(1, len(peaks) + 1)
@@ -116,8 +118,7 @@ def generate_spikes_analyses(data, fs, thresh_min = -2, thresh_prominence=0.5, v
     return spikes_table
 
 
-
-def bursts_detection(df, spike_times='spike_time', spike_amplitudes='spike_amplitude', spike_peaks='spike_peak',
+def bursts_detection(df, spike_times='spike_time', spike_amplitudes='spike_amplitude', spike_peaks='spike_peak', burst_amplitudes='burst_amplitude',
                 n_spikes=2, 
                 max_isi=0.1, 
                 # min_duration,  # Optional
