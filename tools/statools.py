@@ -55,7 +55,7 @@ def bootstrap_test(x,iteration, visual = False, axes = None, **kwargs):
             fig = plt.figure(figsize=(9,8))
             axes = fig.add_subplot(111)
         else:
-            sns.kdeplot(box, ax=axes, linewidth=2, multiple="stack", **kwargs)
+            sns.kdeplot(box, ax=axes, linewidth=2, multiple="layer", **kwargs)
             
             #axes.axvline(x=np.round(CI[0],3), ymax=box[np.where(CI[0])], label='2.5% CI at {}'.format(np.round(CI[0],3)), linestyle = 'dashed', **kwargs)
             #axes.axvline(x=np.round(CI[1],3),ymax=box[np.where(CI[1])], label='97.5% CI at {}'.format(np.round(CI[1],3)), linestyle = 'dashed', **kwargs)
